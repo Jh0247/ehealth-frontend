@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 const PrivateRoute = ({ allowedRoles = [], organizationCheck }) => {
   const user = useSelector(state => state.user);
   const { user_info: { user_role, organization_id } } = user;
-  console.log('private route', user);
+  console.log('private route', user_role);
+  console.log('private routeddd', organization_id);
 
   // When user state is empty
   if (!user || !user.user_info) {

@@ -17,6 +17,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    // "no-unused-vars": ["warn", { "varsIgnorePattern": "^React$" }],
+    "no-unused-vars": ["warn", { "varsIgnorePattern": "^React$" }],
   },
 }

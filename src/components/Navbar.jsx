@@ -1,53 +1,45 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import React, { useState } from 'react';
 
-const Navbar = ( user ) => {
-  const [isDrawerOpen, setDrawerOpen] = React.useState(false);
-
-  const toggleDrawer = () => {
-    setDrawerOpen(!isDrawerOpen);
-  };
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
-      {user && user?.user_info?.user_role === 'admin' ? (
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" style={{ flexGrow: 1 }}>
-              eabcd
-            </Typography>
-            <Button color="inherit" component={Link} to="/logout">
-              Logout
-            </Button>
-          </Toolbar>
-          <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
-            <List>
-              <ListItem component={Link} to="/dashboard">
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <ListItem component={Link} to="/report">
-                <ListItemText primary="Report" />
-              </ListItem>
-            </List>
-          </Drawer>
-        </AppBar>
-      ) : (
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component={Link} to="/" style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1  }}>
-              E-Health
-            </Typography>
-            <Button color="inherit" component={Link} to="/login" size="large">Login</Button>
-          </Toolbar>
-        </AppBar>
+    <nav className="bg-white shadow-md">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="flex items-center">
+          <div className="text-2xl font-bold text-[#347576]">E-Health</div>
+        </div>
+        <div className="hidden md:flex space-x-4 items-center">
+          <a href="#home" className="text-gray-700 hover:text-[#63D4D5]">Home</a>
+          <a href="#services" className="text-gray-700 hover:text-[#63D4D5]">Services</a>
+          <a href="#appointments" className="text-gray-700 hover:text-[#63D4D5]">Appointments</a>
+          <a href="#doctors" className="text-gray-700 hover:text-[#63D4D5]">Doctors</a>
+          <a href="#contact" className="text-gray-700 hover:text-[#63D4D5]">Contact</a>
+          <button className="ml-4 px-4 py-2 bg-[#347576] text-white rounded hover:bg-[#285D5E]">Login</button>
+        </div>
+        <div className="md:hidden">
+          <button 
+            className="text-gray-700 focus:outline-none focus:text-[#63D4D5]"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      {isOpen && (
+        <div className="md:hidden bg-white">
+          <a href="#home" className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5]">Home</a>
+          <a href="#services" className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5]">Services</a>
+          <a href="#appointments" className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5]">Appointments</a>
+          <a href="#doctors" className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5]">Doctors</a>
+          <a href="#contact" className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5]">Contact</a>
+          <button className="block w-full px-4 py-2 bg-[#347576] text-white rounded hover:bg-[#285D5E] mt-2">Login</button>
+        </div>
       )}
-    </div>
+    </nav>
   );
-};
+}
 
 export default Navbar;
