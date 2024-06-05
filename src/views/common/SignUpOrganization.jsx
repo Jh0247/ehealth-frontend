@@ -23,7 +23,6 @@ export default function SignUpOrganization() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [termsAgreed, setTermsAgreed] = useState(false);
   const [isNewCode, setIsNewCode] = useState(true);
 
   const handleSubmit = async (e) => {
