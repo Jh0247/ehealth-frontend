@@ -2,8 +2,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
+
+import { axiosMiddleware } from './middleware/axiosMiddleware';
+import { loadingMiddleware } from './middleware/loadingMiddleware';
+import toastReducer from './features/toastSlice';
+import loadingReducer from './features/loadingSlice';
+
 import authReducer from './features/authSlice';
 import userReducer from './features/userSlice';
+import collaborationReducer from './features/collaborationSlice';
 
 const reduxLogger = (store) => (next) => (action) => {
   console.log('Dispatching action:', action);
@@ -18,8 +25,11 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  toast: toastReducer,
+  loading: loadingReducer,
   auth: authReducer,
   user: userReducer,
+  collaboration: collaborationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -29,7 +39,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(reduxLogger),
+    }).concat(reduxLogger).concat(axiosMiddleware).concat(loadingMiddleware),
 });
 
 export const persistor = persistStore(store);

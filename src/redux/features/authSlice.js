@@ -12,12 +12,21 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials, { rejectWithValue }) => {
     try {
-      console.log('loginUser: Attempting login wdddith credentials:', credentials);
       const response = await axiosInstance.post(API_URL.LOGIN, credentials);
-      console.log('loginUser: Login successful, response:', response);
       return response.data;
     } catch (err) {
-      console.log('loginUser: Login failed, error:', err);
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(API_URL.REGISTER, userData);
+      return response.data;
+    } catch (err) {
       return rejectWithValue(err.response.data);
     }
   }
@@ -48,6 +57,17 @@ const authSlice = createSlice({
         state.token = null;
         state.error = action.payload;
         console.log('loginUser: Failed state, error:', action.payload);
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });

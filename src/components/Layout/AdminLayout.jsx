@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
 import personIcon from '@iconify-icons/mdi/account';
 import articleIcon from '@iconify-icons/mdi/post';
 
-export default function PharmacistLayout() {
+export default function AdminLayout() {
   const auth = useSelector((state) => state.auth);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -36,7 +36,7 @@ export default function PharmacistLayout() {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar navItems={navItems} isMobile={isMobile} />
+      <Sidebar navItems={navItems} />
       <div className={`flex-1 p-4 transition-transform duration-300 ${isMobile && 'ml-14'}`}>
         <Outlet />
       </div>

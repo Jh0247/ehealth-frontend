@@ -16,7 +16,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // rmb to uncomment required fields
+  // rmb to uncomment required fields and remove the required
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(
@@ -38,13 +38,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#E6F7F7]">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-[#347576] mb-6">Login</h2>
+    <div className="flex justify-center md:items-center min-h-screen bg-cover bg-center bg-wave">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md mt-20 md:mt-0 mx-2 md:mx-0 h-fit bg-opacity-90">
+        <h2 className="text-2xl font-bold text-[#347576] mb-6 text-center md:text-left">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="email" className="block text-gray-700">Email</label>
-            <div className="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
               <Icon icon={emailIcon} className="w-6 h-6 text-gray-400 mr-2" />
               <input 
                 type="email" 
@@ -58,7 +58,7 @@ const Login = () => {
           </div>
           <div className="mb-6 relative">
             <label htmlFor="password" className="block text-gray-700">Password</label>
-            <div className="flex items-center border rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
               <Icon icon={lockIcon} className="w-6 h-6 text-gray-400 mr-2" />
               <input 
                 type={showPassword ? 'text' : 'password'} 
@@ -84,8 +84,8 @@ const Login = () => {
             Login
           </button>
         </form>
-        <p className="mt-4 text-center">
-          Dont have an account? <a href="#" className="text-[#63D4D5] hover:underline">Register</a> now
+        <p className="mt-4 text-center text-sm md:text-base">
+          Dont have an account? <a href="/register" className="text-[#63D4D5] hover:underline">Register</a> now
         </p>
       </div>
     </div>

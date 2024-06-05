@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
 import personIcon from '@iconify-icons/mdi/account';
 import articleIcon from '@iconify-icons/mdi/post';
 
-export default function HealthcareLayout() {
+export default function PatientLayout() {
   const auth = useSelector((state) => state.auth);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -30,7 +30,8 @@ export default function HealthcareLayout() {
 
   const navItems = [
     { name: 'Dashboard', path: '/user/dashboard', icon: dashboardIcon },
-    { name: 'Profile', path: '/user/profile', icon: personIcon },
+    { name: 'Health Record', path: '/user/profile', icon: personIcon },
+    { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
     { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
   ];
 

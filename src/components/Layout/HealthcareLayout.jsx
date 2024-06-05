@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
 import personIcon from '@iconify-icons/mdi/account';
 import articleIcon from '@iconify-icons/mdi/post';
 
-export default function AdminLayout() {
+export default function HealthcareLayout() {
   const auth = useSelector((state) => state.auth);
   const [isMobile, setIsMobile] = useState(false);
 

@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
+import { Icon } from '@iconify/react';
+import emailIcon from '@iconify-icons/mdi/email';
+import lockIcon from '@iconify-icons/mdi/lock';
+import eyeIcon from '@iconify-icons/mdi/eye';
+import eyeOffIcon from '@iconify-icons/mdi/eye-off';
+import accountIcon from '@iconify-icons/mdi/account';
+import phoneIcon from '@iconify-icons/mdi/phone';
+import organizationIcon from '@iconify-icons/mdi/office-building';
+import { useDispatch } from 'react-redux';
+import { createCollaborationRequest } from '../../redux/features/collaborationSlice';
 
 export default function SignUpOrganization() {
+
+  const dispatch = useDispatch();
+
   const [organizationName, setOrganizationName] = useState('');
   const [organizationCode, setOrganizationCode] = useState('');
   const [adminName, setAdminName] = useState('');
@@ -11,17 +24,26 @@ export default function SignUpOrganization() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const [isNewCode, setIsNewCode] = useState(true);
 
-  //Todo: organization sign up function
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Organization Name:', organizationName);
-    console.log('Organization Code:', organizationCode);
-    console.log('Admin Name:', adminName);
-    console.log('Admin Contact:', adminContact);
-    console.log('Admin Email:', adminEmail);
-    console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
+    const result = await dispatch(
+      createCollaborationRequest({
+        organization_name: organizationName,
+        organization_code: organizationCode,
+        organization_type: isNewCode ? 'new' : 'old',
+        admin_name: adminName,
+        admin_email: adminEmail,
+        admin_contact: adminContact,
+        password,
+        password_confirmation: confirmPassword
+      })
+    );
+
+    if (result.type === 'collaboration/createCollaborationRequest/fulfilled') {
+      resetField();
+    }
   };
 
   const isFormValid = () => {
@@ -32,151 +54,191 @@ export default function SignUpOrganization() {
       adminContact &&
       adminEmail &&
       password &&
-      confirmPassword &&
-      termsAgreed
+      confirmPassword
     );
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const resetField = () => {
+    setOrganizationName('');
+    setOrganizationCode('');
+    setAdminName('');
+    setAdminContact('');
+    setAdminEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+    setIsNewCode(true);
+  }
+
   return (
-    <div className="bg-white p-1">
-      <div className="flex justify-center">
-        <div className="flex flex-col p-1">
-          <form onSubmit={handleSubmit} className="mt-1 lg:mt-5 p-5 w-full sm:w-[600px]">
-            <div className="text-2xl lg:text-3xl font-bold leading-10 text-zinc-900">
-              Organization Collaboration
-              <br />
-              Request
-            </div>
-            <div className="flex flex-col justify-center mt-10 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Organization Name
-              </label>
-              <input
-                type="text"
-                value={organizationName}
+    <div className="flex justify-center md:items-center min-h-screen bg-cover bg-center bg-wave">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl mt-14 md:mt-0 mb-5 mx-2 h-fit bg-opacity-90">
+        <h2 className="text-2xl font-bold text-[#347576] mb-6 text-center md:text-left">Organization Collaboration Request</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+          <div className="mb-6">
+            <label htmlFor="organizationName" className="block text-gray-700">Organization Name</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={organizationIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type="text" 
+                id="organizationName" 
+                className="w-full outline-none" 
+                value={organizationName} 
                 onChange={(e) => setOrganizationName(e.target.value)}
-                className="bg-gray-100 text-neutral-800 p-4 mt-1"
-                placeholder="Organization Name here..."
+                placeholder='Organization Name here...'
+                required
               />
             </div>
-
-            {/* to do: allow user to select new or old business code */}
-
-            <div className="flex flex-col justify-center mt-5 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Organization Register Code
-              </label>
-              <input
-                type="text"
-                value={organizationCode}
+          </div>
+          <div className="mb-6">
+            <label htmlFor="organizationCodeType" className="block text-gray-700">Organization Register Code Type</label>
+            <div className="flex items-center">
+              <input 
+                type="radio" 
+                id="newCode" 
+                name="codeType" 
+                className="mr-2" 
+                checked={isNewCode} 
+                onChange={() => setIsNewCode(true)}
+              />
+              <label htmlFor="newCode" className="mr-4">New</label>
+              <input 
+                type="radio" 
+                id="oldCode" 
+                name="codeType" 
+                className="mr-2" 
+                checked={!isNewCode} 
+                onChange={() => setIsNewCode(false)}
+              />
+              <label htmlFor="oldCode">Old</label>
+            </div>
+          </div>
+          <div className="mb-6">
+            <label htmlFor="organizationCode" className="block text-gray-700">Organization Register Code</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={organizationIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type="text" 
+                id="organizationCode" 
+                className="w-full outline-none" 
+                value={organizationCode} 
                 onChange={(e) => setOrganizationCode(e.target.value)}
-                className="bg-gray-100 text-neutral-800 p-4 mt-1"
-                placeholder="Organization code here..."
+                placeholder={isNewCode ? '202001012345' : '123456-M'}
                 maxLength={15}
+                required
               />
             </div>
-            <div className="flex flex-col justify-center mt-5 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Admin Name
-              </label>
-              <input
-                type="text"
-                value={adminName}
+          </div>
+          <div className="mb-6">
+            <label htmlFor="adminName" className="block text-gray-700">Admin Name</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={accountIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type="text" 
+                id="adminName" 
+                className="w-full outline-none" 
+                value={adminName} 
                 onChange={(e) => setAdminName(e.target.value)}
-                className="bg-gray-100 text-neutral-800 p-4 mt-2"
-                placeholder="example@email.com"
+                placeholder='Admin Name here...'
+                required
               />
             </div>
-            <div className="flex flex-col justify-center mt-5 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Admin Contact
-              </label>
-              <input
-                type="text"
-                value={adminContact}
+          </div>
+          <div className="mb-6">
+            <label htmlFor="adminContact" className="block text-gray-700">Admin Contact</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={phoneIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type="text" 
+                id="adminContact" 
+                className="w-full outline-none" 
+                value={adminContact} 
                 onChange={(e) => setAdminContact(e.target.value)}
-                className="bg-gray-100 text-neutral-800 p-4 mt-2"
-                placeholder="example@email.com"
+                placeholder='012-3456789'
+                required
               />
             </div>
-            <div className="flex flex-col justify-center mt-5 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Admin Email
-              </label>
-              <input
-                type="email"
-                value={adminEmail}
+          </div>
+          <div className="mb-6">
+            <label htmlFor="adminEmail" className="block text-gray-700">Admin Email</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={emailIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type="email" 
+                id="adminEmail" 
+                className="w-full outline-none" 
+                value={adminEmail} 
                 onChange={(e) => setAdminEmail(e.target.value)}
-                className="bg-gray-100 text-neutral-800 p-4 mt-2"
-                placeholder="example@email.com"
+                placeholder='example@email.com'
+                required
               />
             </div>
-            <div className="flex flex-col justify-center mt-5 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-gray-100 text-neutral-800 p-4 mt-2 w-full"
-                  placeholder="Enter password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-600"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
+          </div>
+          <div className="mb-6 relative col-span-1 md:col-span-2">
+            <label htmlFor="password" className="block text-gray-700">Password</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={lockIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                id="password" 
+                className="w-full outline-none pr-10" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder='********'
+                required
+              />
+              <button 
+                type="button" 
+                className="absolute right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                onClick={togglePasswordVisibility}
+              >
+                <Icon icon={showPassword ? eyeOffIcon : eyeIcon} className="w-6 h-6" />
+              </button>
             </div>
-            <div className="flex flex-col justify-center mt-5 bg-opacity-0">
-              <label className="font-bold text-gray-700">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-gray-100 text-neutral-800 p-4 mt-2 w-full"
-                  placeholder="Retype password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-3 text-gray-600"
-                >
-                  {showConfirmPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
+          </div>
+          <div className="mb-6 relative col-span-1 md:col-span-2">
+            <label htmlFor="confirmPassword" className="block text-gray-700">Confirm Password</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={lockIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type={showConfirmPassword ? 'text' : 'password'} 
+                id="confirmPassword" 
+                className="w-full outline-none pr-10" 
+                value={confirmPassword} 
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder='********'
+                required
+              />
+              <button 
+                type="button" 
+                className="absolute right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                onClick={toggleConfirmPasswordVisibility}
+              >
+                <Icon icon={showConfirmPassword ? eyeOffIcon : eyeIcon} className="w-6 h-6" />
+              </button>
             </div>
-            <div className="flex flex-col justify-center mt-3.5 text-sm leading-5 text-zinc-900">
-              <div className="flex gap-1.5 py-1 bg-opacity-0">
-                <input
-                  type="checkbox"
-                  checked={termsAgreed}
-                  onChange={(e) => setTermsAgreed(e.target.checked)}
-                  className="w-4 h-4 bg-white border border-gray-600"
-                />
-                <div className="flex-auto">
-                  By signing up, I agree with the Terms of Use & Privacy Policy
-                </div>
-              </div>
-            </div>
-            <button
-              type="submit"
+          </div>
+          <div className="col-span-1 md:col-span-2">
+            <button 
+              type="submit" 
+              className={`w-full py-2 px-4 ${
+                isFormValid() ? 'bg-[#347576]' : 'bg-gray-400'
+              } text-white rounded hover:bg-[#285D5E] focus:outline-none focus:ring-2 focus:ring-[#63D4D5]`}
               disabled={!isFormValid()}
-              className={`justify-center items-center p-4 mt-3.5 text-white ${
-                isFormValid() ? 'bg-blue-600' : 'bg-blue-200 cursor-not-allowed'
-              }`}
             >
               Request Collaboration
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );
