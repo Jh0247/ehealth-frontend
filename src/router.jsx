@@ -17,6 +17,7 @@ import SignUpOrganization from "./views/common/SignUpOrganization";
 import ViewBlogpost from "./views/shared/ViewBlogpost";
 import UserList from "./views/shared/UserList";
 import ConsultationList from "./views/shared/ConsultationList";
+import HealthRecord from "./views/shared/HealthRecord";
 
 // Admin Views
 import AdminDashboard from "./views/admin/AdminDashboard";
@@ -71,12 +72,10 @@ const router = createBrowserRouter([
         children: [
           { path: '', element: <Navigate to='dashboard' /> },
           { path: 'dashboard', element: <PatientDashboard /> },
-          
-          { path: 'health-record', element: <BookAppointment /> },
-
-          { path: 'book-appointment', element: <BookAppointment /> },
+          { path: 'health-record', element: <HealthRecord /> },
+          { path: 'consultation', element: <ConsultationList /> },
           { path: 'blogpost', element: <ViewBlogpost /> },
-          { path: 'consultation-list', element: <ConsultationList /> },
+          { path: 'book-appointment', element: <BookAppointment /> },
         ]
       }
     ]

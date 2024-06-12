@@ -1,7 +1,14 @@
 import { popToast, ToastType } from "../features/toastSlice";
 
+const includeToastsForActions = [
+  'auth/loginUser/fulfilled',
+  'auth/loginUser/rejected',
+  'auth/registerUser/fulfilled',
+  'auth/registerUser/rejected',
+];
+
 export const axiosMiddleware = ({ dispatch }) => (next) => async (action) => {
-  if (action.type.endsWith('/rejected')) {
+  if (action.type.endsWith('/rejected')  && includeToastsForActions.includes(action.type)) {
     let errorMessages = action.payload;
     if (typeof errorMessages === 'string') {
       try {
@@ -20,7 +27,7 @@ export const axiosMiddleware = ({ dispatch }) => (next) => async (action) => {
       message: errorMessage,
       type: ToastType.ERROR,
     }));
-  } else if (action.type.endsWith('/fulfilled')) {
+  } else if (action.type.endsWith('/fulfilled') && includeToastsForActions.includes(action.type)) {
     dispatch(popToast({
       title: action.payload?.title || 'Success',
       message: action.payload?.message || 'Success!',

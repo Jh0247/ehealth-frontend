@@ -37,26 +37,23 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.token = '';
+      return initialState; 
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
         state.status = 'loading';
-        console.log('loginUser: Loading state');
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.token = action.payload.access_token;
         state.error = null;
-        console.log('loginUser: Succeeded state, payload:', action.payload);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
         state.token = null;
         state.error = action.payload;
-        console.log('loginUser: Failed state, error:', action.payload);
       })
       .addCase(registerUser.pending, (state) => {
         state.status = 'loading';

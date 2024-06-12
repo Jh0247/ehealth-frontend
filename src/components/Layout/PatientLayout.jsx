@@ -9,6 +9,7 @@ import articleIcon from '@iconify-icons/mdi/post';
 export default function PatientLayout() {
   const auth = useSelector((state) => state.auth);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -30,16 +31,22 @@ export default function PatientLayout() {
 
   const navItems = [
     { name: 'Dashboard', path: '/user/dashboard', icon: dashboardIcon },
-    { name: 'Health Record', path: '/user/profile', icon: personIcon },
-    { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
+    { name: 'Health Record', path: '/user/health-record', icon: personIcon },
+    { name: 'Consultation', path: '/user/blogpost', icon: articleIcon },
     { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
   ];
 
+  const handleToggleSidebar = (isOpen) => {
+    setIsSidebarOpen(isOpen);
+  };
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar navItems={navItems} isMobile={isMobile} />
-      <div className={`flex-1 p-4 transition-transform duration-300 ${isMobile && 'ml-14'}`}>
-        <Outlet />
+    <div className="flex flex-col h-screen">
+      <div className="flex flex-1 overflow-auto">
+        <Sidebar navItems={navItems} onToggleSidebar={handleToggleSidebar} />
+        <div className={`flex flex-1 flex-col p-4 transition-transform duration-300 ${isMobile ? (isMobile ? 'ml-14' : 'ml-52') : (isSidebarOpen ? 'ml-52' : 'ml-14')}`}>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

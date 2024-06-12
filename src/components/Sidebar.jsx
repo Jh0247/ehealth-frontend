@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../redux/features/authSlice';
 import { clearUser } from '../redux/features/userSlice';
 
-const Sidebar = ({ navItems }) => {
+const Sidebar = ({ navItems, onToggleSidebar }) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -25,9 +25,11 @@ const Sidebar = ({ navItems }) => {
     if (window.innerWidth < 768) {
       setIsMobile(true);
       setIsOpen(false);
+      onToggleSidebar(false);
     } else {
       setIsMobile(false);
       setIsOpen(true);
+      onToggleSidebar(true);
     }
   };
 
@@ -37,14 +39,20 @@ const Sidebar = ({ navItems }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const toggleSidebar = () => {
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    onToggleSidebar(newIsOpen);
+  };
+
   return (
     <>
-      <div className={`bg-white text-[#285D5E] h-screen flex flex-col ${isOpen ? 'w-56' : 'w-14'} transition-all duration-300 shadow-lg fixed ${isMobile ? 'z-50' : 'relative'}`}>
+      <div className={`bg-white text-[#285D5E] h-screen flex flex-col ${isOpen ? 'w-52' : 'w-14'} transition-all duration-300 shadow-lg fixed z-50 md:h-screen`}>
         <div className="flex items-center justify-between p-4 shadow-md">
           {isOpen && <div className="text-xl font-bold">E-Health</div>}
           <button 
             className="text-[#285D5E] focus:outline-none" 
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={toggleSidebar}
           >
             <Icon icon={isOpen ? chevronLeft : menuIcon} className="w-6 h-6" />
           </button>
@@ -78,7 +86,10 @@ const Sidebar = ({ navItems }) => {
       {isMobile && isOpen && (
         <div 
           className="fixed inset-0 bg-black opacity-50 z-40"
-          onClick={() => setIsOpen(false)}
+          onClick={() => {
+            setIsOpen(false);
+            onToggleSidebar(false);
+          }}
         ></div>
       )}
       <div className={`transition-transform duration-300 ${isOpen && isMobile ? 'transform translate-x-56' : ''}`}></div>
@@ -86,12 +97,13 @@ const Sidebar = ({ navItems }) => {
   );
 };
 
-export default Sidebar;
-
 Sidebar.propTypes = {
   navItems: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
     icon: PropTypes.object.isRequired,
   })).isRequired,
+  onToggleSidebar: PropTypes.func.isRequired,
 };
+
+export default Sidebar;
