@@ -50,6 +50,22 @@ export const getUserMedications = createAsyncThunk(
   }
 );
 
+export const updateUserProfile = createAsyncThunk(
+  'user/updateUserProfile',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(API_URL.UPDATE_USER_PROFILE, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -63,6 +79,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // getUserHealth
       .addCase(getUserHealth.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -76,6 +93,7 @@ const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+      // getUserAppointments
       .addCase(getUserAppointments.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -89,6 +107,7 @@ const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+      // getUserMedications
       .addCase(getUserMedications.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -99,6 +118,20 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(getUserMedications.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      // updateUserProfile
+      .addCase(updateUserProfile.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user_info = action.payload;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

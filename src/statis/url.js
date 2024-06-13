@@ -7,4 +7,5 @@ export const API_URL = {
   GET_USER_HEALTH_RECORD: API_BASE_URL + 'user-health-record',
   GET_USER_APPOINTMENTS: API_BASE_URL + 'user-appointments',
   GET_USER_MEDICATIONS: API_BASE_URL + 'user-medications',
+  UPDATE_USER_PROFILE: API_BASE_URL + 'update-profile',
 };

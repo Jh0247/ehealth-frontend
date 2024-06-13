@@ -16,12 +16,13 @@ import diseaseImage from '../../assets/disease.png';
 import { getUserHealth } from '../../redux/features/userSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import ProfileUpdateModal from '../shared/ProfileUpdateModal';
 
 export default function HealthRecord() {
   const dispatch = useDispatch();
   const { userId } = useParams();
   const { user_info, health_record, status } = useSelector((state) => state.user);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -38,16 +39,14 @@ export default function HealthRecord() {
       <h3 className="text-xl md:text-2xl font-bold mb-6">Profile</h3>
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center relative">
         <div className="flex items-center flex-col md:flex-row">
-          {imageLoaded ? (
+          {status === 'loading' ? (
+            <Skeleton circle={true} height={144} width={144} className="my-2 md:my-0 md:mr-9" />
+          ) : (
             <img
               src={user_info?.profile_img || defaultImage}
               alt="Profile"
-              className="w-36 h-36 rounded-full my-2 md:my-0 md:mr-9"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageLoaded(true)}
+              className="w-36 h-36 rounded-full my-2 md:my-0 md:mr-9 border"
             />
-          ) : (
-            <Skeleton circle={true} height={144} width={144} className="my-2 md:my-0 md:mr-9" />
           )}
           <div className="text-center md:text-left">
             <h2 className="text-lg font-bold my-2">
@@ -75,7 +74,10 @@ export default function HealthRecord() {
             </p>
           </div>
         </div>
-        <button className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
+        <button
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+          onClick={() => setIsModalOpen(true)}
+        >
           <Icon icon={editIcon} className="w-6 h-6" />
         </button>
       </div>
@@ -141,6 +143,7 @@ export default function HealthRecord() {
           </div>
         </div>
       </div>
+      <ProfileUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

@@ -15,34 +15,32 @@ import cancelIcon from '@iconify-icons/mdi/cancel';
 import noDataImage from '../../assets/noData.png';
 import noMedicationImage from '../../assets/noMedication.png';
 import { getUserHealth, getUserAppointments, getUserMedications } from '../../redux/features/userSlice';
+import ProfileUpdateModal from '../shared/ProfileUpdateModal';
 
 export default function PatientDashboard() {
   const dispatch = useDispatch();
   const { user_info, health_record, appointments, medications, status } = useSelector((state) => state.user);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getUserHealth());
     dispatch(getUserAppointments());
     dispatch(getUserMedications());
   }, [dispatch]);
-
   return (
     <div className="flex flex-col p-1 md:p-5">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Dashboard</h3>
       {/* Profile Card */}
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center relative">
         <div className="flex items-center flex-col md:flex-row">
-          {imageLoaded ? (
+          {status === 'loading' ? (
+            <Skeleton circle={true} height={144} width={144} className="my-2 md:my-0 md:mr-9" />
+          ) : (
             <img
               src={user_info?.profile_img || defaultImage}
               alt="Profile"
-              className="w-36 h-36 rounded-full my-2 md:my-0 md:mr-9"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageLoaded(true)}
+              className={"w-36 h-36 rounded-full my-2 md:my-0 md:mr-9 border"}
             />
-          ) : (
-            <Skeleton circle={true} height={144} width={144} className="my-2 md:my-0 md:mr-9" />
           )}
           <div className="text-center md:text-left">
             <h2 className="text-lg font-bold my-2">
@@ -62,7 +60,10 @@ export default function PatientDashboard() {
             </p>
           </div>
         </div>
-        <button className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
+        <button
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+          onClick={() => setIsModalOpen(true)}
+        >
           <Icon icon={editIcon} className="w-6 h-6" />
         </button>
       </div>
@@ -158,6 +159,7 @@ export default function PatientDashboard() {
           </div>
         </div>
       </div>
+      <ProfileUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
