@@ -5,6 +5,8 @@ const includeToastsForActions = [
   'auth/loginUser/rejected',
   'auth/registerUser/fulfilled',
   'auth/registerUser/rejected',
+  'collaboration/createCollaborationRequest/fulfilled',
+  'collaboration/createCollaborationRequest/rejected',
 ];
 
 export const axiosMiddleware = ({ dispatch }) => (next) => async (action) => {

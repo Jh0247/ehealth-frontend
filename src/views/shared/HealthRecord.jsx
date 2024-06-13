@@ -45,7 +45,7 @@ export default function HealthRecord() {
             <img
               src={user_info?.profile_img || defaultImage}
               alt="Profile"
-              className="w-36 h-36 rounded-full my-2 md:my-0 md:mr-9 border"
+              className="w-36 h-36 rounded-full my-2 md:my-0 md:mr-9 border object-cover"
             />
           )}
           <div className="text-center md:text-left">

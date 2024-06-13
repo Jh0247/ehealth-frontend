@@ -9,9 +9,10 @@ import phoneIcon from '@iconify-icons/mdi/phone';
 import organizationIcon from '@iconify-icons/mdi/office-building';
 import { useDispatch } from 'react-redux';
 import { createCollaborationRequest } from '../../redux/features/collaborationSlice';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 export default function SignUpOrganization() {
-
   const dispatch = useDispatch();
 
   const [organizationName, setOrganizationName] = useState('');
@@ -19,8 +20,12 @@ export default function SignUpOrganization() {
   const [adminName, setAdminName] = useState('');
   const [adminContact, setAdminContact] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
+  const [adminIcno, setAdminIcno] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isNewCode, setIsNewCode] = useState(true);
@@ -35,8 +40,14 @@ export default function SignUpOrganization() {
         admin_name: adminName,
         admin_email: adminEmail,
         admin_contact: adminContact,
+        admin_icno: adminIcno,
         password,
-        password_confirmation: confirmPassword
+        password_confirmation: confirmPassword,
+        locations: [{
+          address,
+          latitude,
+          longitude
+        }]
       })
     );
 
@@ -52,8 +63,12 @@ export default function SignUpOrganization() {
       adminName &&
       adminContact &&
       adminEmail &&
+      adminIcno &&
       password &&
-      confirmPassword
+      confirmPassword &&
+      address &&
+      latitude &&
+      longitude
     );
   };
 
@@ -71,16 +86,41 @@ export default function SignUpOrganization() {
     setAdminName('');
     setAdminContact('');
     setAdminEmail('');
+    setAdminIcno('');
     setPassword('');
     setConfirmPassword('');
+    setAddress('');
+    setLatitude(null);
+    setLongitude(null);
     setShowPassword(false);
     setShowConfirmPassword(false);
     setIsNewCode(true);
   }
 
+  const fetchAddress = async (lat, lon) => {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+    const data = await response.json();
+    return data.display_name;
+  }
+
+  const LocationMarker = () => {
+    const map = useMapEvents({
+      async click(e) {
+        setLatitude(e.latlng.lat);
+        setLongitude(e.latlng.lng);
+        const fetchedAddress = await fetchAddress(e.latlng.lat, e.latlng.lng);
+        setAddress(fetchedAddress);
+      }
+    });
+
+    return latitude && longitude ? (
+      <Marker position={[latitude, longitude]} />
+    ) : null;
+  }
+
   return (
     <div className="flex justify-center md:items-center min-h-screen bg-cover bg-center bg-wave">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl mt-14 md:mt-0 mb-5 mx-2 h-fit bg-opacity-90">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl mt-14 md:mt-10 mb-5 mx-2 h-fit bg-opacity-90">
         <h2 className="text-2xl font-bold text-[#347576] mb-6 text-center md:text-left">Organization Collaboration Request</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
           <div className="mb-6">
@@ -182,6 +222,21 @@ export default function SignUpOrganization() {
               />
             </div>
           </div>
+          <div className="mb-6">
+            <label htmlFor="adminIcno" className="block text-gray-700">Admin IC Number</label>
+            <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
+              <Icon icon={accountIcon} className="w-6 h-6 text-gray-400 mr-2" />
+              <input 
+                type="text" 
+                id="adminIcno" 
+                className="w-full outline-none" 
+                value={adminIcno} 
+                onChange={(e) => setAdminIcno(e.target.value)}
+                placeholder='Admin IC Number here...'
+                required
+              />
+            </div>
+          </div>
           <div className="mb-6 relative col-span-1 md:col-span-2">
             <label htmlFor="password" className="block text-gray-700">Password</label>
             <div className="flex items-center border bg-white rounded px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
@@ -225,6 +280,23 @@ export default function SignUpOrganization() {
                 <Icon icon={showConfirmPassword ? eyeOffIcon : eyeIcon} className="w-6 h-6" />
               </button>
             </div>
+          </div>
+          <div className="mb-6 col-span-1 md:col-span-2">
+            <label className="block text-gray-700">Select Location</label>
+            <MapContainer center={[3.0555128358382975, 101.69090544860869]} zoom={13} className="h-64 w-full">
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
+              <LocationMarker />
+            </MapContainer>
+            {address && (
+              <div className="mt-2 text-gray-700">
+                <p>Selected Address: {address}</p>
+                <p>Latitude: {latitude}</p>
+                <p>Longitude: {longitude}</p>
+              </div>
+            )}
           </div>
           <div className="col-span-1 md:col-span-2">
             <button 
