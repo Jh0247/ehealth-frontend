@@ -5,8 +5,7 @@ import hipaaLogo from '../../assets/hipaa.png';
 export default function Landing() {
   return (
     <div className="relative">
-
-      <div className="bg-cover bg-center relative h-screen bg-wave">
+      <div id="top" className="bg-cover bg-center relative h-screen bg-wave">
         <div className="container mx-auto px-3 md:px-20 text-center md:text-left relative z-10 flex flex-col md:flex-row items-center h-full">
           <div className="w-full md:w-1/2 mt-20 md:-mt-72">
             <h1 className="text-3xl md:text-5xl font-bold text-white mt-10 md:mt-0">E-Health</h1>
