@@ -44,7 +44,7 @@ export default function PatientLayout() {
     <div className="flex flex-col h-screen">
       <div className="flex flex-1 overflow-auto">
         <Sidebar navItems={navItems} onToggleSidebar={handleToggleSidebar} />
-        <div className={`flex flex-1 flex-col p-4 transition-transform duration-300 ${isMobile ? (isMobile ? 'ml-14' : 'ml-52') : (isSidebarOpen ? 'ml-52' : 'ml-14')}`}>
+        <div className={`flex flex-1 flex-col transition-transform duration-300 ${isMobile ? (isMobile ? 'ml-14' : 'ml-52') : (isSidebarOpen ? 'ml-52' : 'ml-14')}`}>
           <Outlet />
         </div>
       </div>

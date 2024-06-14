@@ -11,6 +11,8 @@ import loadingReducer from './features/loadingSlice';
 import authReducer from './features/authSlice';
 import userReducer from './features/userSlice';
 import collaborationReducer from './features/collaborationSlice';
+import organizationReducer from './features/organizationSlice';
+import appointmentReducer from './features/appointmentSlice';
 
 const reduxLogger = (store) => (next) => (action) => {
   console.log('Dispatching action:', action);
@@ -30,6 +32,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   collaboration: collaborationReducer,
+  organization: organizationReducer,
+  appointment: appointmentReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -27,8 +27,9 @@ export default function PatientDashboard() {
     dispatch(getUserAppointments());
     dispatch(getUserMedications());
   }, [dispatch]);
+
   return (
-    <div className="flex flex-col p-1 md:p-5">
+    <div className="flex flex-col p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Dashboard</h3>
       {/* Profile Card */}
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center relative">
@@ -81,7 +82,7 @@ export default function PatientDashboard() {
         {/* Consultation History */}
         <div className="my-8">
           <h3 className="text-lg font-bold">Consultation History</h3>
-          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto">
+          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]">  {/* Set minimum height */}
             <ul>
               {status === 'loading' ? (
                 Array.from({ length: 5 }).map((_, index) => (
@@ -93,21 +94,24 @@ export default function PatientDashboard() {
                 Array.isArray(appointments) && appointments.length > 0 ? (
                   appointments.map((appointment, index) => (
                     <li key={index} className="flex justify-between items-center border-b py-2">
-                      <span className="text-sm">{appointment?.date}</span>
+                      <div className="flex flex-col">
+                        <span className="text-sm">{new Date(appointment?.appointment_datetime).toLocaleString()}</span>
+                        <span className="text-sm">{appointment?.type}</span>
+                      </div>
                       <span className="text-sm flex items-center">
-                        {appointment?.status === 'Pending' && (
+                        {appointment?.status === 'pending' && (
                           <>
                             <Icon icon={clockIcon} className="block md:hidden w-5 h-5 text-yellow-600" />
                             <span className="hidden md:inline-block ml-2 bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full">Pending</span>
                           </>
                         )}
-                        {appointment?.status === 'Cancelled' && (
+                        {appointment?.status === 'cancelled' && (
                           <>
                             <Icon icon={cancelIcon} className="block md:hidden w-5 h-5 text-red-600" />
                             <span className="hidden md:inline-block ml-2 bg-red-200 text-red-800 py-1 px-3 rounded-full">Cancelled</span>
                           </>
                         )}
-                        {appointment?.status === 'Completed' && (
+                        {appointment?.status === 'completed' && (
                           <>
                             <Icon icon={checkIcon} className="block md:hidden w-5 h-5 text-green-600" />
                             <span className="hidden md:inline-block ml-2 bg-green-200 text-green-800 py-1 px-3 rounded-full">Completed</span>
@@ -129,7 +133,7 @@ export default function PatientDashboard() {
         {/* Medication Reminder */}
         <div className="mb-8 md:my-8">
           <h3 className="text-lg font-bold">Medication Reminder</h3>
-          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto">
+          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]"> {/* Set minimum height */}
             <ul>
               {status === 'loading' ? (
                 Array.from({ length: 5 }).map((_, index) => (
@@ -143,7 +147,7 @@ export default function PatientDashboard() {
                     <li key={index} className="flex justify-between items-center border-b py-2">
                       <div className="flex flex-col">
                         <span className="text-sm">{medication?.name}</span>
-                        <span className="text-sm">{medication?.date}</span>
+                        <span className="text-sm">{new Date(medication?.date).toLocaleString()}</span>
                       </div>
                       <button className="bg-gray-200 text-gray-700 py-1 px-3 rounded">{medication?.dosage}</button>
                     </li>

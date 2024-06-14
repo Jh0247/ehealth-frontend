@@ -35,7 +35,7 @@ export default function HealthRecord() {
   }, [dispatch, userId]);
 
   return (
-    <div className="p-1 md:p-5">
+    <div className="flex flex-col p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Profile</h3>
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center relative">
         <div className="flex items-center flex-col md:flex-row">

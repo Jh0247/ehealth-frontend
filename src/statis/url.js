@@ -8,4 +8,7 @@ export const API_URL = {
   GET_USER_APPOINTMENTS: API_BASE_URL + 'user-appointments',
   GET_USER_MEDICATIONS: API_BASE_URL + 'user-medications',
   UPDATE_USER_PROFILE: API_BASE_URL + 'update-profile',
+  ORGANIZATION_LIST: API_BASE_URL + 'organization-list',
+  ORGANIZATION: API_BASE_URL + 'organization',
+  BOOK_APPOINTMENT: API_BASE_URL + 'book-appointment',
 };
