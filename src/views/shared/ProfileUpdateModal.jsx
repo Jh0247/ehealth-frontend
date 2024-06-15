@@ -15,6 +15,7 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
     profile_img: null,
   });
   const [error, setError] = useState('');
+  const [preview, setPreview] = useState(null);
   const [animationClass, setAnimationClass] = useState('');
 
   useEffect(() => {
@@ -23,12 +24,26 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!formData.profile_img) {
+      setPreview(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(formData.profile_img);
+    setPreview(objectUrl);
+
+    // Free memory when component unmounts
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [formData.profile_img]);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'profile_img') {
       const file = files[0];
       if (file && file.size > 2 * 1024 * 1024) {
         setError('File size must be less than 2MB');
+        setFormData((prev) => ({ ...prev, [name]: null }));
       } else {
         setError('');
         setFormData((prev) => ({ ...prev, [name]: file }));
@@ -59,7 +74,7 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
       setAnimationClass('');
       onClose();
     }, 500);
-  }
+  };
 
   if (!isOpen && animationClass === '') return null;
 
@@ -113,6 +128,7 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
               className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#E6F7F7] file:text-[#347576] hover:file:bg-[#D4F1F1]"
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {preview && <img src={preview} alt="Profile Preview" className="mt-2 rounded-md shadow-md w-32 h-32 object-cover" />}
           </div>
           <div className="flex justify-end">
             <button
