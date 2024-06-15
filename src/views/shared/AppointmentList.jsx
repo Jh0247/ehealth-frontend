@@ -108,35 +108,32 @@ const AppointmentList = () => {
         </div>
       </div>
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6">
-        <div className="mt-4">
-          <h4 className="font-bold mb-2">Upcoming</h4>
-          <div className="relative bg-gray-100 rounded-lg shadow-inner">
-            <div className="sticky top-0 bg-gray-100 p-4 rounded-t-lg shadow-md">
-              <div className="flex justify-between mb-2">
-                <div className="w-3/4 sm:w-1/4"><strong>Date & Time</strong></div>
-                <div className="hidden sm:block w-1/4"><strong>Type</strong></div>
-                <div className="hidden sm:block w-1/4"><strong>Purpose</strong></div>
-                <div className="w-1/4"><strong>Status</strong></div>
-              </div>
-            </div>
-            <ul className="max-h-52 overflow-y-auto px-4 py-2">
-              {status === 'loading' ? (
-                Array.from({ length: 3 }).map((_, index) => (
-                  <li key={index} className="flex justify-between items-center border-b py-2">
-                    <Skeleton width={200} height={20} />
-                  </li>
-                ))
-              ) : upcomingAppointments.length > 0 ? (
-                upcomingAppointments.map((appointment, index) => renderAppointment(appointment, index))
-              ) : (
-                <div className="flex flex-col items-center">
-                  <img src={noDataImage} alt="No Appointments Found" className="w-32 h-32" />
-                  <span className="text-center text-gray-500 py-2">No Upcoming Appointments Found</span>
+        {upcomingAppointments.length > 0 && (
+          <div className="mt-4">
+            <h4 className="font-bold mb-2">Upcoming</h4>
+            <div className="relative bg-gray-100 rounded-lg shadow-inner">
+              <div className="sticky top-0 bg-gray-100 p-4 rounded-t-lg shadow-md">
+                <div className="flex justify-between mb-2">
+                  <div className="w-3/4 sm:w-1/4"><strong>Date & Time</strong></div>
+                  <div className="hidden sm:block w-1/4"><strong>Type</strong></div>
+                  <div className="hidden sm:block w-1/4"><strong>Purpose</strong></div>
+                  <div className="w-1/4"><strong>Status</strong></div>
                 </div>
-              )}
-            </ul>
+              </div>
+              <ul className="max-h-52 overflow-y-auto px-4 py-2">
+                {status === 'loading' ? (
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <li key={index} className="flex justify-between items-center border-b py-2">
+                      <Skeleton width={200} height={20} />
+                    </li>
+                  ))
+                ) : upcomingAppointments.length > 0 ? (
+                  upcomingAppointments.map((appointment, index) => renderAppointment(appointment, index))
+                ) : null}
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
         <div className="mt-4">
           <div className="flex flex-row justify-between items-center">
             <h4 className="font-bold mb-2 block sm:hidden">Past</h4>

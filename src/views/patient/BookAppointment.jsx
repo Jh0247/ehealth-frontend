@@ -17,16 +17,11 @@ const StepIndicator = ({ step }) => {
     <div className="flex items-center justify-center mb-6">
       {steps.map((s, index) => (
         <React.Fragment key={s.number}>
-          <div className="flex items-center">
-            <div className={`w-8 h-8 flex items-center justify-center rounded-full ${step >= s.number ? 'bg-[#347576] text-white' : 'bg-gray-200 text-gray-700'}`}>
-              {s.number}
-            </div>
-            {index < steps.length - 1 && (
-              <div className={`flex-1 h-1 ${step > s.number ? 'bg-[#347576]' : 'bg-gray-200'}`} />
-            )}
+          <div className={`w-8 h-8 flex items-center justify-center rounded-full ${step >= s.number ? 'bg-[#347576] text-white' : 'bg-gray-200 text-gray-700'}`}>
+            {s.number}
           </div>
           {index < steps.length - 1 && (
-            <div className="flex-1 h-1 bg-gray-200" />
+            <div className={`flex-1 h-1 ${step > s.number ? 'bg-[#347576]' : 'bg-gray-200'}`} />
           )}
         </React.Fragment>
       ))}
@@ -38,43 +33,51 @@ StepIndicator.propTypes = {
   step: PropTypes.number.isRequired,
 };
 
-const Step1 = ({ formData, handleChange, handleNext }) => (
-  <div>
-    <div className="mb-4">
-      <label className="block mb-2 font-bold text-md">Type of Consultation:</label>
-      <select
-        className="w-full p-2 border border-gray-300 rounded bg-white"
-        value={formData.service}
-        onChange={handleChange('service')}
+const Step1 = ({ formData, handleChange, handleNext }) => {
+  const isStep1Valid = formData.service && formData.date && formData.time;
+
+  return (
+    <div>
+      <div className="mb-4">
+        <label className="block mb-2 font-bold text-md">Type of Consultation:</label>
+        <select
+          className="w-full p-2 border border-gray-300 rounded bg-white"
+          value={formData.service}
+          onChange={handleChange('service')}
+        >
+          <option disabled value="">Please Select</option>
+          <option value="virtual">Virtual</option>
+          <option value="physical">Physical</option>
+        </select>
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2 font-bold text-md">Select Date:</label>
+        <input
+          type="date"
+          className="w-full p-2 border border-gray-300 rounded"
+          value={formData.date}
+          onChange={handleChange('date')}
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2 font-bold text-md">Select Time:</label>
+        <input
+          type="time"
+          className="w-full p-2 border border-gray-300 rounded"
+          value={formData.time}
+          onChange={handleChange('time')}
+        />
+      </div>
+      <button
+        onClick={handleNext}
+        className={`px-4 py-2 rounded ${isStep1Valid ? 'bg-[#347576] text-white' : 'bg-gray-300 text-gray-700 cursor-not-allowed'}`}
+        disabled={!isStep1Valid}
       >
-        <option disabled value="">Please Select</option>
-        <option value="virtual">Virtual</option>
-        <option value="physical">Physical</option>
-      </select>
+        Next
+      </button>
     </div>
-    <div className="mb-4">
-      <label className="block mb-2 font-bold text-md">Select Date:</label>
-      <input
-        type="date"
-        className="w-full p-2 border border-gray-300 rounded"
-        value={formData.date}
-        onChange={handleChange('date')}
-      />
-    </div>
-    <div className="mb-4">
-      <label className="block mb-2 font-bold text-md">Select Time:</label>
-      <input
-        type="time"
-        className="w-full p-2 border border-gray-300 rounded"
-        value={formData.time}
-        onChange={handleChange('time')}
-      />
-    </div>
-    <button onClick={handleNext} className="px-4 py-2 bg-[#347576] text-white rounded">
-      Next
-    </button>
-  </div>
-);
+  );
+};
 
 Step1.propTypes = {
   formData: PropTypes.shape({
@@ -86,7 +89,7 @@ Step1.propTypes = {
   handleNext: PropTypes.func.isRequired,
 };
 
-const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizations, locations, doctors }) => {
+const Step2 = ({ formData, setFormData, handleChange, handleNext, handlePrevious, organizations, locations, doctors }) => {
   const dispatch = useDispatch();
 
   const handleOrganizationChange = (e) => {
@@ -94,7 +97,15 @@ const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizatio
     handleChange('organization')(e);
     dispatch(getOrganizationDetails(organizationId));
     dispatch(getUsersByOrganization({ organizationId, role: 'doctor' }));
+    // Reset location and doctor when organization changes
+    setFormData((prevData) => ({
+      ...prevData,
+      location: '',
+      doctor: '',
+    }));
   };
+
+  const isStep2Valid = formData.organization && formData.location && formData.doctor && formData.purpose;
 
   return (
     <div>
@@ -149,14 +160,17 @@ const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizatio
         <button onClick={handlePrevious} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">
           Previous
         </button>
-        <button onClick={handleNext} className="px-4 py-2 bg-[#347576] text-white rounded">
+        <button
+          onClick={handleNext}
+          className={`px-4 py-2 rounded ${isStep2Valid ? 'bg-[#347576] text-white' : 'bg-gray-300 text-gray-700 cursor-not-allowed'}`}
+          disabled={!isStep2Valid}
+        >
           Next
         </button>
       </div>
     </div>
   );
 };
-
 
 Step2.propTypes = {
   formData: PropTypes.shape({
@@ -165,6 +179,7 @@ Step2.propTypes = {
     doctor: PropTypes.string,
     purpose: PropTypes.string,
   }).isRequired,
+  setFormData: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
   handlePrevious: PropTypes.func.isRequired,
@@ -202,7 +217,6 @@ const BookAppointment = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { organizations, locations, users: doctors } = useSelector((state) => state.organization);
-  const { status } = useSelector((state) => state.appointment);
 
   useEffect(() => {
     dispatch(getOrganizationList());
@@ -250,6 +264,7 @@ const BookAppointment = () => {
           {step === 2 && (
             <Step2
               formData={formData}
+              setFormData={setFormData}
               handleChange={handleChange}
               handleNext={handleNext}
               handlePrevious={handlePrevious}
