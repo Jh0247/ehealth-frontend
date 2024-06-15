@@ -4,6 +4,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
 import personIcon from '@iconify-icons/mdi/account';
+import magnifyIcon from '@iconify-icons/mdi/magnify';
 import articleIcon from '@iconify-icons/mdi/post';
 
 export default function PatientLayout() {
@@ -32,7 +33,7 @@ export default function PatientLayout() {
   const navItems = [
     { name: 'Dashboard', path: '/user/dashboard', icon: dashboardIcon },
     { name: 'Health Record', path: '/user/health-record', icon: personIcon },
-    { name: 'Consultation', path: '/user/blogpost', icon: articleIcon },
+    { name: 'Consultation', path: '/user/appointment-list', icon: magnifyIcon },
     { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
   ];
 

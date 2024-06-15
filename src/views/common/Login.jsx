@@ -21,7 +21,7 @@ const Login = () => {
     e.preventDefault();
     const result = await dispatch(
       loginUser({
-        email: "johndoe2@example.com", 
+        email: "johndoe1@example.com", 
         // email: "admin@sample.com", 
         password: "password" 
       })

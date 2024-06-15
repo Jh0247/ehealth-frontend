@@ -34,6 +34,9 @@ import HealthcareDashboard from "./views/healthcare/HealthcareDashboard";
 import PharmacistDashboard from "./views/pharmacist/PharmacistDashboard";
 import ManagePurchaseRecord from "./views/pharmacist/ManagePurchaseRecord";
 
+
+import AppointmentList from "./views/shared/AppointmentList";
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -76,6 +79,7 @@ const router = createBrowserRouter([
           { path: 'consultation', element: <ConsultationList /> },
           { path: 'blogpost', element: <ViewBlogpost /> },
           { path: 'book-appointment', element: <BookAppointment /> },
+          { path: 'appointment-list', element: <AppointmentList /> },
         ]
       }
     ]

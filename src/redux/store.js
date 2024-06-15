@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
+import loadingTransform from './presist/loadingTransform';
 
 import { axiosMiddleware } from './middleware/axiosMiddleware';
 import { loadingMiddleware } from './middleware/loadingMiddleware';
@@ -24,6 +25,7 @@ const reduxLogger = (store) => (next) => (action) => {
 const persistConfig = {
   key: 'root',
   storage,
+  transforms: [loadingTransform],
 };
 
 const rootReducer = combineReducers({

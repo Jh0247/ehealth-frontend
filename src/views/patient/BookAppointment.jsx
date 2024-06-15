@@ -101,7 +101,7 @@ const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizatio
       <div className="mb-4">
         <label className="block mb-2 font-bold text-md">Please Select Organization:</label>
         <select
-          className="w-full p-2 border border-gray-300 rounded"
+          className="w-full p-2 border border-gray-300 rounded bg-white"
           value={formData.organization}
           onChange={handleOrganizationChange}
         >
@@ -114,7 +114,7 @@ const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizatio
       <div className="mb-4">
         <label className="block mb-2 font-bold text-md">Location:</label>
         <select
-          className="w-full p-2 border border-gray-300 rounded"
+          className="w-full p-2 border border-gray-300 rounded bg-white max-w-full"
           value={formData.location}
           onChange={handleChange('location')}
         >
@@ -135,7 +135,7 @@ const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizatio
       <div className="mb-4">
         <label className="block mb-2 font-bold text-md">Doctor:</label>
         <select
-          className="w-full p-2 border border-gray-300 rounded bg-white"
+          className="w-full p-2 border border-gray-300 rounded bg-white max-w-full"
           value={formData.doctor}
           onChange={handleChange('doctor')}
         >
@@ -156,6 +156,7 @@ const Step2 = ({ formData, handleChange, handleNext, handlePrevious, organizatio
     </div>
   );
 };
+
 
 Step2.propTypes = {
   formData: PropTypes.shape({

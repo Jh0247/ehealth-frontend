@@ -82,7 +82,7 @@ export default function PatientDashboard() {
         {/* Consultation History */}
         <div className="my-8">
           <h3 className="text-lg font-bold">Consultation History</h3>
-          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]">  {/* Set minimum height */}
+          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]">
             <ul>
               {status === 'loading' ? (
                 Array.from({ length: 5 }).map((_, index) => (
@@ -95,8 +95,12 @@ export default function PatientDashboard() {
                   appointments.map((appointment, index) => (
                     <li key={index} className="flex justify-between items-center border-b py-2">
                       <div className="flex flex-col">
-                        <span className="text-sm">{new Date(appointment?.appointment_datetime).toLocaleString()}</span>
-                        <span className="text-sm">{appointment?.type}</span>
+                      <span className="text-sm">
+                        <strong>Date:</strong> {new Date(appointment?.appointment_datetime).toLocaleDateString()}, {new Date(appointment?.appointment_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      <span className="text-sm">
+                        <strong>Type:</strong> {appointment?.type}
+                      </span>
                       </div>
                       <span className="text-sm flex items-center">
                         {appointment?.status === 'pending' && (
