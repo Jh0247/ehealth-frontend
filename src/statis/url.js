@@ -11,4 +11,5 @@ export const API_URL = {
   ORGANIZATION_LIST: API_BASE_URL + 'organization-list',
   ORGANIZATION: API_BASE_URL + 'organization',
   BOOK_APPOINTMENT: API_BASE_URL + 'book-appointment',
+  APPOINTMENT: API_BASE_URL + 'appointment',
 };

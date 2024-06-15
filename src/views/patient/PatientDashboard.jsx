@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -21,6 +21,7 @@ export default function PatientDashboard() {
   const dispatch = useDispatch();
   const { user_info, health_record, appointments, medications, status } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getUserHealth());
@@ -93,14 +94,18 @@ export default function PatientDashboard() {
               ) : (
                 Array.isArray(appointments) && appointments.length > 0 ? (
                   appointments.map((appointment, index) => (
-                    <li key={index} className="flex justify-between items-center border-b py-2">
+                    <li 
+                      key={index} 
+                      className="flex justify-between items-center border-b py-2 cursor-pointer" 
+                      onClick={() => navigate('/user/appointment-details', { state: { appointmentId: appointment.id } })}
+                    >
                       <div className="flex flex-col">
-                      <span className="text-sm">
-                        <strong>Date:</strong> {new Date(appointment?.appointment_datetime).toLocaleDateString()}, {new Date(appointment?.appointment_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                      <span className="text-sm">
-                        <strong>Type:</strong> {appointment?.type}
-                      </span>
+                        <span className="text-sm">
+                          <strong>Date:</strong> {new Date(appointment?.appointment_datetime).toLocaleDateString()}, {new Date(appointment?.appointment_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <span className="text-sm">
+                          <strong>Type:</strong> {appointment?.type}
+                        </span>
                       </div>
                       <span className="text-sm flex items-center">
                         {appointment?.status === 'pending' && (
@@ -137,7 +142,7 @@ export default function PatientDashboard() {
         {/* Medication Reminder */}
         <div className="mb-8 md:my-8">
           <h3 className="text-lg font-bold">Medication Reminder</h3>
-          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]"> {/* Set minimum height */}
+          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]">
             <ul>
               {status === 'loading' ? (
                 Array.from({ length: 5 }).map((_, index) => (

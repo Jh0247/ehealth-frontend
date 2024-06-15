@@ -36,6 +36,7 @@ import ManagePurchaseRecord from "./views/pharmacist/ManagePurchaseRecord";
 
 
 import AppointmentList from "./views/shared/AppointmentList";
+import ViewAppointmentDetails from "./views/shared/ViewAppointmentDetails";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,7 @@ const router = createBrowserRouter([
           { path: 'blogpost', element: <ViewBlogpost /> },
           { path: 'book-appointment', element: <BookAppointment /> },
           { path: 'appointment-list', element: <AppointmentList /> },
+          { path: 'appointment-details', element: <ViewAppointmentDetails /> },
         ]
       }
     ]

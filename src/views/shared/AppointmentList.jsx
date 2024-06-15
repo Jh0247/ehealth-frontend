@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserAppointments } from '../../redux/features/userSlice';
 import Skeleton from 'react-loading-skeleton';
@@ -10,11 +10,13 @@ import checkIcon from '@iconify-icons/mdi/check';
 import clockIcon from '@iconify-icons/mdi/clock';
 import cancelIcon from '@iconify-icons/mdi/cancel';
 import plusIcon from '@iconify-icons/mdi/plus';
+import arrowRightIcon from '@iconify-icons/mdi/arrow-right';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const AppointmentList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { appointments, status } = useSelector((state) => state.user);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [filter, setFilter] = useState('Last Month');
@@ -48,7 +50,11 @@ const AppointmentList = () => {
   const upcomingAppointments = appointments.filter(app => app.status === 'pending');
 
   const renderAppointment = (appointment, index) => (
-    <li key={index} className="flex justify-between items-center border-b py-2">
+    <li
+      key={index} 
+      className="flex justify-between items-center border-b py-2"
+      onClick={() => navigate('/user/appointment-details', { state: { appointmentId: appointment.id } })}
+    >
       <div className="flex w-full">
         <div className="flex flex-col w-3/4 sm:w-1/4 border-r-2 border-gray-300 pr-2">
           <span className="text-sm my-1 md:my-0">
