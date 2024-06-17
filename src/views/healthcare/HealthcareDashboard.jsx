@@ -1,7 +1,7 @@
 export default function HealthcareDashboard(){
   return(
     <div>
-      HealthcareDashboard
+      HealthcareDashboard why u show cibai
     </div>
   )
 }

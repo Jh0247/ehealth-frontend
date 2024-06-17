@@ -51,72 +51,48 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: 'admin',
-    element: <PrivateRoute allowedRoles={['admin']} />,
+    path: 'e-admin',
+    element: <AdminLayout />,
     children: [
-      {
-        path: '',
-        element: <AdminLayout />,
-        children: [
-          { path: '', element: <Navigate to='dashboard' /> },
-          { path: 'dashboard', element: <AdminDashboard /> },
-          { path: 'organization-list', element: <OrganizationList /> },
-          { path: 'staff-list', element: <UserList /> },
-          { path: 'blogpost', element: <ViewBlogpost /> },
-        ]
-      }
+      { path: '', element: <Navigate to='dashboard' /> },
+      { path: 'dashboard', element: <AdminDashboard /> },
+      { path: 'organization-list', element: <OrganizationList /> },
+      { path: 'staff-list', element: <UserList /> },
+      { path: 'blogpost', element: <ViewBlogpost /> },
     ]
   },
   {
     path: 'user',
-    element: <PrivateRoute allowedRoles={['user']} />,
+    element: <PatientLayout allowedRoles={['user']} />,
     children: [
-      {
-        path: '',
-        element: <PatientLayout />,
-        children: [
-          { path: '', element: <Navigate to='dashboard' /> },
-          { path: 'dashboard', element: <PatientDashboard /> },
-          { path: 'health-record', element: <HealthRecord /> },
-          { path: 'consultation', element: <ConsultationList /> },
-          { path: 'blogpost', element: <ViewBlogpost /> },
-          { path: 'book-appointment', element: <BookAppointment /> },
-          { path: 'appointment-list', element: <AppointmentList /> },
-          { path: 'appointment-details', element: <ViewAppointmentDetails /> },
-          { path: 'blogpost-details/:id', element: <BlogpostDetails /> },
-        ]
-      }
+      { path: '', element: <Navigate to='dashboard' /> },
+      { path: 'dashboard', element: <PatientDashboard /> },
+      { path: 'health-record', element: <HealthRecord /> },
+      { path: 'consultation', element: <ConsultationList /> },
+      { path: 'blogpost', element: <ViewBlogpost /> },
+      { path: 'book-appointment', element: <BookAppointment /> },
+      { path: 'appointment-list', element: <AppointmentList /> },
+      { path: 'appointment-details', element: <ViewAppointmentDetails /> },
+      { path: 'blogpost-details/:id', element: <BlogpostDetails /> },
     ]
   },
   {
     path: 'healthcare',
-    element: <PrivateRoute allowedRoles={['admin', 'doctor', 'nurse']} organizationCheck={1} />,
+    element: <HealthcareLayout />,
     children: [
-      {
-        path: '',
-        element: <HealthcareLayout />,
-        children: [
-          { path: '', element: <Navigate to='dashboard' /> },
-          { path: 'dashboard', element: <HealthcareDashboard /> },
-          { path: 'patient-list', element: <UserList /> },
-          { path: 'blogpost', element: <ViewBlogpost /> },
-        ]
-      }
+      { path: '', element: <Navigate to='dashboard' /> },
+      { path: 'dashboard', element: <HealthcareDashboard /> },
+      { path: 'patient-list', element: <UserList /> },
+      { path: 'blogpost', element: <ViewBlogpost /> },
     ]
   },
   {
     path: 'pharmacist',
-    element: <PrivateRoute allowedRoles={['pharmacist']} organizationCheck={1} />,
+    element: <PharmacistLayout />,
     children: [
-      {
-        path: '',
-        element: <PharmacistLayout />,
-        children: [
-          { path: '', element: <Navigate to='dashboard' /> },
-          { path: 'dashboard', element: <PharmacistDashboard /> },
-          { path: 'manage-purchase-record', element: <ManagePurchaseRecord /> },
-        ]
-      }
+      { path: '', element: <Navigate to='dashboard' /> },
+      { path: 'dashboard', element: <PharmacistDashboard /> },
+      { path: 'manage-purchase-record', element: <ManagePurchaseRecord /> },
     ]
   },
   { path: '*', element: <NotFound /> }

@@ -8,7 +8,9 @@ import magnifyIcon from '@iconify-icons/mdi/magnify';
 import articleIcon from '@iconify-icons/mdi/post';
 
 export default function PatientLayout() {
+  const user = useSelector(state => state.user);
   const auth = useSelector((state) => state.auth);
+  const { user_info: { user_role } } = user;
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -28,6 +30,14 @@ export default function PatientLayout() {
 
   if (!auth?.token) {
     return <Navigate to="/login" />;
+  }
+
+  if (user_role !== 'user') {
+    if (user_role === 'admin' || user_role === 'doctor' || user_role === 'nurse') {
+      return <Navigate to="/healthcare/dashboard" />;
+    } else {
+        return <Navigate to={`/${user_role}/dashboard`} />;
+    }
   }
 
   const navItems = [

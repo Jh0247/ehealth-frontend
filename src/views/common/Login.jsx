@@ -21,7 +21,8 @@ const Login = () => {
     e.preventDefault();
     const result = await dispatch(
       loginUser({
-        email: "johndoe2@example.com", 
+        email: "johndoe2@example.com",
+        // email: "test1@example.com",
         // email: "admin@sample.com", 
         password: "password" 
       })
@@ -29,7 +30,12 @@ const Login = () => {
     // success case
     if (result.type === 'auth/loginUser/fulfilled') {
       dispatch(setUser(result.payload.user));
-      navigate('/'+result?.payload?.user?.user_role+'/dashboard');
+      let role = result?.payload?.user?.user_role;
+      if (role === 'admin' || role === 'doctor' || role === 'nurse') {
+        navigate('/healthcare/dashboard');
+      } else {
+        navigate('/'+role+'/dashboard');
+      }
     }
   };
 
