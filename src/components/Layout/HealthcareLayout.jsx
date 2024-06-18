@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
-import personIcon from '@iconify-icons/mdi/account';
+import blogIcon from '@iconify-icons/mdi/blogger';
 import magnifyIcon from '@iconify-icons/mdi/magnify';
 import articleIcon from '@iconify-icons/mdi/post';
 import peopleIcon from '@iconify-icons/mdi/people';
@@ -42,6 +42,7 @@ export default function HealthcareLayout() {
     { name: 'Consultation', path: '/healthcare/appointment-list', icon: magnifyIcon },
     { name: 'Manage Staff', path: '/healthcare/staff-list', icon: peopleIcon, roles: ['admin'] },
     { name: 'My Patient', path: '/healthcare/patient-list', icon: peopleIcon, roles: ['doctor'] },
+    { name: 'My Blog', path: '/healthcare/my-blogpost', icon: blogIcon },
     { name: 'Blog Post', path: '/healthcare/blogpost', icon: articleIcon },
   ];
 

@@ -15,4 +15,6 @@ export const API_URL = {
   BLOGPOSTS: API_BASE_URL + 'blogposts',
   PATIENTS_BY_APPOINTMENTS: API_BASE_URL + 'patients-by-appointments',
   ORGANIZATION_STATS: API_BASE_URL + 'organization-stats',
+  USER: API_BASE_URL + 'user',
+  STAFF_REGISTER: API_BASE_URL + 'staff-register',
 };

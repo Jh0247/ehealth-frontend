@@ -13,20 +13,37 @@ import plusIcon from '@iconify-icons/mdi/plus';
 import DatePicker from 'react-datepicker';
 import { rolePathMap } from '../../constants/rolePath';
 import 'react-datepicker/dist/react-datepicker.css';
+import { getAppointmentsByOrganization } from '../../redux/features/healthcareProviderSlice';
 
 const AppointmentList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { appointments, status } = useSelector((state) => state.user);
-  const { user_info } = useSelector((state) => state.user);
+  const { user_info, appointments: userAppointments, status: userStatus} = useSelector((state) => state.user);
+  const { appointments: adminAppointment, status: providerStatus,} = useSelector((state) => state.healthcareProvider);
+  const [appointments, setAppointments] = useState([]);
+  const [status, setStatus] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [filter, setFilter] = useState('Last Month');
   const [startDate, setStartDate] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)));
   const [endDate, setEndDate] = useState(new Date());
 
   useEffect(() => {
-    dispatch(getUserAppointments());
-  }, [dispatch]);
+    if (user_info?.user_role === 'admin') {
+      dispatch(getAppointmentsByOrganization(user_info.organization_id));
+    } else {
+      dispatch(getUserAppointments());
+    }
+  }, [dispatch, user_info])
+
+  useEffect(() => {
+    if (user_info?.user_role === 'admin') {
+      setAppointments(adminAppointment?.data);
+      setStatus(providerStatus);
+    } else {
+      setAppointments(userAppointments);
+      setStatus(userStatus);
+    }
+  }, [user_info, userAppointments, adminAppointment, userStatus, providerStatus])
 
   useEffect(() => {
     const filterAppointments = () => {

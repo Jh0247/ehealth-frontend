@@ -6,6 +6,7 @@ const initialState = {
   patients: [],
   appointments: [],
   statistics: null,
+  staff: [],
   status: 'idle',
   error: null,
 };
@@ -39,6 +40,42 @@ export const getAppointmentsByOrganization = createAsyncThunk(
   async (organizationId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`${API_URL.ORGANIZATION}/${organizationId}/appointments`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getStaffByOrganization = createAsyncThunk(
+  'healthcareProvider/getStaffByOrganization',
+  async (organizationId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`${API_URL.ORGANIZATION}/${organizationId}/users`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const updateUserStatus = createAsyncThunk(
+  'healthcareProvider/updateUserStatus',
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL.USER}/${id}/status`, { status });
+      return { id, status };
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const registerStaff = createAsyncThunk(
+  'healthcareProvider/registerStaff',
+  async (staffData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`${API_URL.STAFF_REGISTER}`, staffData);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -87,6 +124,37 @@ const healthcareProviderSlice = createSlice({
         state.error = null;
       })
       .addCase(getAppointmentsByOrganization.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(getStaffByOrganization.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getStaffByOrganization.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.staff = action.payload;
+        state.error = null;
+      })
+      .addCase(getStaffByOrganization.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(updateUserStatus.fulfilled, (state, action) => {
+        const { id, status } = action.payload;
+        const index = state.staff.findIndex((member) => member.id === id);
+        if (index !== -1) {
+          state.staff[index].status = status;
+        }
+      })
+      .addCase(registerStaff.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(registerStaff.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.staff.push(action.payload.user);
+        state.error = null;
+      })
+      .addCase(registerStaff.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

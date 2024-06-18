@@ -37,6 +37,7 @@ import CreationBlogpost from "./views/healthcare/CreationBlogpost";
 import PharmacistDashboard from "./views/pharmacist/PharmacistDashboard";
 import ManagePurchaseRecord from "./views/pharmacist/ManagePurchaseRecord";
 import MyPatients from "./views/healthcare/MyPatients";
+import MyStaff from "./views/healthcare/MyStaff";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
       { path: 'dashboard', element: <HealthcareDashboard /> },
       { path: 'health-record', element: <HealthRecord /> },
       { path: 'patient-list', element: <MyPatients /> },
+      { path: 'staff-list', element: <MyStaff /> },
       { path: 'appointment-list', element: <AppointmentList /> },
       { path: 'appointment-details', element: <ViewAppointmentDetails /> },
       { path: 'blogpost', element: <ViewBlogpost /> },
