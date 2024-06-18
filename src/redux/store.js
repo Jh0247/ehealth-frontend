@@ -15,6 +15,7 @@ import collaborationReducer from './features/collaborationSlice';
 import organizationReducer from './features/organizationSlice';
 import appointmentReducer from './features/appointmentSlice';
 import blogPostReducer from './features/blogpostSlice';
+import healthcareProviderReducer from './features/healthcareProviderSlice';
 
 const reduxLogger = (store) => (next) => (action) => {
   console.log('Dispatching action:', action);
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   organization: organizationReducer,
   appointment: appointmentReducer,
   blogpost: blogPostReducer,
+  healthcareProvider: healthcareProviderReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

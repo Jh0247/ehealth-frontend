@@ -10,14 +10,15 @@ import checkIcon from '@iconify-icons/mdi/check';
 import clockIcon from '@iconify-icons/mdi/clock';
 import cancelIcon from '@iconify-icons/mdi/cancel';
 import plusIcon from '@iconify-icons/mdi/plus';
-import arrowRightIcon from '@iconify-icons/mdi/arrow-right';
 import DatePicker from 'react-datepicker';
+import { rolePathMap } from '../../constants/rolePath';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const AppointmentList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { appointments, status } = useSelector((state) => state.user);
+  const { user_info } = useSelector((state) => state.user);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [filter, setFilter] = useState('Last Month');
   const [startDate, setStartDate] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)));
@@ -53,7 +54,7 @@ const AppointmentList = () => {
     <li
       key={index} 
       className="flex justify-between items-center border-b py-2"
-      onClick={() => navigate('/user/appointment-details', { state: { appointmentId: appointment.id } })}
+      onClick={() => navigate(rolePathMap[user_info?.user_role]+'/appointment-details', { state: { appointmentId: appointment.id } })}
     >
       <div className="flex w-full">
         <div className="flex flex-col w-3/4 sm:w-1/4 border-r-2 border-gray-300 pr-2">
@@ -102,7 +103,7 @@ const AppointmentList = () => {
     <div className="flex flex-col p-5 md:p-9">
       <div className="flex flex-row justify-between items-center mb-6">
         <h3 className="text-xl md:text-2xl font-bold">Appointment</h3>
-        <div className="">
+        {user_info?.user_role === 'user' && (
           <Link to="/user/book-appointment">
             <button className="hidden sm:block bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded">
               Book Appointment
@@ -111,7 +112,7 @@ const AppointmentList = () => {
               <Icon icon={plusIcon} className="w-5 h-5" />
             </button>
           </Link>
-        </div>
+        )}
       </div>
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6">
         {upcomingAppointments.length > 0 && (

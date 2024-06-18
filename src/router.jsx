@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
 
 // Layouts
 import GuestLayout from "./components/Layout/GuestLayout";
@@ -16,8 +15,10 @@ import NotFound from "./views/common/NotFound";
 import SignUpOrganization from "./views/common/SignUpOrganization";
 import ViewBlogpost from "./views/shared/ViewBlogpost";
 import UserList from "./views/shared/UserList";
-import ConsultationList from "./views/shared/ConsultationList";
 import HealthRecord from "./views/shared/HealthRecord";
+import AppointmentList from "./views/shared/AppointmentList";
+import ViewAppointmentDetails from "./views/shared/ViewAppointmentDetails";
+import BlogpostDetails from "./views/shared/BlogpostDetails";
 
 // Admin Views
 import AdminDashboard from "./views/admin/AdminDashboard";
@@ -29,15 +30,13 @@ import BookAppointment from "./views/patient/BookAppointment";
 
 // Healthcare Views
 import HealthcareDashboard from "./views/healthcare/HealthcareDashboard";
+import MyBlogpost from "./views/healthcare/MyBlogpost";
+import CreationBlogpost from "./views/healthcare/CreationBlogpost";
 
 // Pharmacist Views
 import PharmacistDashboard from "./views/pharmacist/PharmacistDashboard";
 import ManagePurchaseRecord from "./views/pharmacist/ManagePurchaseRecord";
-
-
-import AppointmentList from "./views/shared/AppointmentList";
-import ViewAppointmentDetails from "./views/shared/ViewAppointmentDetails";
-import BlogpostDetails from "./views/shared/BlogpostDetails";
+import MyPatients from "./views/healthcare/MyPatients";
 
 const router = createBrowserRouter([
   {
@@ -68,7 +67,6 @@ const router = createBrowserRouter([
       { path: '', element: <Navigate to='dashboard' /> },
       { path: 'dashboard', element: <PatientDashboard /> },
       { path: 'health-record', element: <HealthRecord /> },
-      { path: 'consultation', element: <ConsultationList /> },
       { path: 'blogpost', element: <ViewBlogpost /> },
       { path: 'book-appointment', element: <BookAppointment /> },
       { path: 'appointment-list', element: <AppointmentList /> },
@@ -82,8 +80,14 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <Navigate to='dashboard' /> },
       { path: 'dashboard', element: <HealthcareDashboard /> },
-      { path: 'patient-list', element: <UserList /> },
+      { path: 'health-record', element: <HealthRecord /> },
+      { path: 'patient-list', element: <MyPatients /> },
+      { path: 'appointment-list', element: <AppointmentList /> },
+      { path: 'appointment-details', element: <ViewAppointmentDetails /> },
       { path: 'blogpost', element: <ViewBlogpost /> },
+      { path: 'blogpost-details/:id', element: <BlogpostDetails /> },
+      { path: 'my-blog', element: <MyBlogpost /> },
+      { path: 'creation-blog', element: <CreationBlogpost /> },
     ]
   },
   {

@@ -13,4 +13,6 @@ export const API_URL = {
   BOOK_APPOINTMENT: API_BASE_URL + 'book-appointment',
   APPOINTMENT: API_BASE_URL + 'appointment',
   BLOGPOSTS: API_BASE_URL + 'blogposts',
+  PATIENTS_BY_APPOINTMENTS: API_BASE_URL + 'patients-by-appointments',
+  ORGANIZATION_STATS: API_BASE_URL + 'organization-stats',
 };

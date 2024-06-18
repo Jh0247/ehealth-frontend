@@ -35,7 +35,7 @@ export default function AdminLayout() {
     if (user_role === 'admin' || user_role === 'doctor' || user_role === 'nurse') {
       return <Navigate to="/healthcare/dashboard" />;
     } else {
-        return <Navigate to={`/${user_role}/dashboard`} />;
+      return <Navigate to={`/${user_role}/dashboard`} />;
     }
   }
 

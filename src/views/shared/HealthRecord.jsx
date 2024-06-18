@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import emailIcon from '@iconify-icons/mdi/email';
 import phoneIcon from '@iconify-icons/mdi/phone';
@@ -20,8 +20,9 @@ import ProfileUpdateModal from '../shared/ProfileUpdateModal';
 
 export default function HealthRecord() {
   const dispatch = useDispatch();
-  const { userId } = useParams();
-  const { user_info, health_record, status } = useSelector((state) => state.user);
+  const location = useLocation();
+  const { userId } = location.state || {};
+  const { health_record, status } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -43,34 +44,34 @@ export default function HealthRecord() {
             <Skeleton circle={true} height={144} width={144} className="my-2 md:my-0 md:mr-9" />
           ) : (
             <img
-              src={user_info?.profile_img || defaultImage}
+              src={health_record?.profile_img || defaultImage}
               alt="Profile"
               className="w-36 h-36 rounded-full my-2 md:my-0 md:mr-9 border object-cover"
             />
           )}
           <div className="text-center md:text-left">
             <h2 className="text-lg font-bold my-2">
-              {status === 'loading' ? <Skeleton width={120} /> : user_info?.name}
+              {status === 'loading' ? <Skeleton width={120} /> : health_record?.name}
             </h2>
             <p className="flex items-center text-gray-600 mt-2">
               <Icon icon={idCardIcon} className="w-5 h-5 mr-2" />
-              {status === 'loading' ? <Skeleton width={120} /> : user_info?.icno}
+              {status === 'loading' ? <Skeleton width={120} /> : health_record?.icno}
             </p>
             <p className="flex items-center text-gray-600 mt-2">
               <Icon icon={emailIcon} className="w-5 h-5 mr-2" />
-              {status === 'loading' ? <Skeleton width={180} /> : user_info?.email}
+              {status === 'loading' ? <Skeleton width={180} /> : health_record?.email}
             </p>
             <p className="flex items-center text-gray-600 mt-2">
               <Icon icon={phoneIcon} className="w-5 h-5 mr-2" />
-              {status === 'loading' ? <Skeleton width={120} /> : user_info?.contact}
+              {status === 'loading' ? <Skeleton width={120} /> : health_record?.contact}
             </p>
             <p className="flex items-center text-gray-600 mt-2">
               <Icon icon={healthyIcon} className="w-5 h-5 mr-2" />
-              {status === 'loading' ? <Skeleton width={60} /> : (health_record?.health_condition || 'N/A')}
+              {status === 'loading' ? <Skeleton width={60} /> : (health_record?.health_record?.health_condition || 'N/A')}
             </p>
             <p className="flex items-center text-gray-600 mt-2">
               <Icon icon={bloodTypeIcon} className="w-5 h-5 mr-2" />
-              {status === 'loading' ? <Skeleton width={20} /> : (health_record?.blood_type || 'N/A')}
+              {status === 'loading' ? <Skeleton width={20} /> : (health_record?.health_record?.blood_type || 'N/A')}
             </p>
           </div>
         </div>
@@ -93,7 +94,7 @@ export default function HealthRecord() {
             />
             <h4 className="text-md font-bold">Food allergic</h4>
             <ul className="list-disc list-inside">
-              {status === 'loading' ? <Skeleton count={1} width={120} /> : <li>{health_record?.allergic?.food || 'None'}</li>}
+              {status === 'loading' ? <Skeleton count={1} width={120} /> : <li>{health_record?.health_record?.allergic?.food || 'None'}</li>}
             </ul>
           </div>
           <div className="bg-white rounded shadow-sm shadow-teal-800 p-4">
@@ -106,7 +107,7 @@ export default function HealthRecord() {
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
                 <>
-                  <li>{health_record?.allergic?.environment || 'None'}</li>
+                  <li>{health_record?.health_record?.allergic?.environment || 'None'}</li>
                 </>
               )}
             </ul>
@@ -121,7 +122,7 @@ export default function HealthRecord() {
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
                 <>
-                  <li>{health_record?.allergic?.drug || 'None'}</li>
+                  <li>{health_record?.health_record?.allergic?.drug || 'None'}</li>
                 </>
               )}
             </ul>
@@ -136,7 +137,7 @@ export default function HealthRecord() {
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
                 <>
-                  <li>{health_record?.diseases || 'None'}</li>
+                  <li>{health_record?.health_record?.diseases || 'None'}</li>
                 </>
               )}
             </ul>
