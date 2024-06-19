@@ -22,8 +22,8 @@ const Login = () => {
     const result = await dispatch(
       loginUser({
         // email: "johndoe2@example.com",
-        // email: "doctorname@example.com",
-        email: "test1@example.com",
+        email: "doctorname@example.com",
+        // email: "test1@example.com",
         // email: "admin@sample.com", 
         password: "password" 
       })

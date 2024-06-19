@@ -23,11 +23,7 @@ const MyStaff = () => {
     }
   }, [dispatch, user_info]);
 
-  useEffect(() => {
-    filterStaff();
-  }, [staff, searchQuery, statusFilter, roleFilter]);
-
-  const filterStaff = () => {
+  useEffect(() => {    
     let filtered = staff;
 
     if (searchQuery) {
@@ -48,7 +44,7 @@ const MyStaff = () => {
     }
 
     setFilteredStaff(filtered);
-  };
+  }, [staff, searchQuery, statusFilter, roleFilter]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -121,7 +117,7 @@ const MyStaff = () => {
           onChange={handleStatusFilterChange}
           className="p-2 w-full sm:w-auto border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
         >
-          <option value="all">All Statuses</option>
+          <option value="all">All Status</option>
           <option value="active">Active</option>
           <option value="terminated">Terminated</option>
         </select>

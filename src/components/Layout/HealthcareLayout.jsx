@@ -42,7 +42,7 @@ export default function HealthcareLayout() {
     { name: 'Consultation', path: '/healthcare/appointment-list', icon: magnifyIcon },
     { name: 'Manage Staff', path: '/healthcare/staff-list', icon: peopleIcon, roles: ['admin'] },
     { name: 'My Patient', path: '/healthcare/patient-list', icon: peopleIcon, roles: ['doctor'] },
-    { name: 'My Blog', path: '/healthcare/my-blogpost', icon: blogIcon },
+    { name: 'My Blog', path: '/healthcare/my-blog', icon: blogIcon },
     { name: 'Blog Post', path: '/healthcare/blogpost', icon: articleIcon },
   ];
 
