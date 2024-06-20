@@ -34,7 +34,35 @@ StepIndicator.propTypes = {
 };
 
 const Step1 = ({ formData, handleChange, handleNext }) => {
-  const isStep1Valid = formData.service && formData.date && formData.time;
+  const [dateError, setDateError] = useState('');
+  const [timeError, setTimeError] = useState('');
+
+  const isStep1Valid = formData.service && formData.date && formData.time && !dateError && !timeError;
+
+  useEffect(() => {
+    if (formData.date) {
+      const selectedDate = new Date(formData.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        setDateError('Selected date cannot be in the past');
+      } else {
+        setDateError('');
+      }
+    }
+
+    if (formData.date && formData.time) {
+      const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
+      const now = new Date();
+
+      if (selectedDateTime < now) {
+        setTimeError('Selected time cannot be in the past');
+      } else {
+        setTimeError('');
+      }
+    }
+  }, [formData.date, formData.time]);
 
   return (
     <div>
@@ -58,6 +86,7 @@ const Step1 = ({ formData, handleChange, handleNext }) => {
           value={formData.date}
           onChange={handleChange('date')}
         />
+        {dateError && <p className="text-red-500 text-sm">{dateError}</p>}
       </div>
       <div className="mb-4">
         <label className="block mb-2 font-bold text-md">Select Time:</label>
@@ -67,6 +96,7 @@ const Step1 = ({ formData, handleChange, handleNext }) => {
           value={formData.time}
           onChange={handleChange('time')}
         />
+        {timeError && <p className="text-red-500 text-sm">{timeError}</p>}
       </div>
       <button
         onClick={handleNext}
