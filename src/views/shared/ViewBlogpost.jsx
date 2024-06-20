@@ -61,17 +61,17 @@ export default function ViewBlogpost() {
   return (
     <div className="p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Blog Posts</h3>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <input
           type="text"
           value={searchQuery}
           onChange={handleInputChange}
           placeholder="Search by name..."
-          className="p-2 flex-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="p-2 w-full flex-1 mb-2 sm:mb-0 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <button
           onClick={hasSearched ? handleClear : handleSearch}
-          className={`ml-2 px-4 py-2 rounded ${
+          className={`w-full sm:w-fit sm:ml-2 px-4 py-2 rounded ${
             hasSearched ? 'bg-blue-500 text-white' : 'bg-[#347576] text-white'
           }`}
         >

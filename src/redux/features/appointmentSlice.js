@@ -15,7 +15,7 @@ export const bookAppointment = createAsyncThunk(
       const response = await axiosInstance.post(API_URL.BOOK_APPOINTMENT, appointmentData);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response.data.message || err.message);
     }
   }
 );
@@ -27,7 +27,7 @@ export const getAppointmentDetails = createAsyncThunk(
       const response = await axiosInstance.get(`${API_URL.APPOINTMENT}/${appointmentId}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response.data.message || err.message);
     }
   }
 );
@@ -39,7 +39,7 @@ export const deleteAppointment = createAsyncThunk(
       const response = await axiosInstance.delete(`${API_URL.APPOINTMENT}/${appointmentId}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response.data.message || err.message);
     }
   }
 );
@@ -51,7 +51,7 @@ export const updateAppointmentWithPrescriptions = createAsyncThunk(
       const response = await axiosInstance.post(`${API_URL.APPOINTMENT}/${appointmentId}`, data);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response.data.message || err.message);
     }
   }
 );

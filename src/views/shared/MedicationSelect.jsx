@@ -20,7 +20,7 @@ const MedicationSelect = ({ medications, value, onChange }) => {
   }, []);
 
   useEffect(() => {
-    const selectedMedication = medications.find((med) => med.id === Number(value));
+    const selectedMedication = medications.find((med) => med.id === parseInt(value, 10));
     if (selectedMedication) {
       setSearchTerm(selectedMedication.name);
     } else {
