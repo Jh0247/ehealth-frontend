@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import bookingSuccess from '../../assets/bookingSuccess.png';
-import { getOrganizationList, getOrganizationDetails, getUsersByOrganization } from '../../redux/features/organizationSlice';
+import { getOrganizationList, getUsersByOrganization } from '../../redux/features/organizationSlice';
 import { bookAppointment, resetState } from '../../redux/features/appointmentSlice';
 
 const StepIndicator = ({ step }) => {
@@ -89,23 +89,25 @@ Step1.propTypes = {
   handleNext: PropTypes.func.isRequired,
 };
 
-const Step2 = ({ formData, setFormData, handleChange, handleNext, handlePrevious, organizations, locations, doctors }) => {
+const Step2 = ({ formData, setFormData, handleChange, handleNext, handlePrevious, organizations, doctors, location, setLocation }) => {
   const dispatch = useDispatch();
 
   const handleOrganizationChange = (e) => {
-    const organizationId = e.target.value;
     handleChange('organization')(e);
-    dispatch(getOrganizationDetails(organizationId));
-    dispatch(getUsersByOrganization({ organizationId, role: 'doctor' }));
-    // Reset location and doctor when organization changes
+    const organizationId = e.target.value;
+    const selectedOrganization = organizations.find(org => org.id === parseInt(organizationId));
+    if (selectedOrganization) {
+      dispatch(getUsersByOrganization({ organizationId, role: 'doctor' }));
+      setLocation(selectedOrganization.address);
+      handleChange('organization')(e);
+    }
     setFormData((prevData) => ({
       ...prevData,
-      location: '',
       doctor: '',
     }));
   };
 
-  const isStep2Valid = formData.organization && formData.location && formData.doctor && formData.purpose;
+  const isStep2Valid = formData.organization && formData.doctor && formData.purpose;
 
   return (
     <div>
@@ -116,25 +118,23 @@ const Step2 = ({ formData, setFormData, handleChange, handleNext, handlePrevious
           value={formData.organization}
           onChange={handleOrganizationChange}
         >
-          <option value="">Select Organization</option>
+          <option disabled value="">Select Organization</option>
           {organizations?.map((org) => (
             <option key={org.id} value={org.id}>{org.name}</option>
           ))}
         </select>
       </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-bold text-md">Location:</label>
-        <select
-          className="w-full p-2 border border-gray-300 rounded bg-white max-w-full"
-          value={formData.location}
-          onChange={handleChange('location')}
-        >
-          <option value="">Select Location</option>
-          {locations?.map((loc) => (
-            <option key={loc.id} value={loc.id}>{loc.address}</option>
-          ))}
-        </select>
-      </div>
+      {location && (
+        <div className="mb-4">
+          <label className="block mb-2 font-bold text-md">Location:</label>
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded"
+            value={location}
+            disabled
+          />
+        </div>
+      )}
       <div className="mb-4">
         <label className="block mb-2 font-bold text-md">Purpose:</label>
         <textarea
@@ -150,7 +150,7 @@ const Step2 = ({ formData, setFormData, handleChange, handleNext, handlePrevious
           value={formData.doctor}
           onChange={handleChange('doctor')}
         >
-          <option value="">Select Doctor</option>
+          <option disabled value="">Select Doctor</option>
           {doctors?.map((doc) => (
             <option key={doc.id} value={doc.id}>{doc.name}</option>
           ))}
@@ -179,12 +179,13 @@ Step2.propTypes = {
     doctor: PropTypes.string,
     purpose: PropTypes.string,
   }).isRequired,
+  location: PropTypes.string,
+  setLocation: PropTypes.func.isRequired,
   setFormData: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
   handlePrevious: PropTypes.func.isRequired,
   organizations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  locations: PropTypes.arrayOf(PropTypes.object).isRequired,
   doctors: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
@@ -204,19 +205,19 @@ Step3.propTypes = {
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
+  const [location, setLocation] = useState('');
   const [formData, setFormData] = useState({
     service: '',
     doctor: '',
     date: '',
     time: '',
     organization: '',
-    location: '',
     purpose: '',
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { organizations, locations, users: doctors } = useSelector((state) => state.organization);
+  const { organizations, users: doctors } = useSelector((state) => state.organization);
 
   useEffect(() => {
     dispatch(getOrganizationList());
@@ -269,8 +270,9 @@ const BookAppointment = () => {
               handleNext={handleNext}
               handlePrevious={handlePrevious}
               organizations={organizations}
-              locations={locations}
               doctors={doctors}
+              location={location}
+              setLocation={setLocation}
             />
           )}
           {step === 3 && <Step3 handlePrevious={handleHome} />}
