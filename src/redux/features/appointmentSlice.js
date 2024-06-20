@@ -56,6 +56,18 @@ export const updateAppointmentWithPrescriptions = createAsyncThunk(
   }
 );
 
+export const cancelAppointment = createAsyncThunk(
+  'appointment/cancelAppointment',
+  async (appointmentId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL.APPOINTMENT}/${appointmentId}/status`, { status: 'cancelled' });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data.message || err.message);
+    }
+  }
+);
+
 const appointmentSlice = createSlice({
   name: 'appointment',
   initialState,
@@ -107,6 +119,18 @@ const appointmentSlice = createSlice({
         state.error = null;
       })
       .addCase(updateAppointmentWithPrescriptions.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(cancelAppointment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(cancelAppointment.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.appointment = action.payload;
+        state.error = null;
+      })
+      .addCase(cancelAppointment.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

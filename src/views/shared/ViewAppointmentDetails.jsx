@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getAppointmentDetails, deleteAppointment, updateAppointmentWithPrescriptions } from '../../redux/features/appointmentSlice';
+import { getAppointmentDetails, deleteAppointment, updateAppointmentWithPrescriptions, cancelAppointment } from '../../redux/features/appointmentSlice';
 import { fetchMedications } from '../../redux/features/medicationSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -12,6 +12,8 @@ import plusIcon from '@iconify-icons/mdi/plus';
 import arrowBackIcon from '@iconify-icons/mdi/arrow-left';
 import JitsiMeeting from '../../components/JitsiMeeting';
 import PrescriptionField from './PrescriptionField';
+import { rolePathMap } from '../../constants/rolePath';
+import { popToast, ToastType } from '../../redux/features/toastSlice';
 
 const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
@@ -46,7 +48,7 @@ const ViewAppointmentDetails = () => {
 
   const { appointmentId } = location.state || {};
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [prescriptions, setPrescriptions] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([{ medication_id: '', dosage: '', dosageUnit: 'pills', frequency: '', duration: '', durationUnit: 'days' }]);
   const [showPrescriptionFields, setShowPrescriptionFields] = useState(false);
   const [duration, setDuration] = useState('');
   const [note, setNote] = useState('');
@@ -56,9 +58,9 @@ const ViewAppointmentDetails = () => {
       dispatch(getAppointmentDetails(appointmentId));
       dispatch(fetchMedications());
     } else {
-      navigate('/user/appointment-list');
+      navigate(rolePathMap[user_info?.user_role]+'/appointment-list');
     }
-  }, [dispatch, appointmentId, navigate]);
+  }, [dispatch, appointmentId, navigate, user_info]);
 
   useEffect(() => {
     if (appointment) {
@@ -71,7 +73,15 @@ const ViewAppointmentDetails = () => {
   const handleDelete = () => {
     dispatch(deleteAppointment(appointmentId)).then((action) => {
       if (action.type === deleteAppointment.fulfilled.toString()) {
-        navigate('/user/appointment-list');
+        navigate(rolePathMap[user_info?.user_role]+'/appointment-list');
+      }
+    });
+  };
+
+  const handleCancel = () => {
+    dispatch(cancelAppointment(appointmentId)).then((action) => {
+      if (action.type === cancelAppointment.fulfilled.toString()) {
+        navigate(rolePathMap[user_info?.user_role]+'/appointment-list');
       }
     });
   };
@@ -96,27 +106,27 @@ const ViewAppointmentDetails = () => {
     setPrescriptions(newPrescriptions);
   };
 
+  // Doctor to completed appointment
   const handleComplete = () => {
     const allPrescriptionsFilled = prescriptions.every(prescription => 
       prescription.medication_id && prescription.dosage && prescription.frequency && prescription.duration
     );
-
     if (!duration || !note || !allPrescriptionsFilled) {
-      alert('Please fill in all the fields.');
+      dispatch(popToast({
+        title: 'Error',
+        message: 'Please fill in all the fields.',
+        type: ToastType.ERROR,
+      }));
       return;
     }
-
     const updateData = {
       duration: parseInt(duration, 10),
       note,
       prescriptions,
     };
-
-    console.warn('Update Data, ', updateData);
-
     dispatch(updateAppointmentWithPrescriptions({ appointmentId, data: updateData })).then((action) => {
       if (action.type === updateAppointmentWithPrescriptions.fulfilled.toString()) {
-        navigate('/user/appointment-list');
+        navigate(rolePathMap[user_info?.user_role]+'/appointment-list');
       }
     });
   };
@@ -142,7 +152,7 @@ const ViewAppointmentDetails = () => {
       </button>
       <div className="flex flex-row justify-between items-center mb-6">
         <h3 className="text-xl md:text-2xl font-bold">Appointment Details</h3>
-        {!isCompleted && appointment.status === 'pending' && user_info?.user_role === 'user' &&(
+        {!isCompleted && appointment.status === 'pending' && user_info?.user_role === 'user' && (
           <div className="flex justify-end">
             <button
               onClick={() => setIsModalOpen(true)}
@@ -150,6 +160,17 @@ const ViewAppointmentDetails = () => {
             >
               <Icon icon={deleteIcon} className="w-5 h-5 sm:mr-2" />
               <p className="hidden sm:block">Cancel</p>
+            </button>
+          </div>
+        )}
+        {appointment.status === 'pending' && user_info?.user_role === 'admin' && (
+          <div className="flex justify-end">
+            <button
+              onClick={handleCancel}
+              className="flex items-center px-4 py-2 bg-red-500 text-white rounded"
+            >
+              <Icon icon={deleteIcon} className="w-5 h-5 sm:mr-2" />
+              <p className="hidden sm:block">Cancel Appointment</p>
             </button>
           </div>
         )}
@@ -161,6 +182,13 @@ const ViewAppointmentDetails = () => {
           <p className="capitalize mt-2"><strong>Type:</strong> {appointment.type}</p>
           <p className="mt-2"><strong>Purpose:</strong> {appointment.purpose}</p>
           <p className="capitalize mt-2"><strong>Status:</strong> {appointment.status}</p>
+        </div>
+        <hr></hr>
+        <div className="my-4">
+          <h4 className="font-bold">Patient Information</h4>
+          <p className="mt-2"><strong>Name:</strong> {appointment.user.name}</p>
+          <p className="mt-2"><strong>Email:</strong> {appointment.user.email}</p>
+          <p className="mt-2"><strong>Contact:</strong> {appointment.user.contact}</p>
         </div>
         <hr></hr>
         <div className="my-4">
@@ -176,7 +204,7 @@ const ViewAppointmentDetails = () => {
           <p className="mt-2"><strong>Location:</strong> {appointment.organization.address}</p>
         </div>
         <hr></hr>
-        {appointment.type === 'virtual' && (
+        {appointment.type === 'virtual' && !isCompleted &&(
           <div className="mb-4">
             <h4 className="font-bold my-2">Virtual Meeting</h4>
             <JitsiMeeting
@@ -254,6 +282,12 @@ const ViewAppointmentDetails = () => {
         {isCompleted && (
           <div className="mt-6">
             <h4 className="font-bold mb-2">Prescriptions</h4>
+            <div className="grid grid-flow-row grid-cols-1 sm:grid-cols-4 gap-4 w-full p-2 bg-slate-100">
+              <span className="font-bold border-r-2 border-gray-300">Name</span>
+              <span className="font-bold border-r-2 border-gray-300 hidden sm:block">Dosage</span>
+              <span className="font-bold border-r-2 border-gray-300 hidden sm:block">Frequency</span>
+              <span className="font-bold border-r-2 border-gray-300 hidden sm:block">Duration</span>
+            </div>
             <div>
               {prescriptions.map((prescription, index) => (
                 <PrescriptionField

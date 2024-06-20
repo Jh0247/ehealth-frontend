@@ -92,7 +92,7 @@ export default function HealthcareDashboard() {
           <Icon icon={editIcon} className="w-6 h-6" />
         </button>
       </div>
-      <div className="flex flex-col md:flex-row md:gap-6">
+      <div className="flex flex-col sm:flex-row sm:gap-6">
         {/* My Patients */}
         {user_info?.user_role === 'doctor' && (
           <div className="mt-8 w-full">

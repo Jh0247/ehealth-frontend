@@ -4,27 +4,24 @@ import MedicationSelect from './MedicationSelect';
 import { Icon } from '@iconify/react';
 import closeIcon from '@iconify-icons/mdi/close';
 
+const dosageUnits = ['pills', 'ml'];
+const frequencyOptions = ['once a day', 'twice a day', 'three times a day', 'four times a day'];
+const durationUnits = ['days', 'weeks', 'months'];
+
 const PrescriptionField = ({ index, medications, formData, handleChange, handleRemove, isEditable }) => {
   return (
-    <div className="mb-4 flex flex-col relative">
+    <div className="flex flex-col relative">
       <div className="flex items-center justify-between">
-        {isEditable? (
+        {isEditable && (
           <>
-          <span className="font-bold">Prescription {index + 1}</span>
-          <Icon
-            icon={closeIcon}
-            className="w-5 h-5 cursor-pointer text-red-500"
-            onClick={() => handleRemove(index)}
-          />
+            <span className="font-bold">Prescription {index + 1}</span>
+            <Icon
+              icon={closeIcon}
+              className="w-5 h-5 cursor-pointer text-red-500"
+              onClick={() => handleRemove(index)}
+            />
           </>
-        ):
-        <div className="grid grid-flow-row grid-cols-1 sm:grid-cols-4 gap-4 w-full p-2 bg-slate-100">
-          <span className="font-bold border-r-2 border-gray-300">Name</span>
-          <span className="font-bold border-r-2 border-gray-300 hidden sm:block">Dosage</span>
-          <span className="font-bold border-r-2 border-gray-300 hidden sm:block">Frequency</span>
-          <span className="font-bold border-r-2 border-gray-300 hidden sm:block">Duration</span>
-        </div>
-        }
+        )}
       </div>
       <div className={`grid grid-flow-row grid-cols-1 sm:grid-cols-4 gap-4 mt-2 ${!isEditable && 'mt-0 bg-gray-200 p-2'}`}>
         {isEditable ? (
@@ -37,40 +34,68 @@ const PrescriptionField = ({ index, medications, formData, handleChange, handleR
           <div className="border-r-2 border-r-white">{medications.find((med) => med.id === parseInt(formData.medication_id, 10))?.name || 'N/A'}</div>
         )}
         {isEditable ? (
-          <input
-            type="text"
-            placeholder="Dosage"
-            className="w-full p-2 border border-gray-300 rounded mb-2"
-            value={formData.dosage || ''}
-            onChange={(e) => handleChange(index, 'dosage', e.target.value)}
-            required
-          />
+          <>
+            <div className="flex">
+              <input
+                type="number"
+                placeholder="Dosage"
+                className="w-full p-2 border border-gray-300 rounded mb-2"
+                value={formData.dosage || ''}
+                onChange={(e) => handleChange(index, 'dosage', e.target.value)}
+                required
+              />
+              <select
+                className="w-full p-2 border border-gray-300 rounded mb-2 ml-2"
+                value={formData.dosageUnit || dosageUnits[0]}
+                onChange={(e) => handleChange(index, 'dosageUnit', e.target.value)}
+                required
+              >
+                {dosageUnits.map(unit => (
+                  <option key={unit} value={unit}>{unit}</option>
+                ))}
+              </select>
+            </div>
+          </>
         ) : (
-          <div className="border-r-2 border-r-white hidden sm:block">{formData.dosage}</div>
+          <div className="border-r-2 border-r-white hidden sm:block">{formData.dosage} {formData.dosageUnit}</div>
         )}
         {isEditable ? (
-          <input
-            type="text"
-            placeholder="Frequency"
+          <select
             className="w-full p-2 border border-gray-300 rounded mb-2"
-            value={formData.frequency || ''}
+            value={formData.frequency || frequencyOptions[0]}
             onChange={(e) => handleChange(index, 'frequency', e.target.value)}
             required
-          />
+          >
+            {frequencyOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
         ) : (
           <div className="border-r-2 border-r-white hidden sm:block">{formData.frequency}</div>
         )}
         {isEditable ? (
-          <input
-            type="text"
-            placeholder="Duration"
-            className="w-full p-2 border border-gray-300 rounded mb-2"
-            value={formData.duration || ''}
-            onChange={(e) => handleChange(index, 'duration', e.target.value)}
-            required
-          />
+          <div className="flex">
+            <input
+              type="number"
+              placeholder="Duration"
+              className="w-full p-2 border border-gray-300 rounded mb-2"
+              value={formData.duration || ''}
+              onChange={(e) => handleChange(index, 'duration', e.target.value)}
+              required
+            />
+            <select
+              className="w-full p-2 border border-gray-300 rounded mb-2 ml-2"
+              value={formData.durationUnit || durationUnits[0]}
+              onChange={(e) => handleChange(index, 'durationUnit', e.target.value)}
+              required
+            >
+              {durationUnits.map(unit => (
+                <option key={unit} value={unit}>{unit}</option>
+              ))}
+            </select>
+          </div>
         ) : (
-          <div className="border-r-2 border-r-white hidden sm:block">{formData.duration}</div>
+          <div className="border-r-2 border-r-white hidden sm:block">{formData.duration} {formData.durationUnit}</div>
         )}
       </div>
     </div>
@@ -83,8 +108,10 @@ PrescriptionField.propTypes = {
   formData: PropTypes.shape({
     medication_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dosage: PropTypes.string,
+    dosageUnit: PropTypes.string,
     frequency: PropTypes.string,
     duration: PropTypes.string,
+    durationUnit: PropTypes.string,
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleRemove: PropTypes.func.isRequired,
