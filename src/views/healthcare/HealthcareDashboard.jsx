@@ -97,7 +97,7 @@ export default function HealthcareDashboard() {
         {user_info?.user_role === 'doctor' && (
           <div className="mt-8 w-full">
             <h3 className="text-md sm:text-lg font-bold mb-3">My Patients</h3>
-            <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[250px]">
+            <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[300px]">
               <ul>
                 {providerStatus === 'loading' ? (
                   Array.from({ length: 5 }).map((_, index) => (
@@ -120,13 +120,9 @@ export default function HealthcareDashboard() {
                             className="w-12 h-12 rounded-full mr-4"
                           />
                           <div>
-                            <h4 className="text-sm sm:text-md font-semibold">{patient.name}</h4>
-                            <p className="text-sm text-gray-600"><strong>Tel : </strong>{patient.contact}</p>
+                            <h4 className="text-sm md:text-base font-semibold">{patient.name}</h4>
+                            <p className="text-sm md:text-base text-gray-600"><strong>Tel : </strong>{patient.contact}</p>
                           </div>
-                        </div>
-                        <div className="text-sm">
-                          <span className="block text-gray-600">{patient.health_condition}</span>
-                          <span className="block text-gray-600">{patient.blood_type}</span>
                         </div>
                       </li>
                     ))
@@ -143,7 +139,7 @@ export default function HealthcareDashboard() {
         )}
         {/* Statistics Cards for Admin */}
         {user_info?.user_role === 'admin' && (
-          <div className="flex flex-col gap-6 mt-8">
+          <div className="flex flex-col gap-6 mt-8 sm:w-1/4">
             <h3 className="text-lg font-bold">Statistic</h3>
             <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center">
               <h4 className="text-lg mb-2">Number of Staffs</h4>

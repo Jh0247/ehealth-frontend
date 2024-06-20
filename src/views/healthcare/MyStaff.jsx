@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import noDataImage from '../../assets/noData.png';
 import defaultImage from '../../assets/default.jpg';
-import CreateStaffModal from '../../components/CreateStaffModal';
+import CreateStaffModal from './CreateStaffModal';
 
 const MyStaff = () => {
   const dispatch = useDispatch();
@@ -102,7 +102,7 @@ const MyStaff = () => {
   );
 
   return (
-    <div className="flex flex-col p-5 md:p-9 bg-gray-50">
+    <div className="flex flex-col p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6 text-center sm:text-left">My Staff</h3>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
         <input

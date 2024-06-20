@@ -11,9 +11,9 @@ const initialState = {
 
 export const fetchBlogposts = createAsyncThunk(
   'blogpost/fetchBlogposts',
-  async (_, { rejectWithValue }) => {
+  async (params = {}, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(API_URL.BLOGPOSTS);
+      const response = await axiosInstance.get(API_URL.BLOGPOSTS, { params });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -73,7 +73,7 @@ export const updateBlogpost = createAsyncThunk(
   'blogpost/updateBlogpost',
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.put(`${API_URL.BLOGPOSTS}/${id}`, formData);
+      const response = await axiosInstance.post(`${API_URL.BLOGPOSTS}/${id}`, formData);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

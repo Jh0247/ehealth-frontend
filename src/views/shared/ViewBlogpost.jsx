@@ -5,6 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import noDataImage from '../../assets/noData.png';
 import { rolePathMap } from '../../constants/rolePath';
+import { Editor, EditorState, convertFromHTML, ContentState } from 'draft-js';
 
 export default function ViewBlogpost() {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function ViewBlogpost() {
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchBlogposts());
+    dispatch(fetchBlogposts({ status: 'published' }));
   }, [dispatch]);
 
   const handleSearch = () => {
@@ -26,7 +27,7 @@ export default function ViewBlogpost() {
 
   const handleClear = () => {
     setSearchQuery('');
-    dispatch(fetchBlogposts());
+    dispatch(fetchBlogposts({ status: 'published' }));
     setHasSearched(false);
   };
 
@@ -42,6 +43,20 @@ export default function ViewBlogpost() {
   }
 
   const blogpostData = blogposts?.data || [];
+
+  const renderBlogpostContent = (content) => {
+    if (!content) {
+      return null; // or a placeholder text if you prefer
+    }
+    
+    const blocksFromHTML = convertFromHTML(content);
+    const contentState = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap,
+    );
+    const editorState = EditorState.createWithContent(contentState);
+    return <Editor editorState={editorState} readOnly={true} />;
+  };
 
   return (
     <div className="p-5 md:p-9">
@@ -81,8 +96,10 @@ export default function ViewBlogpost() {
               <div className="px-4 pb-2">
                 <div className="text-gray-600 text-sm mb-2">{new Date(post.created_at).toLocaleDateString()}</div>
                 <h4 className="text-base sm:text-lg font-bold mb-2 truncate">{post.title}</h4>
-                <p className="text-sm sm:text-base text-gray-700 mb-4 line-clamp-2">{post.content}</p>
-                <a href={rolePathMap[user_info?.user_role]+`/blogpost-details/${post.id}`} className="text-[#347576] hover:underline text-sm sm:text-base">
+                <div className="text-sm sm:text-base text-gray-700 mb-4 line-clamp-2">
+                  {renderBlogpostContent(post.content)}
+                </div>
+                <a href={rolePathMap[user_info?.user_role] + `/blogpost-details/${post.id}`} className="text-[#347576] hover:underline text-sm sm:text-base">
                   Read more
                 </a>
               </div>

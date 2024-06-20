@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerStaff } from '../redux/features/healthcareProviderSlice';
+import { registerStaff } from '../../redux/features/healthcareProviderSlice';
 
 const CreateStaffModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();

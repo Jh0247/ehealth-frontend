@@ -28,8 +28,8 @@ const Register = () => {
     const result = await dispatch(
       registerUser({
         name : "John Doe",
-        email: "johndoe@example.com",
-        icno: "11111111111-",
+        email: "johndoe2@example.com",
+        icno: "111111111112",
         contact: "1234567890",
         password: "password",
         password_confirmation:"password"
@@ -45,7 +45,6 @@ const Register = () => {
     setShowPassword(!showPassword);
   };
 
-  
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };

@@ -43,11 +43,9 @@ export default function SignUpOrganization() {
         admin_icno: adminIcno,
         password,
         password_confirmation: confirmPassword,
-        locations: [{
-          address,
-          latitude,
-          longitude
-        }]
+        address,
+        latitude,
+        longitude
       })
     );
 

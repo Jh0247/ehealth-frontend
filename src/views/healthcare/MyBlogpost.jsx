@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Editor, EditorState, convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import { fetchUserBlogposts } from '../../redux/features/blogpostSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -30,6 +31,16 @@ const MyBlogpost = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const renderBlogpostContent = (content) => {
+    const blocksFromHTML = convertFromHTML(content);
+    const contentState = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap,
+    );
+    const editorState = EditorState.createWithContent(contentState);
+    return <Editor editorState={editorState} readOnly={true} />;
+  };
+
   const renderBlogpost = (blogpost, index) => (
     <li 
       key={index} 
@@ -41,7 +52,9 @@ const MyBlogpost = () => {
       )}
       <div className="flex-grow">
         <h4 className="text-lg font-semibold mb-2">{blogpost.title}</h4>
-        <p className="text-gray-600 mb-2 line-clamp-2">{blogpost.content}</p>
+        <div className="text-gray-600 mb-2 line-clamp-2">
+          {renderBlogpostContent(blogpost.content)}
+        </div>
         <p className="text-sm text-gray-500">{formatDate(blogpost.created_at)}</p>
       </div>
       <div className="sm:ml-4 mt-5">
@@ -64,7 +77,7 @@ const MyBlogpost = () => {
   );
 
   return (
-    <div className="flex flex-col p-5 md:p-9 bg-gray-50">
+    <div className="flex flex-col p-5 md:p-9">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h3 className="text-xl md:text-2xl font-bold mb-6 text-center sm:text-left">My Blogposts</h3>
         <button
