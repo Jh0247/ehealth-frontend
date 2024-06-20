@@ -32,23 +32,23 @@ export const getAppointmentDetails = createAsyncThunk(
   }
 );
 
-// export const updateAppointment = createAsyncThunk(
-//   'appointment/updateAppointment',
-//   async ({ appointmentId, updatedData }, { rejectWithValue }) => {
-//     try {
-//       const response = await axiosInstance.put(`${API_URL.UPDATE_APPOINTMENT}/${appointmentId}`, updatedData);
-//       return response.data;
-//     } catch (err) {
-//       return rejectWithValue(err.response.data);
-//     }
-//   }
-// );
-
 export const deleteAppointment = createAsyncThunk(
   'appointment/deleteAppointment',
   async (appointmentId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.delete(`${API_URL.APPOINTMENT}/${appointmentId}`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const updateAppointmentWithPrescriptions = createAsyncThunk(
+  'appointment/updateAppointmentWithPrescriptions',
+  async ({ appointmentId, data }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`${API_URL.APPOINTMENT}/${appointmentId}`, data);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -87,18 +87,6 @@ const appointmentSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      // .addCase(updateAppointment.pending, (state) => {
-      //   state.status = 'loading';
-      // })
-      // .addCase(updateAppointment.fulfilled, (state, action) => {
-      //   state.status = 'succeeded';
-      //   state.appointment = action.payload;
-      //   state.error = null;
-      // })
-      // .addCase(updateAppointment.rejected, (state, action) => {
-      //   state.status = 'failed';
-      //   state.error = action.payload;
-      // })
       .addCase(deleteAppointment.pending, (state) => {
         state.status = 'loading';
       })
@@ -108,6 +96,17 @@ const appointmentSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteAppointment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(updateAppointmentWithPrescriptions.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateAppointmentWithPrescriptions.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(updateAppointmentWithPrescriptions.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getAppointmentDetails, deleteAppointment } from '../../redux/features/appointmentSlice';
+import { getAppointmentDetails, deleteAppointment, updateAppointmentWithPrescriptions } from '../../redux/features/appointmentSlice';
+import { fetchMedications } from '../../redux/features/medicationSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Icon } from '@iconify/react';
 import editIcon from '@iconify-icons/mdi/pencil';
 import deleteIcon from '@iconify-icons/mdi/delete';
+import plusIcon from '@iconify-icons/mdi/plus';
 import arrowBackIcon from '@iconify-icons/mdi/arrow-left';
 import JitsiMeeting from '../../components/JitsiMeeting';
+import PrescriptionField from './PrescriptionField';
 
 const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
@@ -39,13 +42,20 @@ const ViewAppointmentDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { appointment, status, error } = useSelector((state) => state.appointment);
+  const { medications } = useSelector((state) => state.medication);
+  const { user_info } = useSelector((state) => state.user);
 
   const { appointmentId } = location.state || {};
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [showPrescriptionFields, setShowPrescriptionFields] = useState(false);
+  const [duration, setDuration] = useState('');
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     if (appointmentId) {
       dispatch(getAppointmentDetails(appointmentId));
+      dispatch(fetchMedications());
     } else {
       navigate('/user/appointment-list');
     }
@@ -62,6 +72,50 @@ const ViewAppointmentDetails = () => {
   const handleEdit = () => {
     console.log('Edit appointment');
     // navigate to edit page or open edit modal
+  };
+
+  const handleAddPrescription = () => {
+    setPrescriptions([...prescriptions, { medication_id: '', dosage: '', frequency: '', duration: '' }]);
+    setShowPrescriptionFields(true);
+  };
+
+  const handleRemovePrescription = (index) => {
+    const newPrescriptions = prescriptions.filter((_, i) => i !== index);
+    setPrescriptions(newPrescriptions);
+  };
+
+  const handlePrescriptionChange = (index, field, value) => {
+    const newPrescriptions = prescriptions.map((prescription, i) => {
+      if (i === index) {
+        return { ...prescription, [field]: value };
+      }
+      return prescription;
+    });
+    setPrescriptions(newPrescriptions);
+  };
+
+  const handleComplete = () => {
+    const allPrescriptionsFilled = prescriptions.every(prescription => 
+      prescription.medication_id && prescription.dosage && prescription.frequency && prescription.duration
+    );
+
+    if (!duration || !note || !allPrescriptionsFilled) {
+      alert('Please fill in all the fields.');
+      return;
+    }
+
+    const updateData = {
+      duration,
+      note,
+      prescriptions,
+    };
+
+    console.log(updateData);
+    // dispatch(updateAppointmentWithPrescriptions({ appointmentId, data: updateData })).then((action) => {
+    //   if (action.type === updateAppointmentWithPrescriptions.fulfilled.toString()) {
+    //     navigate('/user/appointment-list');
+    //   }
+    // });
   };
 
   if (status === 'loading' || !appointment) {
@@ -100,7 +154,7 @@ const ViewAppointmentDetails = () => {
         <div className="mb-4">
           <h4 className="font-bold mb-2">Organization Information</h4>
           <p><strong>Name:</strong> {appointment.organization.name}</p>
-          <p><strong>Location:</strong> {appointment.organization.locations[0].address}</p>
+          <p><strong>Location:</strong> {appointment.organization.address}</p>
         </div>
         {appointment.type === 'virtual' && (
           <div className="mb-4">
@@ -125,6 +179,60 @@ const ViewAppointmentDetails = () => {
               <Icon icon={deleteIcon} className="w-5 h-5 mr-2" />
               Delete
             </button>
+          </div>
+        )}
+        {user_info?.user_role === 'doctor' && (
+          <div className="mt-6">
+            <h4 className="font-bold mb-2">Prescriptions</h4>
+            <button
+              onClick={handleAddPrescription}
+              className="flex items-center px-4 py-2 bg-green-500 text-white rounded mb-4"
+            >
+              <Icon icon={plusIcon} className="w-5 h-5 mr-2" />
+              Add Prescription
+            </button>
+            {showPrescriptionFields && (
+              <div>
+                {prescriptions.map((prescription, index) => (
+                  <PrescriptionField
+                    key={index}
+                    index={index}
+                    medications={medications}
+                    formData={prescription}
+                    handleChange={handlePrescriptionChange}
+                    handleRemove={handleRemovePrescription}
+                  />
+                ))}
+                <div className="mt-4">
+                  <label className="block font-bold mb-2">Duration:</label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded mb-2"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    required
+                  >
+                    <option value="">Select duration</option>
+                    <option value="15 minutes">15 minutes</option>
+                    <option value="30 minutes">30 minutes</option>
+                    <option value="1 hour">1 hour</option>
+                  </select>
+                  <label className="block font-bold mb-2">Note:</label>
+                  <textarea
+                    className="w-full p-2 border border-gray-300 rounded mb-2"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder="Note things on the appointment..."
+                    required
+                  />
+                  <button
+                    onClick={handleComplete}
+                    className="flex items-center px-4 py-2 bg-blue-500 text-white rounded mt-4"
+                  >
+                    Complete
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
