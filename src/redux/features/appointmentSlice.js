@@ -68,6 +68,30 @@ export const cancelAppointment = createAsyncThunk(
   }
 );
 
+export const searchUserByIcno = createAsyncThunk(
+  'appointment/searchUserByIcno',
+  async (icno, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`${API_URL.SEARCH_USER}?icno=${icno}`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data.message || err.message);
+    }
+  }
+);
+
+export const adminBookAppointment = createAsyncThunk(
+  'appointment/adminBookAppointment',
+  async (appointmentData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(API_URL.ADMIN_BOOK_APPOINTMENT, appointmentData);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data.message || err.message);
+    }
+  }
+);
+
 const appointmentSlice = createSlice({
   name: 'appointment',
   initialState,
@@ -131,6 +155,29 @@ const appointmentSlice = createSlice({
         state.error = null;
       })
       .addCase(cancelAppointment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(searchUserByIcno.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(searchUserByIcno.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.userSearchResults = action.payload;
+        state.error = null;
+      })
+      .addCase(searchUserByIcno.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(adminBookAppointment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(adminBookAppointment.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(adminBookAppointment.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

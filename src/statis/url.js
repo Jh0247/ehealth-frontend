@@ -19,4 +19,6 @@ export const API_URL = {
   STAFF_REGISTER: API_BASE_URL + 'staff-register',
   USER_BLOGPOSTS: API_BASE_URL + 'user/blogposts', 
   MEDICATIONS: API_BASE_URL + 'medications',
+  ADMIN_BOOK_APPOINTMENT: API_BASE_URL + 'admin-book-appointment',
+  SEARCH_USER: API_BASE_URL + 'search-user',
 };

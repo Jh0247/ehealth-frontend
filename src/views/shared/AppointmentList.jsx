@@ -14,6 +14,7 @@ import DatePicker from 'react-datepicker';
 import { rolePathMap } from '../../constants/rolePath';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getAppointmentsByOrganization } from '../../redux/features/healthcareProviderSlice';
+import CreateAppointmentModal from '../healthcare/CreateAppointmentModal';
 
 const AppointmentList = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const AppointmentList = () => {
   const [filter, setFilter] = useState('Last Month');
   const [startDate, setStartDate] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)));
   const [endDate, setEndDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (user_info?.user_role === 'admin') {
@@ -130,6 +132,14 @@ const AppointmentList = () => {
             </button>
           </Link>
         )}
+        {user_info?.user_role === 'admin' && (
+          <button
+            className="hidden sm:block bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Create Appointment
+          </button>
+        )}
       </div>
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6">
         {upcomingAppointments.length > 0 && (
@@ -229,6 +239,7 @@ const AppointmentList = () => {
           </div>
         </div>
       </div>
+      <CreateAppointmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
