@@ -24,7 +24,6 @@ const HealthRecordUpdateModal = ({ isOpen, onClose }) => {
   });
   const [error, setError] = useState('');
   const [animationClass, setAnimationClass] = useState('');
-  const [diseases, setDiseases] = useState(allDiseases);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,24 +52,29 @@ const HealthRecordUpdateModal = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, newDisease: e.target.value }));
   };
 
-  const handleAddDisease = () => {
-    if (formData.newDisease && !diseases.includes(formData.newDisease)) {
-      setDiseases([...diseases, formData.newDisease]);
-      setFormData((prev) => ({
-        ...prev,
-        diseases: prev.diseases ? `${prev.diseases}, ${formData.newDisease}` : formData.newDisease,
-        newDisease: '',
-      }));
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Dispatch an action or make an API call here with formData
-    // await dispatch(updateUserHealthRecord(formData));
+  
+    const { allergic, ...otherData } = formData;
+    const filteredAllergic = {};
+  
+    for (const key in allergic) {
+      if (allergic[key].length > 0) {
+        filteredAllergic[key] = allergic[key];
+      }
+    }
+  
+    const updatedData = {
+      ...otherData,
+      ...(Object.keys(filteredAllergic).length > 0 && { allergic: filteredAllergic })
+    };
+  
+    console.log(updatedData); // Log the updated data
+    // Dispatch an action or make an API call here with updatedData
+    // await dispatch(updateUserHealthRecord(updatedData));
     // closeModal();
   };
+  
 
   const closeModal = () => {
     setAnimationClass('animate-fadeOut');
@@ -92,7 +96,7 @@ const HealthRecordUpdateModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-      <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-md w-full mx-2 max-h-full overflow-y-auto">
+      <div className={`bg-white p-6 rounded-lg shadow-lg relative max-w-md w-full mx-2 max-h-full overflow-y-auto ${animationClass}`}>
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={closeModal}
@@ -219,25 +223,10 @@ const HealthRecordUpdateModal = ({ isOpen, onClose }) => {
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-1 md:px-2"
             >
               <option value="">Select Disease</option>
-              {diseases.map((disease) => (
+              {allDiseases.map((disease) => (
                 <option key={disease} value={disease}>{disease}</option>
               ))}
             </select>
-            <input
-              type="text"
-              name="newDisease"
-              value={formData.newDisease}
-              onChange={handleNewDiseaseChange}
-              placeholder="Add new disease"
-              className="mt-2 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-1 md:px-2"
-            />
-            <button
-              type="button"
-              onClick={handleAddDisease}
-              className="mt-2 py-2 px-4 bg-[#347576] text-white rounded-lg hover:bg-[#285D5E]"
-            >
-              Add Disease
-            </button>
           </div>
           <div className="flex justify-end">
             <button
