@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Editor, EditorState, convertFromHTML, ContentState } from 'draft-js';
 import { fetchBlogpostById } from '../../redux/features/blogpostSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import noDataImage from '../../assets/noData.png';
+import { Icon } from '@iconify/react';
+import arrowBackIcon from '@iconify-icons/mdi/arrow-left';
 
 export default function BlogpostDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { blogpost, status } = useSelector((state) => state.blogpost);
 
   useEffect(() => {
@@ -36,9 +39,16 @@ export default function BlogpostDetails() {
 
   return (
     <div className="p-5 md:p-9">
+      <button 
+        onClick={() => navigate(-1)}
+        className="text-blue-500 underline flex items-center mb-4"
+      >
+        <Icon icon={arrowBackIcon} className="w-5 h-5 mr-2" />
+        Back
+      </button>
       {blogpost ? (
         <div className="bg-white rounded shadow-sm shadow-teal-800 p-6">
-          <h1 className="text-2xl md:text-4xl font-bold mb-4">{blogpost.title}</h1>
+          <h1 className="text-xl md:text-4xl font-bold mb-4">{blogpost.title}</h1>
           {blogpost.user && (
             <div className="flex items-center mb-4">
               <img
@@ -47,7 +57,7 @@ export default function BlogpostDetails() {
                 className="w-12 h-12 rounded-full mr-4"
               />
               <div>
-                <h2 className="text-lg font-semibold">{blogpost.user.name}</h2>
+                <h2 className="text-md sm:text-lg font-semibold">{blogpost.user.name}</h2>
                 <p className="text-gray-600">{new Date(blogpost.created_at).toLocaleDateString()}</p>
               </div>
             </div>

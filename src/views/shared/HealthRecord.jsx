@@ -16,13 +16,13 @@ import diseaseImage from '../../assets/disease.png';
 import { getUserHealth } from '../../redux/features/userSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import ProfileUpdateModal from '../shared/ProfileUpdateModal';
+import HealthRecordUpdateModal from '../healthcare/HealthRecordUpdateModal';
 
 export default function HealthRecord() {
   const dispatch = useDispatch();
   const location = useLocation();
   const { userId } = location.state || {};
-  const { health_record, status } = useSelector((state) => state.user);
+  const { user_info, health_record, status } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -34,6 +34,17 @@ export default function HealthRecord() {
       dispatch(getUserHealth());
     }
   }, [dispatch, userId]);
+
+  // Parse allergic data
+  const parseAllergic = (allergic) => {
+    try {
+      return JSON.parse(allergic);
+    } catch (e) {
+      return {};
+    }
+  };
+
+  const allergic = health_record?.health_record?.allergic ? parseAllergic(health_record.health_record.allergic) : {};
 
   return (
     <div className="flex flex-col p-5 md:p-9">
@@ -75,12 +86,14 @@ export default function HealthRecord() {
             </p>
           </div>
         </div>
-        <button
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <Icon icon={editIcon} className="w-6 h-6" />
-        </button>
+        {user_info?.user_role === 'doctor' && (
+          <button
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <Icon icon={editIcon} className="w-6 h-6" />
+          </button>
+        )}
       </div>
 
       <div className="my-8">
@@ -92,9 +105,13 @@ export default function HealthRecord() {
               alt="Food Allergic"
               className="w-20 h-20 mx-auto mb-4"
             />
-            <h4 className="text-md font-bold">Food allergic</h4>
+            <h4 className="text-md font-bold">Food Allergic</h4>
             <ul className="list-disc list-inside">
-              {status === 'loading' ? <Skeleton count={1} width={120} /> : <li>{health_record?.health_record?.allergic?.food || 'None'}</li>}
+              {status === 'loading' ? <Skeleton count={1} width={120} /> : (
+                (allergic.Food && allergic.Food.length > 0) ? allergic.Food.map((item, index) => (
+                  <li key={index}>{item}</li>
+                )) : <li>None</li>
+              )}
             </ul>
           </div>
           <div className="bg-white rounded shadow-sm shadow-teal-800 p-4">
@@ -103,12 +120,12 @@ export default function HealthRecord() {
               alt="Environment Allergic"
               className="w-20 h-20 mx-auto mb-4"
             />
-            <h4 className="text-md font-bold">Environment allergic</h4>
+            <h4 className="text-md font-bold">Environment Allergic</h4>
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
-                <>
-                  <li>{health_record?.health_record?.allergic?.environment || 'None'}</li>
-                </>
+                (allergic.Environment && allergic.Environment.length > 0) ? allergic.Environment.map((item, index) => (
+                  <li key={index}>{item}</li>
+                )) : <li>None</li>
               )}
             </ul>
           </div>
@@ -118,12 +135,12 @@ export default function HealthRecord() {
               alt="Drug Allergic"
               className="w-20 h-20 mx-auto mb-4"
             />
-            <h4 className="text-md font-bold">Drug allergic</h4>
+            <h4 className="text-md font-bold">Drug Allergic</h4>
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
-                <>
-                  <li>{health_record?.health_record?.allergic?.drug || 'None'}</li>
-                </>
+                (allergic.Drug && allergic.Drug.length > 0) ? allergic.Drug.map((item, index) => (
+                  <li key={index}>{item}</li>
+                )) : <li>None</li>
               )}
             </ul>
           </div>
@@ -136,15 +153,15 @@ export default function HealthRecord() {
             <h4 className="text-md font-bold">Disease</h4>
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
-                <>
-                  <li>{health_record?.health_record?.diseases || 'None'}</li>
-                </>
+                (health_record?.health_record?.diseases && health_record.health_record.diseases.length > 0) ? health_record.health_record.diseases.split(',').map((item, index) => (
+                  <li key={index}>{item}</li>
+                )) : <li>None</li>
               )}
             </ul>
           </div>
         </div>
       </div>
-      <ProfileUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <HealthRecordUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
