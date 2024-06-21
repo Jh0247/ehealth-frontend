@@ -29,13 +29,17 @@ const AppointmentList = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
+  const fetchAppointments = () => {
     if (user_info?.user_role === 'admin') {
       dispatch(getAppointmentsByOrganization(user_info.organization_id));
     } else {
       dispatch(getUserAppointments());
     }
-  }, [dispatch, user_info])
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [dispatch, user_info]);
 
   useEffect(() => {
     if (user_info?.user_role === 'admin') {
@@ -239,7 +243,13 @@ const AppointmentList = () => {
           </div>
         </div>
       </div>
-      <CreateAppointmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CreateAppointmentModal 
+        isOpen={isModalOpen} 
+        onClose={() => {
+          setIsModalOpen(false);
+          fetchAppointments(); // Refetch appointments after closing modal
+        }} 
+      />
     </div>
   );
 };

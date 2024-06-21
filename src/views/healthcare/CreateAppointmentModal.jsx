@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchUserByIcno, adminBookAppointment } from '../../redux/features/appointmentSlice';
+import { searchUserByIcno, adminBookAppointment, clearUserSearchResults } from '../../redux/features/appointmentSlice';
+import { popToast, ToastType } from '../../redux/features/toastSlice';
 
 const CreateAppointmentModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
@@ -48,27 +49,49 @@ const CreateAppointmentModal = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    if (selectedUser) {
-      const data = {
-        ...appointmentData,
-        user_id: selectedUser.id,
-        organization_id: user_info.organization_id,
-      };
-      dispatch(adminBookAppointment(data)).then((action) => {
-        if (action.type === adminBookAppointment.fulfilled.toString()) {
-          onClose();
-        }
-      });
-    } else {
-      alert('Please select a user.');
+    if (!selectedUser || !appointmentData.doctor_id || !appointmentData.appointment_datetime || !appointmentData.type || !appointmentData.purpose) {
+      dispatch(popToast({
+        title: 'Error',
+        message: 'Please fill in all fields.',
+        type: ToastType.ERROR,
+      }));
+      return;
     }
+
+    const selectedDate = new Date(appointmentData.appointment_datetime);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      dispatch(popToast({
+        title: 'Error',
+        message: 'Cannot book an appointment in the past.',
+        type: ToastType.ERROR,
+      }));
+      return;
+    }
+
+    const data = {
+      ...appointmentData,
+      user_id: selectedUser.id,
+      organization_id: user_info.organization_id,
+    };
+    dispatch(adminBookAppointment(data)).then((action) => {
+      if (action.type === adminBookAppointment.fulfilled.toString()) {
+        dispatch(clearUserSearchResults()); 
+        onClose();
+      }
+    });
+  };
+
+  const handleClose = () => {
+    dispatch(clearUserSearchResults());
+    onClose();
   };
 
   const doctors = staff.filter((member) => member.user_role === 'doctor');
 
   return isOpen ? (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+      <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-md w-full mx-2">
         <h3 className="text-lg font-bold mb-4">Create Appointment</h3>
         <div className="mb-4">
           <input
@@ -140,8 +163,8 @@ const CreateAppointmentModal = ({ isOpen, onClose }) => {
             className="w-full p-2 border border-gray-300 rounded mb-2"
           />
         </div>
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">Cancel</button>
+        <div className="flex flex-col sm:flex-row justify-end gap-2">
+          <button onClick={handleClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">Cancel</button>
           <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">Create Appointment</button>
         </div>
       </div>

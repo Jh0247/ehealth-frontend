@@ -204,7 +204,7 @@ const ViewAppointmentDetails = () => {
           <p className="mt-2"><strong>Location:</strong> {appointment.organization.address}</p>
         </div>
         <hr></hr>
-        {appointment.type === 'virtual' && !isCompleted &&(
+        {appointment.type === 'virtual' && !isCompleted && (user_info?.user_role === 'doctor' || user_info?.user_role === 'user') && (
           <div className="mb-4">
             <h4 className="font-bold my-2">Virtual Meeting</h4>
             <JitsiMeeting

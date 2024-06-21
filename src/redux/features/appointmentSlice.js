@@ -97,6 +97,9 @@ const appointmentSlice = createSlice({
   initialState,
   reducers: {
     resetState: () => initialState,
+    clearUserSearchResults: (state) => {
+      state.userSearchResults = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -184,5 +187,5 @@ const appointmentSlice = createSlice({
   },
 });
 
-export const { resetState } = appointmentSlice.actions;
+export const { resetState, clearUserSearchResults } = appointmentSlice.actions;
 export default appointmentSlice.reducer;
