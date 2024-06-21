@@ -86,7 +86,7 @@ const HealthRecordUpdateModal = ({ isOpen, onClose }) => {
     }
     const updatedData = {
       ...otherData,
-      ...(Object.keys(filteredAllergic).length > 0 && { allergic: filteredAllergic })
+      allergic: Object.keys(filteredAllergic).length > 0 ? filteredAllergic : ['None'],
     };
 
     await dispatch(updateUserHealthRecord({ id: health_record?.health_record?.id, data: updatedData }));

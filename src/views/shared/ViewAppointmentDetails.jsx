@@ -141,6 +141,18 @@ const ViewAppointmentDetails = () => {
 
   const isCompleted = appointment.status === 'completed';
 
+  const formatAllergies = (allergies) => {
+    if (allergies === '["None"]') return "None";
+    const parsedAllergies = JSON.parse(allergies);
+    const formattedAllergies = Object.entries(parsedAllergies)
+      .map(([key, value]) => (
+        <div className="mt-2" key={key}>
+          <strong>{key}:</strong> {value?.join(", ")}
+        </div>
+      ));
+    return formattedAllergies;
+  };
+
   return (
     <div className="flex flex-col p-5 md:p-9">
       <button 
@@ -178,39 +190,77 @@ const ViewAppointmentDetails = () => {
       <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6">
         <div className="mb-4">
           <h4 className="font-bold">Appointment Information</h4>
-          <p className="capitalize mt-2"><strong>Date & Time:</strong> {new Date(appointment.appointment_datetime).toLocaleString('en-GB')}</p>
-          <p className="capitalize mt-2"><strong>Type:</strong> {appointment.type}</p>
-          <p className="mt-2"><strong>Purpose:</strong> {appointment.purpose}</p>
-          <p className="capitalize mt-2"><strong>Status:</strong> {appointment.status}</p>
+          <p className="capitalize mt-2"><strong>Date & Time:</strong> {new Date(appointment?.appointment_datetime).toLocaleString('en-GB')}</p>
+          <p className="capitalize mt-2"><strong>Type:</strong> {appointment?.type}</p>
+          <p className="mt-2"><strong>Purpose:</strong> {appointment?.purpose}</p>
+          <p className="capitalize mt-2"><strong>Status:</strong> {appointment?.status}</p>
         </div>
         <hr></hr>
         <div className="my-4">
           <h4 className="font-bold">Patient Information</h4>
-          <p className="mt-2"><strong>Name:</strong> {appointment.user.name}</p>
-          <p className="mt-2"><strong>Email:</strong> {appointment.user.email}</p>
-          <p className="mt-2"><strong>Contact:</strong> {appointment.user.contact}</p>
+          <p className="mt-2"><strong>Name: </strong>
+            <span 
+              onClick={() => navigate(`${rolePathMap[user_info?.user_role]}/health-record`, { state: { userId: appointment?.user?.id } })}
+              className="mt-2 text-blue-500 underline cursor-pointer"
+            >
+              {appointment?.user?.name}
+            </span>
+          </p>
+          <p className="mt-2"><strong>Email: </strong>
+            <a
+              href={`mailto:${appointment?.user?.email}`}
+              className="mt-2 text-blue-500 underline cursor-pointer"
+            >
+              {appointment?.user?.email}
+            </a>
+          </p>
+          <p className="mt-2"><strong>Contact: </strong>
+            <a
+              href={`tel:${appointment?.user?.contact}`}
+              className="mt-2 text-blue-500 underline cursor-pointer"
+            >
+              {appointment?.user?.contact}
+            </a>
+          </p>
+          <p className="mt-2"><strong>Blood Type:</strong> {appointment?.user?.health_record?.blood_type}</p>
+          <p className="mt-2"><strong>Allergic:</strong> {formatAllergies(appointment?.user?.health_record?.allergic)}</p>
+          <p className="mt-2"><strong>Diseases:</strong> {appointment?.user?.health_record?.diseases !== 'null' ? appointment?.user?.health_record?.diseases : 'None'}</p>
         </div>
         <hr></hr>
         <div className="my-4">
           <h4 className="font-bold">Doctor Information</h4>
-          <p className="mt-2"><strong>Name:</strong> {appointment.doctor.name}</p>
-          <p className="mt-2"><strong>Email:</strong> {appointment.doctor.email}</p>
-          <p className="mt-2"><strong>Contact:</strong> {appointment.doctor.contact}</p>
+          <p className="mt-2"><strong>Name:</strong> {appointment?.doctor?.name}</p>
+          <p className="mt-2"><strong>Email: </strong>
+            <a
+              href={`mailto:${appointment.doctor.email}`}
+              className="mt-2 text-blue-500 underline cursor-pointer"
+            >
+              {appointment.doctor.email}
+            </a>
+          </p>
+          <p className="mt-2"><strong>Contact: </strong>
+            <a
+              href={`tel:${appointment?.doctor?.contact}`}
+              className="mt-2 text-blue-500 underline cursor-pointer"
+            >
+              {appointment?.doctor?.contact}
+            </a>
+          </p>
         </div>
         <hr></hr>
         <div className="my-4">
           <h4 className="font-bold">Organization Information</h4>
-          <p className="capitalize mt-2"><strong>Name:</strong> {appointment.organization.name}</p>
-          <p className="mt-2"><strong>Location:</strong> {appointment.organization.address}</p>
+          <p className="capitalize mt-2"><strong>Name:</strong> {appointment?.organization?.name}</p>
+          <p className="mt-2"><strong>Location:</strong> {appointment?.organization?.address}</p>
         </div>
         <hr></hr>
         {appointment.type === 'virtual' && !isCompleted && (user_info?.user_role === 'doctor' || user_info?.user_role === 'user') && (
           <div className="mb-4">
             <h4 className="font-bold my-2">Virtual Meeting</h4>
             <JitsiMeeting
-              roomName={`appointment_${appointment.id}`}
-              displayName={appointment.user.name}
-              email={appointment.user.email}
+              roomName={`appointment_${appointment?.id}`}
+              displayName={appointment?.user?.name}
+              email={appointment?.user?.email}
             />
           </div>
         )}
