@@ -66,6 +66,18 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+export const updateUserHealthRecord = createAsyncThunk(
+  'user/updateUserHealthRecord',
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL.HEALTH_RECORD}/${id}`, data);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -132,6 +144,19 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(updateUserHealthRecord.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(updateUserHealthRecord.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.health_record = action.payload;
+        state.error = null;
+      })
+      .addCase(updateUserHealthRecord.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

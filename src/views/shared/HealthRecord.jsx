@@ -35,6 +35,12 @@ export default function HealthRecord() {
     }
   }, [dispatch, userId]);
 
+  useEffect(() => {
+    if (status === 'succeeded' && isModalOpen) {
+      setIsModalOpen(false);
+    }
+  }, [status, isModalOpen]);
+
   // Parse allergic data
   const parseAllergic = (allergic) => {
     try {
@@ -123,7 +129,7 @@ export default function HealthRecord() {
             <h4 className="text-md font-bold">Environment Allergic</h4>
             <ul className="list-disc list-inside">
               {status === 'loading' ? <Skeleton count={2} width={120} /> : (
-                (allergic.Environment && allergic.Environment.length > 0) ? allergic.Environment.map((item, index) => (
+                (allergic.Environmental && allergic.Environmental.length > 0) ? allergic.Environmental.map((item, index) => (
                   <li key={index}>{item}</li>
                 )) : <li>None</li>
               )}

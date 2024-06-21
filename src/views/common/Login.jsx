@@ -22,7 +22,7 @@ const Login = () => {
     const result = await dispatch(
       loginUser({
         // email: "johndoe@example.com",
-        email: "doctorname@example.com",
+        email: "doctorname2@example.com",
         // email: "doctorOZ2x2@example.com", //second oz doc
         // email: "test1@example.com",
         // email: "admin@sample.com", 

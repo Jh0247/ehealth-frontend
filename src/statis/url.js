@@ -21,4 +21,5 @@ export const API_URL = {
   MEDICATIONS: API_BASE_URL + 'medications',
   ADMIN_BOOK_APPOINTMENT: API_BASE_URL + 'admin-book-appointment',
   SEARCH_USER: API_BASE_URL + 'search-user',
+  HEALTH_RECORD: API_BASE_URL + 'health-record',
 };
