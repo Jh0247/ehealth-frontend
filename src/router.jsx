@@ -32,12 +32,13 @@ import BookAppointment from "./views/patient/BookAppointment";
 import HealthcareDashboard from "./views/healthcare/HealthcareDashboard";
 import MyBlogpost from "./views/healthcare/MyBlogpost";
 import CreationBlogpost from "./views/healthcare/CreationBlogpost";
+import MyPatients from "./views/healthcare/MyPatients";
+import MyStaff from "./views/healthcare/MyStaff";
 
 // Pharmacist Views
 import PharmacistDashboard from "./views/pharmacist/PharmacistDashboard";
 import ManagePurchaseRecord from "./views/pharmacist/ManagePurchaseRecord";
-import MyPatients from "./views/healthcare/MyPatients";
-import MyStaff from "./views/healthcare/MyStaff";
+import AddPurchaseRecord from "./views/pharmacist/AddPurchaseRecord";
 
 const router = createBrowserRouter([
   {
@@ -100,6 +101,8 @@ const router = createBrowserRouter([
       { path: 'dashboard', element: <PharmacistDashboard /> },
       { path: 'blogpost', element: <ViewBlogpost /> },
       { path: 'manage-purchase-record', element: <ManagePurchaseRecord /> },
+      { path: 'add-purchase-record', element: <AddPurchaseRecord /> },
+
     ]
   },
   { path: '*', element: <NotFound /> }
