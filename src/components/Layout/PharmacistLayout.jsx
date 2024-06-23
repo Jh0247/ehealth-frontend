@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
-import personIcon from '@iconify-icons/mdi/account';
+import shopIcon from '@iconify-icons/mdi/shop';
 import articleIcon from '@iconify-icons/mdi/post';
 
 export default function PharmacistLayout() {
@@ -40,9 +40,9 @@ export default function PharmacistLayout() {
   }
 
   const navItems = [
-    { name: 'Dashboard', path: '/user/dashboard', icon: dashboardIcon },
-    { name: 'Health Record', path: '/user/health-record', icon: personIcon },
-    { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
+    { name: 'Dashboard', path: '/pharmacist/dashboard', icon: dashboardIcon },
+    { name: 'Purchase Record', path: '/pharmacist/manage-purchase-record', icon: shopIcon },
+    { name: 'Blog Post', path: '/pharmacist/blogpost', icon: articleIcon },
   ];
 
   const handleToggleSidebar = (isOpen) => {

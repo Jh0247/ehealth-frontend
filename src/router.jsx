@@ -98,6 +98,7 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <Navigate to='dashboard' /> },
       { path: 'dashboard', element: <PharmacistDashboard /> },
+      { path: 'blogpost', element: <ViewBlogpost /> },
       { path: 'manage-purchase-record', element: <ManagePurchaseRecord /> },
     ]
   },
