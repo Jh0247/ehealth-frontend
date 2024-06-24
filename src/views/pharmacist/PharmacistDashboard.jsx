@@ -72,7 +72,7 @@ export default function PharmacistDashboard() {
       {/* Manage Purchase Record */}
       <div className="mt-8">
         <h3 className="text-lg font-bold mb-3">Manage Purchase Record</h3>
-        <Link to="/pharmacist/manage-purchase-record">
+        <Link to="/pharmacist/add-purchase-record">
           <button className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded w-full">
             Add Purchase Record
           </button>
@@ -88,11 +88,11 @@ export default function PharmacistDashboard() {
           </div>
           <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center w-full">
             <h4 className="text-lg mb-2">Total Sales</h4>
-            <p className="text-3xl font-bold">{statsStatus === 'loading' ? <Skeleton width={60} /> : statistics?.total_sales || 0}</p>
+            <p className="text-3xl font-bold">{statsStatus === 'loading' ? <Skeleton width={60} /> : ('$' + statistics?.total_sales) || 0}</p>
           </div>
           <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center w-full">
             <h4 className="text-lg mb-2">Today Sales</h4>
-            <p className="text-3xl font-bold">{statsStatus === 'loading' ? <Skeleton width={60} /> : statistics?.today_sales || 0}</p>
+            <p className="text-3xl font-bold">{statsStatus === 'loading' ? <Skeleton width={60} /> : ('$' + statistics?.today_sales) || 0}</p>
           </div>
         </div>
       </div>

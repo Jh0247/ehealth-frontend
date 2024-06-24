@@ -3,5 +3,6 @@ export const rolePathMap = {
   'admin': '/healthcare',
   'doctor': '/healthcare',
   'nurse': '/healthcare',
+  'pharmacist': '/healthcare',
   'e-admin': '/e-admin'
 };

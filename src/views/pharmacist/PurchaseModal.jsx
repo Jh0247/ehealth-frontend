@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import closeIcon from '@iconify-icons/mdi/close';
 import AddMedication from './AddMedication';
 
-const PurchaseModal = ({ isOpen, onClose, user, medications, onCreatePurchase }) => {
+const PurchaseModal = ({ isOpen, onClose, user, medications, onCreatePurchase, pharmacistId }) => {
   const [selectedMedications, setSelectedMedications] = useState([]);
   const [quantities, setQuantities] = useState({});
 
@@ -43,6 +43,7 @@ const PurchaseModal = ({ isOpen, onClose, user, medications, onCreatePurchase })
       date_purchase: new Date().toISOString().split('T')[0],
       quantity: quantities[medication.id] || 1,
       total_payment: parseFloat(medication.price) * (quantities[medication.id] || 1),
+      pharmacist_id: pharmacistId
     }));
     onCreatePurchase(purchaseData);
     onClose();
@@ -50,7 +51,7 @@ const PurchaseModal = ({ isOpen, onClose, user, medications, onCreatePurchase })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-      <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full mx-2 max-h-full overflow-y-auto min-h-[500px] min-h-">
+      <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full mx-2 max-h-full overflow-y-auto min-h-[500px]  sm:min-w-[640px]">
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={onClose}
@@ -63,9 +64,9 @@ const PurchaseModal = ({ isOpen, onClose, user, medications, onCreatePurchase })
           medications={medications}
           onAddMedication={handleAddMedication}
         />
-        <div className="mt-4">
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {selectedMedications.map(medication => (
-            <div key={medication.id} className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col mb-4">
+            <div key={medication.id} className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col">
               <h4 className="text-lg mb-2">Medication: <strong>{medication.name}</strong></h4>
               <p className="mb-2">Price: <strong>${medication.price}</strong></p>
               <div className="mb-2">
@@ -101,6 +102,7 @@ PurchaseModal.propTypes = {
   user: PropTypes.object.isRequired,
   medications: PropTypes.arrayOf(PropTypes.object).isRequired,
   onCreatePurchase: PropTypes.func.isRequired,
+  pharmacistId: PropTypes.number.isRequired, 
 };
 
 export default PurchaseModal;

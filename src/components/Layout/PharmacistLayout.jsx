@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
+import plusIcon from '@iconify-icons/mdi/plus-box';
 import shopIcon from '@iconify-icons/mdi/shop';
 import articleIcon from '@iconify-icons/mdi/post';
 
@@ -41,6 +42,7 @@ export default function PharmacistLayout() {
 
   const navItems = [
     { name: 'Dashboard', path: '/pharmacist/dashboard', icon: dashboardIcon },
+    { name: 'Add Record', path: '/pharmacist/add-purchase-record', icon: plusIcon },
     { name: 'Purchase Record', path: '/pharmacist/manage-purchase-record', icon: shopIcon },
     { name: 'Blog Post', path: '/pharmacist/blogpost', icon: articleIcon },
   ];

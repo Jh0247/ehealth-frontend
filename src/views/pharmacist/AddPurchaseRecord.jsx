@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { searchUserByIcno, clearUserSearchResults } from '../../redux/features/appointmentSlice';
 import { createPurchaseRecord, fetchAppointmentPrescriptions } from '../../redux/features/purchaseSlice';
 import { getAppointmentsByOrganization } from '../../redux/features/healthcareProviderSlice';
-import { fetchMedications } from '../../redux/features/medicationSlice'; // Import the fetchMedications action
+import { fetchMedications } from '../../redux/features/medicationSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import PrescriptionModal from './PrescriptionModal';
 import PurchaseModal from './PurchaseModal';
 import { popToast, ToastType } from '../../redux/features/toastSlice';
+import noDataImage from '../../assets/noData.png';
 
 export default function AddPurchaseRecord() {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export default function AddPurchaseRecord() {
   const { userSearchResults, searchStatus } = useSelector((state) => state.appointment);
   const { appointments, appointmentStatus } = useSelector((state) => state.healthcareProvider);
   const { prescriptions, status: prescriptionStatus } = useSelector((state) => state.purchase);
-  const { medications, status: medicationStatus } = useSelector((state) => state.medication); // Select medications from state
+  const { medications, status: medicationStatus } = useSelector((state) => state.medication);
   const [activeTab, setActiveTab] = useState('appointment');
   const [icno, setIcno] = useState('');
   const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function AddPurchaseRecord() {
     if (user_info?.organization_id) {
       dispatch(getAppointmentsByOrganization(user_info.organization_id));
     }
-    dispatch(fetchMedications()); // Fetch medications when the component mounts
+    dispatch(fetchMedications());
   }, [dispatch, user_info?.organization_id]);
 
   useEffect(() => {
@@ -57,6 +58,9 @@ export default function AddPurchaseRecord() {
           );
           setIsPrescriptionModalOpen(false);
           setIsPurchaseModalOpen(false);
+          setIcno('');
+          //navigate to purchase record
+          
         })
         .catch((error) => {
           dispatch(
@@ -116,15 +120,15 @@ export default function AddPurchaseRecord() {
   return (
     <div className="flex flex-col p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Add Purchase Record</h3>
-      <div className="flex justify-between mb-4">
+      <div className="flex mb-4">
         <button
-          className={`py-2 px-4 ${activeTab === 'appointment' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} rounded-lg text-sm sm:text-base`}
+          className={`py-2 px-4 ${activeTab === 'appointment' ? 'bg-teal-800 text-white' : 'bg-gray-200 text-gray-700'} text-sm sm:text-base rounded-l`}
           onClick={() => handleTabChange('appointment')}
         >
           By Appointment
         </button>
         <button
-          className={`py-2 px-4 ${activeTab === 'search' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} rounded-lg text-sm sm:text-base`}
+          className={`py-2 px-4 ${activeTab === 'search' ? 'bg-teal-800 text-white' : 'bg-gray-200 text-gray-700'} text-sm sm:text-base rounded-r`}
           onClick={() => handleTabChange('search')}
         >
           Search User
@@ -164,20 +168,27 @@ export default function AddPurchaseRecord() {
           {searchStatus === 'loading' ? (
             <Skeleton count={1} height={50} />
           ) : (
-            userSearchResults && userSearchResults.map(user => (
-              <div key={user.id} className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col sm:flex-row justify-between items-center sm:text-left mb-4">
-                <div className="flex flex-col">
-                  <h4 className="mb-2 text-sm sm:text-base">Name: <strong>{user.name}</strong></h4>
-                  <p className="mb-2 text-sm sm:text-base">IC Number: <strong>{user.icno}</strong></p>
+            userSearchResults.length > 0 ? (
+              userSearchResults.map(user => (
+                <div key={user.id} className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col sm:flex-row justify-between items-center sm:text-left mb-4">
+                  <div className="flex flex-col">
+                    <h4 className="mb-2 text-sm sm:text-base">Name: <strong>{user.name}</strong></h4>
+                    <p className="mb-2 text-sm sm:text-base">IC Number: <strong>{user.icno}</strong></p>
+                  </div>
+                  <button
+                    className="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 text-sm sm:text-base"
+                    onClick={() => handleShowPurchaseModal(user)}
+                  >
+                    Add Purchase Record
+                  </button>
                 </div>
-                <button
-                  className="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 text-sm sm:text-base"
-                  onClick={() => handleShowPurchaseModal(user)}
-                >
-                  Add Purchase Record
-                </button>
+              ))
+            ) : (
+              <div className="flex flex-col items-center">
+                <img src={noDataImage} alt="No data" className="w-64 h-64" />
+                <p className="text-gray-500 mt-4">No users found.</p>
               </div>
-            ))
+            )
           )}
         </div>
       )}
@@ -196,8 +207,9 @@ export default function AddPurchaseRecord() {
           isOpen={isPurchaseModalOpen}
           onClose={() => setIsPurchaseModalOpen(false)}
           user={selectedUser}
-          medications={medications} // Pass the medication list here
+          medications={medications}
           onCreatePurchase={handleCreatePurchase}
+          pharmacistId={user_info.id}
         />
       )}
     </div>

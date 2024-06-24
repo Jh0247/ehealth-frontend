@@ -102,7 +102,7 @@ const router = createBrowserRouter([
       { path: 'blogpost', element: <ViewBlogpost /> },
       { path: 'manage-purchase-record', element: <ManagePurchaseRecord /> },
       { path: 'add-purchase-record', element: <AddPurchaseRecord /> },
-
+      { path: 'blogpost-details/:id', element: <BlogpostDetails /> },
     ]
   },
   { path: '*', element: <NotFound /> }
