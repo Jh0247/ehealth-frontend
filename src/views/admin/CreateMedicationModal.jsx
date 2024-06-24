@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const CreateMedicationModal = ({ isOpen, onClose, onCreate }) => {
+const CreateMedicationModal = ({ isOpen, onClose, onCreate, initialData }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -13,10 +13,17 @@ const CreateMedicationModal = ({ isOpen, onClose, onCreate }) => {
     price: '',
   });
 
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -30,7 +37,7 @@ const CreateMedicationModal = ({ isOpen, onClose, onCreate }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
       <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-md w-full mx-2 max-h-full overflow-y-auto">
-        <h3 className="text-lg font-bold mb-4">Create Medication</h3>
+        <h3 className="text-lg font-bold mb-4">{initialData ? 'Edit Medication' : 'Create Medication'}</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700">Name</label>
@@ -119,8 +126,8 @@ const CreateMedicationModal = ({ isOpen, onClose, onCreate }) => {
             />
           </div>
           <div className="flex justify-end gap-2">
-            <button onClick={onClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">Cancel</button>
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Create</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">Cancel</button>
+            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">{initialData ? 'Update' : 'Create'}</button>
           </div>
         </form>
       </div>
@@ -132,6 +139,11 @@ CreateMedicationModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onCreate: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
+};
+
+CreateMedicationModal.defaultProps = {
+  initialData: null,
 };
 
 export default CreateMedicationModal;

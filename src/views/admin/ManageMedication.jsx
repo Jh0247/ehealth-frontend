@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import CreateMedicationModal from './CreateMedicationModal';
-import { fetchMedications, createMedication } from '../../redux/features/medicationSlice';
+import { fetchMedications, createMedication, updateMedication } from '../../redux/features/medicationSlice';
 import { Icon } from '@iconify/react';
 import arrowDown from '@iconify-icons/mdi/arrow-down';
 import arrowUp from '@iconify-icons/mdi/arrow-up';
@@ -16,6 +16,8 @@ const ManageMedication = () => {
   const [sortedMedications, setSortedMedications] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedMedication, setSelectedMedication] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedManufacturer, setSelectedManufacturer] = useState('');
@@ -57,7 +59,12 @@ const ManageMedication = () => {
 
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key) return null;
-    return sortConfig.direction === 'ascending' ? <Icon icon={arrowUp} /> : <Icon icon={arrowDown} />;
+    return sortConfig.direction === 'ascending' ? <Icon className="ml-2" icon={arrowUp} /> : <Icon className="ml-2" icon={arrowDown} />;
+  };
+
+  const handleEdit = (medication) => {
+    setSelectedMedication(medication);
+    setEditModalOpen(true);
   };
 
   const renderMedication = (medication, index) => (
@@ -71,12 +78,12 @@ const ManageMedication = () => {
             <strong>Name: </strong> {medication.name}
           </span>
         </div>
-        <div className="flex flex-col w-2/4 border-r-2 border-gray-300 px-2">
+        <div className="flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
             <strong>Form: </strong> {medication.form}
           </span>
         </div>
-        <div className="hidden sm:flex flex-col w-2/4 border-r-2 border-gray-300 px-2">
+        <div className="hidden sm:flex flex-col w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
             <strong>Manufacturer: </strong> {medication.manufacturer}
           </span>
@@ -86,6 +93,12 @@ const ManageMedication = () => {
             <strong>Price: </strong> ${medication.price}
           </span>
         </div>
+        <button
+          onClick={() => handleEdit(medication)}
+          className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded ml-2"
+        >
+          Edit
+        </button>
       </div>
     </li>
   );
@@ -93,6 +106,12 @@ const ManageMedication = () => {
   const handleCreateMedication = (formData) => {
     dispatch(createMedication(formData)).then(() => {
       setCreateModalOpen(false);
+    });
+  };
+
+  const handleUpdateMedication = (id, formData) => {
+    dispatch(updateMedication({ id, formData })).then(() => {
+      setEditModalOpen(false);
     });
   };
 
@@ -176,16 +195,16 @@ const ManageMedication = () => {
       <div className="relative bg-gray-100 rounded-lg shadow-inner">
         <div className="sticky top-0 bg-gray-100 p-4 rounded-t-lg shadow-md">
           <div className="flex justify-between mb-2">
-            <div className="w-2/4 sm:w-1/4 sm:text-base cursor-pointer" onClick={() => handleSort('name')}>
+            <div className="flex flex-row w-2/4 sm:w-1/4 sm:text-base cursor-pointer items-center" onClick={() => handleSort('name')}>
               <strong>Name</strong> {renderSortIcon('name')}
             </div>
-            <div className="w-2/4 sm:text-base cursor-pointer" onClick={() => handleSort('form')}>
+            <div className="flex flex-row w-2/4 sm:w-1/4 sm:text-base cursor-pointer items-center" onClick={() => handleSort('form')}>
               <strong>Form</strong> {renderSortIcon('form')}
             </div>
-            <div className="hidden sm:block w-2/4 sm:text-base cursor-pointer" onClick={() => handleSort('manufacturer')}>
+            <div className="flex-row hidden sm:flex sm:w-1/4 sm:text-base cursor-pointer items-center" onClick={() => handleSort('manufacturer')}>
               <strong>Manufacturer</strong> {renderSortIcon('manufacturer')}
             </div>
-            <div className="hidden sm:block w-1/4 sm:text-base cursor-pointer" onClick={() => handleSort('price')}>
+            <div className="flex-row hidden sm:flex sm:w-1/4 sm:text-base cursor-pointer items-center" onClick={() => handleSort('price')}>
               <strong>Price</strong> {renderSortIcon('price')}
             </div>
           </div>
@@ -211,6 +230,14 @@ const ManageMedication = () => {
         onClose={() => setCreateModalOpen(false)}
         onCreate={handleCreateMedication}
       />
+      {selectedMedication && (
+        <CreateMedicationModal
+          isOpen={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          onCreate={(formData) => handleUpdateMedication(selectedMedication.id, formData)}
+          initialData={selectedMedication}
+        />
+      )}
     </div>
   );
 };

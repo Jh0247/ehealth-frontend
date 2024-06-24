@@ -45,6 +45,18 @@ export const createMedication = createAsyncThunk(
   }
 );
 
+export const updateMedication = createAsyncThunk(
+  'medication/updateMedication',
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL.MEDICATIONS}/${id}`, formData);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const medicationSlice = createSlice({
   name: 'medication',
   initialState,
@@ -86,6 +98,21 @@ const medicationSlice = createSlice({
         state.error = null;
       })
       .addCase(createMedication.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(updateMedication.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateMedication.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const index = state.medications.findIndex(med => med.id === action.payload.medication.id);
+        if (index !== -1) {
+          state.medications[index] = action.payload.medication;
+        }
+        state.error = null;
+      })
+      .addCase(updateMedication.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
