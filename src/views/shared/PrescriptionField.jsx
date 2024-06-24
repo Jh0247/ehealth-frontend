@@ -46,10 +46,11 @@ const PrescriptionField = ({ index, medications, formData, handleChange, handleR
               />
               <select
                 className="w-full p-2 border border-gray-300 rounded mb-2 ml-2"
-                value={formData.dosageUnit || dosageUnits[0]}
+                value={formData.dosageUnit || ''}
                 onChange={(e) => handleChange(index, 'dosageUnit', e.target.value)}
                 required
               >
+                <option disabled value=''>Unit</option>
                 {dosageUnits.map(unit => (
                   <option key={unit} value={unit}>{unit}</option>
                 ))}
@@ -62,10 +63,11 @@ const PrescriptionField = ({ index, medications, formData, handleChange, handleR
         {isEditable ? (
           <select
             className="w-full p-2 border border-gray-300 rounded mb-2"
-            value={formData.frequency || frequencyOptions[0]}
+            value={formData.frequency || ''}
             onChange={(e) => handleChange(index, 'frequency', e.target.value)}
             required
           >
+            <option disabled value=''>Frequency</option>
             {frequencyOptions.map(option => (
               <option key={option} value={option}>{option}</option>
             ))}
@@ -85,10 +87,11 @@ const PrescriptionField = ({ index, medications, formData, handleChange, handleR
             />
             <select
               className="w-full p-2 border border-gray-300 rounded mb-2 ml-2"
-              value={formData.durationUnit || durationUnits[0]}
+              value={formData.durationUnit || ''}
               onChange={(e) => handleChange(index, 'durationUnit', e.target.value)}
               required
             >
+              <option disabled value=''>Duration</option>
               {durationUnits.map(unit => (
                 <option key={unit} value={unit}>{unit}</option>
               ))}

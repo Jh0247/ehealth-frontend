@@ -5,6 +5,7 @@ import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
 import personIcon from '@iconify-icons/mdi/account';
 import magnifyIcon from '@iconify-icons/mdi/magnify';
+import shopIcon from '@iconify-icons/mdi/shop';
 import articleIcon from '@iconify-icons/mdi/post';
 
 export default function PatientLayout() {
@@ -44,6 +45,7 @@ export default function PatientLayout() {
     { name: 'Dashboard', path: '/user/dashboard', icon: dashboardIcon },
     { name: 'Health Record', path: '/user/health-record', icon: personIcon },
     { name: 'Consultation', path: '/user/appointment-list', icon: magnifyIcon },
+    { name: 'Purchase Record', path: '/user/purchase-record', icon: shopIcon },
     { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
   ];
 

@@ -23,4 +23,5 @@ export const API_URL = {
   SEARCH_USER: API_BASE_URL + 'search-user',
   HEALTH_RECORD: API_BASE_URL + 'health-record',
   PURCHASES: API_BASE_URL + 'purchases',
+  USER_PURCHASES: API_BASE_URL + 'user-purchases',
 };

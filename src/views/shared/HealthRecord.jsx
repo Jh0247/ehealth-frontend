@@ -13,24 +13,30 @@ import foodAllergicImage from '../../assets/foodAllergic.png';
 import environmentAllergicImage from '../../assets/environmentAllergic.png';
 import drugAllergicImage from '../../assets/drugAllergic.png';
 import diseaseImage from '../../assets/disease.png';
-import { getUserHealth } from '../../redux/features/userSlice';
+import noMedicationImage from '../../assets/noMedication.png';
+import { getUserHealth, getUserMedications } from '../../redux/features/userSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { fetchMedicationDetails } from '../../redux/features/medicationSlice';
 import HealthRecordUpdateModal from '../healthcare/HealthRecordUpdateModal';
+import MedicationDetailsModal from './MedicationDetailsModal';
 
 export default function HealthRecord() {
   const dispatch = useDispatch();
   const location = useLocation();
   const { userId } = location.state || {};
-  const { user_info, health_record, status } = useSelector((state) => state.user);
+  const { user_info, health_record, medications, status } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [medicationModalOpen, setMedicationModalOpen] = useState(false);
 
   useEffect(() => {
     if (userId) {
       // Fetch data for a specific user (admin view)
+      dispatch(getUserMedications(userId));
       dispatch(getUserHealth(userId));
     } else {
       // Fetch data for the logged-in user
+      dispatch(getUserMedications());
       dispatch(getUserHealth());
     }
   }, [dispatch, userId]);
@@ -40,6 +46,12 @@ export default function HealthRecord() {
       setIsModalOpen(false);
     }
   }, [status, isModalOpen]);
+
+  const handleViewDetails = (id) => {
+    dispatch(fetchMedicationDetails(id)).then(() => {
+      setMedicationModalOpen(true);
+    });
+  };
 
   // Parse allergic data
   const parseAllergic = (allergic) => {
@@ -167,7 +179,47 @@ export default function HealthRecord() {
           </div>
         </div>
       </div>
-      <HealthRecordUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* On-going Medication */}
+      <div className="mb-8 md:my-8">
+        <h3 className="text-lg font-bold">On-going Medication</h3>
+        <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]">
+          <ul>
+            {status === 'loading' ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <li key={index} className="flex justify-between items-center border-b py-2">
+                  <Skeleton width={200} height={20} />
+                </li>
+              ))
+            ) : (
+              Array.isArray(medications) && medications.length > 0 ? (
+                medications.map((medication, index) => (
+                  <li onClick={() => handleViewDetails(medication?.medication_id)} key={index} className="flex justify-between items-center border-b py-2">
+                    <div className="flex flex-col">
+                      <span className="text-sm"><strong>{medication?.medication_name}</strong></span>
+                      <span className="text-sm">Start on: <strong>{medication?.start_date}</strong></span>
+                      <span className="text-sm">End on: <strong>{medication?.end_date}</strong></span>
+                    </div>
+                    <button className="bg-gray-200 text-gray-700 py-1 px-3 rounded">{medication?.dosage}</button>
+                  </li>
+                ))
+              ) : (
+                <div className="flex flex-col items-center">
+                  <img src={noMedicationImage} alt="No Medications Found" className="w-32 h-32" />
+                  <span className="text-center text-gray-500 py-2">No Medications Found</span>
+                </div>
+              )
+            )}
+          </ul>
+        </div>
+      </div>
+      <MedicationDetailsModal
+        isOpen={medicationModalOpen}
+        onClose={() => setMedicationModalOpen(false)}
+      />
+      <HealthRecordUpdateModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }

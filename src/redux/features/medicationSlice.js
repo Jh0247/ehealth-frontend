@@ -4,6 +4,7 @@ import { API_URL } from '../../statis/url';
 
 const initialState = {
   medications: [],
+  medicationDetails: null,
   status: 'idle',
   error: null,
 };
@@ -13,6 +14,18 @@ export const fetchMedications = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(API_URL.MEDICATIONS);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchMedicationDetails = createAsyncThunk(
+  'medication/fetchMedicationDetails',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`${API_URL.MEDICATIONS}/${id}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -37,6 +50,18 @@ const medicationSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMedications.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(fetchMedicationDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchMedicationDetails.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.medicationDetails = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchMedicationDetails.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

@@ -27,6 +27,7 @@ import OrganizationList from "./views/admin/OrganizationList";
 // Patient Views
 import PatientDashboard from "./views/patient/PatientDashboard";
 import BookAppointment from "./views/patient/BookAppointment";
+import PurchaseRecord from "./views/patient/PurchaseRecord";
 
 // Healthcare Views
 import HealthcareDashboard from "./views/healthcare/HealthcareDashboard";
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
       { path: 'appointment-list', element: <AppointmentList /> },
       { path: 'appointment-details', element: <ViewAppointmentDetails /> },
       { path: 'blogpost-details/:id', element: <BlogpostDetails /> },
+      { path: 'purchase-record', element: <PurchaseRecord /> },
     ]
   },
   {

@@ -15,12 +15,16 @@ import cancelIcon from '@iconify-icons/mdi/cancel';
 import noDataImage from '../../assets/noData.png';
 import noMedicationImage from '../../assets/noMedication.png';
 import { getUserHealth, getUserAppointments, getUserMedications } from '../../redux/features/userSlice';
+import { fetchMedicationDetails } from '../../redux/features/medicationSlice';
 import ProfileUpdateModal from '../shared/ProfileUpdateModal';
+import MedicationDetailsModal from '../shared/MedicationDetailsModal';
 
 export default function PatientDashboard() {
   const dispatch = useDispatch();
   const { user_info, health_record, appointments, medications, status } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [medicationModalOpen, setMedicationModalOpen] = useState(false);
+  const [selectedMedicationId, setSelectedMedicationId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +32,13 @@ export default function PatientDashboard() {
     dispatch(getUserAppointments());
     dispatch(getUserMedications());
   }, [dispatch]);
+
+  const handleViewDetails = (id) => {
+    setSelectedMedicationId(id);
+    dispatch(fetchMedicationDetails(id)).then(() => {
+      setMedicationModalOpen(true);
+    });
+  };
 
   return (
     <div className="flex flex-col p-5 md:p-9">
@@ -153,10 +164,11 @@ export default function PatientDashboard() {
               ) : (
                 Array.isArray(medications) && medications.length > 0 ? (
                   medications.map((medication, index) => (
-                    <li key={index} className="flex justify-between items-center border-b py-2">
+                    <li onClick={() => handleViewDetails(medication?.medication_id)} key={index} className="flex justify-between items-center border-b py-2">
                       <div className="flex flex-col">
-                        <span className="text-sm">{medication?.name}</span>
-                        <span className="text-sm">{new Date(medication?.date).toLocaleString()}</span>
+                        <span className="text-sm"><strong>{medication?.medication_name}</strong></span>
+                        <span className="text-sm">Start on: <strong>{medication?.start_date}</strong></span>
+                        <span className="text-sm">End on: <strong>{medication?.end_date}</strong></span>
                       </div>
                       <button className="bg-gray-200 text-gray-700 py-1 px-3 rounded">{medication?.dosage}</button>
                     </li>
@@ -172,7 +184,14 @@ export default function PatientDashboard() {
           </div>
         </div>
       </div>
-      <ProfileUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <MedicationDetailsModal
+        isOpen={medicationModalOpen}
+        onClose={() => setMedicationModalOpen(false)}
+      />
+      <ProfileUpdateModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }

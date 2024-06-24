@@ -48,7 +48,7 @@ const ViewAppointmentDetails = () => {
 
   const { appointmentId } = location.state || {};
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [prescriptions, setPrescriptions] = useState([{ medication_id: '', dosage: '', dosageUnit: 'pills', frequency: '', duration: '', durationUnit: 'days' }]);
+  const [prescriptions, setPrescriptions] = useState([{ medication_id: '', dosage: '', dosageUnit: '', frequency: '', duration: '', durationUnit: '' }]);
   const [showPrescriptionFields, setShowPrescriptionFields] = useState(false);
   const [duration, setDuration] = useState('');
   const [note, setNote] = useState('');
@@ -97,6 +97,7 @@ const ViewAppointmentDetails = () => {
   };
 
   const handlePrescriptionChange = (index, field, value) => {
+    console.log(`Changing prescription at index ${index}, field ${field}, value ${value}`);
     const newPrescriptions = prescriptions.map((prescription, i) => {
       if (i === index) {
         return { ...prescription, [field]: value };
@@ -104,14 +105,28 @@ const ViewAppointmentDetails = () => {
       return prescription;
     });
     setPrescriptions(newPrescriptions);
+    console.log('Updated prescriptions:', newPrescriptions);
   };
-
-  // Doctor to completed appointment
+  
+  
   const handleComplete = () => {
+    console.log('Prescriptions:', prescriptions);
+  
     const allPrescriptionsFilled = prescriptions.every(prescription => 
-      prescription.medication_id && prescription.dosage && prescription.frequency && prescription.duration
+      prescription.medication_id && 
+      prescription.dosage && 
+      prescription.dosageUnit && 
+      prescription.frequency && 
+      prescription.duration && 
+      prescription.durationUnit
     );
+  
     if (!duration || !note || !allPrescriptionsFilled) {
+      console.log('Duration:', duration);
+      console.log('Note:', note);
+      console.log('All Prescriptions Filled:', allPrescriptionsFilled);
+      console.log('Prescriptions Details:', prescriptions);
+  
       dispatch(popToast({
         title: 'Error',
         message: 'Please fill in all the fields.',
@@ -119,18 +134,29 @@ const ViewAppointmentDetails = () => {
       }));
       return;
     }
+  
     const updateData = {
       duration: parseInt(duration, 10),
       note,
-      prescriptions,
+      prescriptions: prescriptions.map(prescription => ({
+        medication_id: prescription.medication_id,
+        dosage: (prescription.dosage +' '+ prescription.dosageUnit),
+        frequency: prescription.frequency,
+        duration: prescription.duration,
+        durationUnit: prescription.durationUnit,
+      })),
     };
+  
+    console.log('Update data:', updateData);
+  
     dispatch(updateAppointmentWithPrescriptions({ appointmentId, data: updateData })).then((action) => {
       if (action.type === updateAppointmentWithPrescriptions.fulfilled.toString()) {
-        navigate(rolePathMap[user_info?.user_role]+'/appointment-list');
+        navigate(rolePathMap[user_info?.user_role] + '/appointment-list');
       }
     });
   };
-
+  
+  
   if (status === 'loading' || !appointment) {
     return <Skeleton count={5} />;
   }
