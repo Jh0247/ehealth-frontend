@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Editor, EditorState, convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
-import { fetchUserBlogposts } from '../../redux/features/blogpostSlice';
+import { fetchUserBlogposts, deleteBlogpost } from '../../redux/features/blogpostSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import noDataImage from '../../assets/noData.png';
@@ -24,6 +24,11 @@ const MyBlogpost = () => {
 
   const handleStatusFilterChange = (e) => {
     setStatusFilter(e.target.value);
+  };
+
+  const handleDeleteBlogpost = async (id) => {
+    await dispatch(deleteBlogpost(id));
+    dispatch(fetchUserBlogposts());
   };
 
   const formatDate = (dateString) => {
@@ -57,7 +62,7 @@ const MyBlogpost = () => {
         </div>
         <p className="text-sm text-gray-500">{formatDate(blogpost.created_at)}</p>
       </div>
-      <div className="sm:ml-4 mt-5">
+      <div className="sm:ml-4 mt-5 flex items-center space-x-2">
         {blogpost.status === 'draft' && (
           <span className="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full">Draft</span>
         )}
@@ -67,6 +72,15 @@ const MyBlogpost = () => {
         {blogpost.status === 'terminated' && (
           <span className="bg-red-200 text-red-800 py-1 px-3 rounded-full">Terminated</span>
         )}
+        <button
+          className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 text-sm sm:text-base"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteBlogpost(blogpost.id);
+          }}
+        >
+          Delete
+        </button>
       </div>
     </li>
   );
@@ -74,7 +88,7 @@ const MyBlogpost = () => {
   const filteredBlogposts = blogpost?.data?.filter((bp) =>
     (statusFilter === 'all' || bp.status === statusFilter) &&
     bp.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ) || [];
 
   return (
     <div className="flex flex-col p-5 md:p-9">

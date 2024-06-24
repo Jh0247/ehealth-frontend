@@ -37,13 +37,15 @@ export default function HealthcareDashboard() {
     } else if (user_info?.user_role === 'admin') {
       dispatch(getOrganizationStats(user_info.organization_id));
       dispatch(getAppointmentsByOrganization(user_info.organization_id));
+    } else if (user_info?.user_role === 'nurse') {
+      dispatch(getAppointmentsByOrganization(user_info.organization_id));
     }
   }, [dispatch, user_info]);
 
   useEffect(() => {
     if (user_info?.user_role === 'doctor') {
       setAppointmentData(doctorAppointment);
-    } else if(user_info?.user_role === 'admin') {
+    } else if(user_info?.user_role === 'admin' || user_info?.user_role === 'nurse') {
       setAppointmentData(adminAppointment?.data);
     }
   }, [user_info, doctorAppointment, adminAppointment])

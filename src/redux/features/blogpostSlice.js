@@ -81,6 +81,18 @@ export const updateBlogpost = createAsyncThunk(
   }
 );
 
+export const deleteBlogpost = createAsyncThunk(
+  'blogpost/deleteBlogpost',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(`${API_URL.BLOGPOSTS}/${id}`);
+      return { id };
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const blogpostSlice = createSlice({
   name: 'blogpost',
   initialState,
@@ -142,7 +154,7 @@ const blogpostSlice = createSlice({
       })
       .addCase(createBlogpost.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.blogposts.push(action.payload);
+        state.blogpost = action.payload;
         state.error = null;
       })
       .addCase(createBlogpost.rejected, (state, action) => {
@@ -161,6 +173,17 @@ const blogpostSlice = createSlice({
         state.error = null;
       })
       .addCase(updateBlogpost.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(deleteBlogpost.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteBlogpost.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(deleteBlogpost.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

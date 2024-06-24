@@ -42,7 +42,7 @@ const AppointmentList = () => {
   }, [dispatch, user_info]);
 
   useEffect(() => {
-    if (user_info?.user_role === 'admin') {
+    if (user_info?.user_role === 'admin' || user_info?.user_role === 'nurse') {
       setAppointments(adminAppointment?.data);
       setStatus(providerStatus);
     } else {

@@ -75,7 +75,7 @@ const CreationBlogpost = () => {
     e.preventDefault();
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
-    formDataToSend.append('content', formData.content);
+    formDataToSend.append('content', formData.content? formData.content : 'Content here');
     formDataToSend.append('status', formData.status);
     if (bannerChanged && formData.banner) {
       formDataToSend.append('banner', formData.banner);

@@ -21,12 +21,13 @@ const Login = () => {
     e.preventDefault();
     const result = await dispatch(
       loginUser({
-        // email: "johndoe@example.com",
+        // email: "johndoe2@example.com",
         // email: "doctorname2@example.com",
         // email: "doctorOZ2x2@example.com", //second oz doc
         // email: "test1@example.com",
-        // email: "admin@sample.com", 
-        email: "pharmacist@example.com",
+        email: "admin@sample.com", 
+        // email: "pharmacist@example.com",
+        // email: "nurse@sample.com",
         password: "password" 
       })
     );
