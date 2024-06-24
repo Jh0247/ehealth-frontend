@@ -33,6 +33,18 @@ export const fetchMedicationDetails = createAsyncThunk(
   }
 );
 
+export const createMedication = createAsyncThunk(
+  'medication/createMedication',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(API_URL.MEDICATIONS, formData);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const medicationSlice = createSlice({
   name: 'medication',
   initialState,
@@ -62,6 +74,18 @@ const medicationSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMedicationDetails.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(createMedication.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createMedication.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.medications.push(action.payload.medication);
+        state.error = null;
+      })
+      .addCase(createMedication.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

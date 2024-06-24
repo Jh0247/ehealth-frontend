@@ -180,9 +180,9 @@ export default function HealthRecord() {
         </div>
       </div>
       {/* On-going Medication */}
-      <div className="mb-8 md:my-8">
+      <div className="mb-8">
         <h3 className="text-lg font-bold">On-going Medication</h3>
-        <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[200px]">
+        <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[300px]">
           <ul>
             {status === 'loading' ? (
               Array.from({ length: 5 }).map((_, index) => (
@@ -195,9 +195,9 @@ export default function HealthRecord() {
                 medications.map((medication, index) => (
                   <li onClick={() => handleViewDetails(medication?.medication_id)} key={index} className="flex justify-between items-center border-b py-2">
                     <div className="flex flex-col">
-                      <span className="text-sm"><strong>{medication?.medication_name}</strong></span>
-                      <span className="text-sm">Start on: <strong>{medication?.start_date}</strong></span>
-                      <span className="text-sm">End on: <strong>{medication?.end_date}</strong></span>
+                      <span className="text-sm sm:text-base"><strong>{medication?.medication_name}</strong></span>
+                      <span className="text-sm sm:text-base my-2">Start on: <strong>{medication?.start_date}</strong></span>
+                      <span className="text-sm sm:text-base">End on: <strong>{medication?.end_date}</strong></span>
                     </div>
                     <button className="bg-gray-200 text-gray-700 py-1 px-3 rounded">{medication?.dosage}</button>
                   </li>

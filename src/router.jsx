@@ -14,7 +14,6 @@ import Landing from "./views/common/Landing";
 import NotFound from "./views/common/NotFound";
 import SignUpOrganization from "./views/common/SignUpOrganization";
 import ViewBlogpost from "./views/shared/ViewBlogpost";
-import UserList from "./views/shared/UserList";
 import HealthRecord from "./views/shared/HealthRecord";
 import AppointmentList from "./views/shared/AppointmentList";
 import ViewAppointmentDetails from "./views/shared/ViewAppointmentDetails";
@@ -23,6 +22,8 @@ import BlogpostDetails from "./views/shared/BlogpostDetails";
 // Admin Views
 import AdminDashboard from "./views/admin/AdminDashboard";
 import OrganizationList from "./views/admin/OrganizationList";
+import ManageBlogpost from "./views/admin/ManageBlogpost";
+import ManageMedication from "./views/admin/ManageMedication";
 
 // Patient Views
 import PatientDashboard from "./views/patient/PatientDashboard";
@@ -59,8 +60,9 @@ const router = createBrowserRouter([
       { path: '', element: <Navigate to='dashboard' /> },
       { path: 'dashboard', element: <AdminDashboard /> },
       { path: 'organization-list', element: <OrganizationList /> },
-      { path: 'staff-list', element: <UserList /> },
-      { path: 'blogpost', element: <ViewBlogpost /> },
+      { path: 'manage-blogpost', element: <ManageBlogpost /> },
+      { path: 'blogpost-details/:id', element: <BlogpostDetails /> },
+      { path: 'manage-medication', element: <ManageMedication /> },
     ]
   },
   {

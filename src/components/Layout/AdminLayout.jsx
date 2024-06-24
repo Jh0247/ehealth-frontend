@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
 import dashboardIcon from '@iconify-icons/mdi/view-dashboard';
-import personIcon from '@iconify-icons/mdi/account';
+import factoryIcon from '@iconify-icons/mdi/factory';
 import articleIcon from '@iconify-icons/mdi/post';
+import medicineIcon from '@iconify-icons/mdi/medicine';
 
 export default function AdminLayout() {
   const user = useSelector(state => state.user);
@@ -40,9 +41,10 @@ export default function AdminLayout() {
   }
 
   const navItems = [
-    { name: 'Dashboard', path: '/user/dashboard', icon: dashboardIcon },
-    { name: 'Health Record', path: '/user/health-record', icon: personIcon },
-    { name: 'Blog Post', path: '/user/blogpost', icon: articleIcon },
+    { name: 'Dashboard', path: '/e-admin/dashboard', icon: dashboardIcon },
+    { name: 'Organization', path: '/e-admin/organization-list', icon: factoryIcon },
+    { name: 'Blog Post', path: '/e-admin/manage-blogpost', icon: articleIcon },
+    { name: 'Medication', path: '/e-admin/manage-medication', icon: medicineIcon },
   ];
 
   const handleToggleSidebar = (isOpen) => {
