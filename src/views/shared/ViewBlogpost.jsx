@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBlogposts, fetchBlogpostsByName } from '../../redux/features/blogpostSlice';
+import { fetchBlogpost, fetchBlogpostsByName } from '../../redux/features/blogpostSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import noDataImage from '../../assets/noData.png';
@@ -10,12 +10,12 @@ import { Editor, EditorState, convertFromHTML, ContentState } from 'draft-js';
 export default function ViewBlogpost() {
   const dispatch = useDispatch();
   const { user_info } = useSelector((state) => state.user);
-  const { blogposts, status } = useSelector((state) => state.blogpost);
+  const { blogpost, status } = useSelector((state) => state.blogpost);
   const [searchQuery, setSearchQuery] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchBlogposts({ status: 'published' }));
+    dispatch(fetchBlogpost({ status: 'published' }));
   }, [dispatch]);
 
   const handleSearch = () => {
@@ -27,7 +27,7 @@ export default function ViewBlogpost() {
 
   const handleClear = () => {
     setSearchQuery('');
-    dispatch(fetchBlogposts({ status: 'published' }));
+    dispatch(fetchBlogpost({ status: 'published' }));
     setHasSearched(false);
   };
 
@@ -42,7 +42,7 @@ export default function ViewBlogpost() {
     return <Skeleton count={5} />;
   }
 
-  const blogpostData = blogposts?.data || [];
+  const blogpostData = blogpost?.data || [];
 
   const renderBlogpostContent = (content) => {
     if (!content) {

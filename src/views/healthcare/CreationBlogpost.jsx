@@ -149,7 +149,6 @@ const CreationBlogpost = () => {
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
-            <option value="terminated">Terminated</option>
           </select>
         </div>
         <div className="flex justify-end">

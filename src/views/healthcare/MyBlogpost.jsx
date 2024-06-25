@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Editor, EditorState, convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
-import { fetchUserBlogposts, deleteBlogpost } from '../../redux/features/blogpostSlice';
+import { fetchUserBlogpost, deleteBlogpost } from '../../redux/features/blogpostSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import noDataImage from '../../assets/noData.png';
@@ -15,7 +15,7 @@ const MyBlogpost = () => {
   const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    dispatch(fetchUserBlogposts());
+    dispatch(fetchUserBlogpost());
   }, [dispatch]);
 
   const handleSearch = (e) => {
@@ -28,7 +28,7 @@ const MyBlogpost = () => {
 
   const handleDeleteBlogpost = async (id) => {
     await dispatch(deleteBlogpost(id));
-    dispatch(fetchUserBlogposts());
+    dispatch(fetchUserBlogpost());
   };
 
   const formatDate = (dateString) => {

@@ -46,6 +46,18 @@ export const getUsersByOrganization = createAsyncThunk(
   }
 );
 
+export const getAdminViewAllOrganization = createAsyncThunk(
+  'organization/getAdminViewAllOrganization',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(API_URL.ADMIN_VIEW_ALL_ORGANIZATION);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const organizationSlice = createSlice({
   name: 'organization',
   initialState,
@@ -82,6 +94,17 @@ const organizationSlice = createSlice({
         state.users = action.payload;
       })
       .addCase(getUsersByOrganization.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(getAdminViewAllOrganization.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getAdminViewAllOrganization.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.organizations = action.payload;
+      })
+      .addCase(getAdminViewAllOrganization.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

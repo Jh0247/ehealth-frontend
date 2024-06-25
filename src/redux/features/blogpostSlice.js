@@ -3,14 +3,13 @@ import axiosInstance from '../../Utils/axiosSetup';
 import { API_URL } from '../../statis/url';
 
 const initialState = {
-  blogposts: [],
   blogpost: null,
   status: 'idle',
   error: null,
 };
 
-export const fetchBlogposts = createAsyncThunk(
-  'blogpost/fetchBlogposts',
+export const fetchBlogpost = createAsyncThunk(
+  'blogpost/fetchBlogpost',
   async (params = {}, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(API_URL.BLOGPOSTS, { params });
@@ -45,8 +44,8 @@ export const fetchBlogpostsByName = createAsyncThunk(
   }
 );
 
-export const fetchUserBlogposts = createAsyncThunk(
-  'blogpost/fetchUserBlogposts',
+export const fetchUserBlogpost = createAsyncThunk(
+  'blogpost/fetchUserBlogpost',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(API_URL.USER_BLOGPOSTS);
@@ -93,6 +92,18 @@ export const deleteBlogpost = createAsyncThunk(
   }
 );
 
+export const updateBlogpostStatus = createAsyncThunk(
+  'blogpostStatus/updateBlogpostStatus',
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL.BLOGPOSTS}/${id}/status`, { status });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const blogpostSlice = createSlice({
   name: 'blogpost',
   initialState,
@@ -101,15 +112,15 @@ const blogpostSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBlogposts.pending, (state) => {
+      .addCase(fetchBlogpost.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchBlogposts.fulfilled, (state, action) => {
+      .addCase(fetchBlogpost.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.blogposts = action.payload;
+        state.blogpost = action.payload;
         state.error = null;
       })
-      .addCase(fetchBlogposts.rejected, (state, action) => {
+      .addCase(fetchBlogpost.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
@@ -130,22 +141,22 @@ const blogpostSlice = createSlice({
       })
       .addCase(fetchBlogpostsByName.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.blogposts = action.payload;
+        state.blogpost = action.payload;
         state.error = null;
       })
       .addCase(fetchBlogpostsByName.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
-      .addCase(fetchUserBlogposts.pending, (state) => {
+      .addCase(fetchUserBlogpost.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchUserBlogposts.fulfilled, (state, action) => {
+      .addCase(fetchUserBlogpost.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.blogpost = action.payload;
         state.error = null;
       })
-      .addCase(fetchUserBlogposts.rejected, (state, action) => {
+      .addCase(fetchUserBlogpost.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
@@ -166,9 +177,9 @@ const blogpostSlice = createSlice({
       })
       .addCase(updateBlogpost.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const index = state.blogposts.findIndex(bp => bp.id === action.payload.id);
+        const index = state.blogpost.findIndex(bp => bp.id === action.payload.id);
         if (index !== -1) {
-          state.blogposts[index] = action.payload;
+          state.blogpost[index] = action.payload;
         }
         state.error = null;
       })
@@ -184,6 +195,17 @@ const blogpostSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteBlogpost.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(updateBlogpostStatus.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateBlogpostStatus.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(updateBlogpostStatus.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

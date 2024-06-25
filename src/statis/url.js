@@ -24,4 +24,5 @@ export const API_URL = {
   HEALTH_RECORD: API_BASE_URL + 'health-record',
   PURCHASES: API_BASE_URL + 'purchases',
   USER_PURCHASES: API_BASE_URL + 'user-purchases',
+  ADMIN_VIEW_ALL_ORGANIZATION: API_BASE_URL + 'admin-view-all-organization',
 };
