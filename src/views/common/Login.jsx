@@ -24,10 +24,11 @@ const Login = () => {
         // email: "johndoe2@example.com",
         // email: "doctorname2@example.com",
         // email: "doctorOZ2x2@example.com", //second oz doc
-        // email: "test1@example.com",
-        email: "admin@sample.com", 
+        email: "test1@example.com",
+        // email: "admin@sample.com", 
         // email: "pharmacist@example.com",
         // email: "nurse@sample.com",
+        // email: "testdel@mail.com",
         password: "password" 
       })
     );

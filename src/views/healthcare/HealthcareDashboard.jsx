@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { Line, Bar, Pie } from 'react-chartjs-2';
 import defaultImage from '../../assets/default.jpg';
 import noDataImage from '../../assets/noData.png';
 import { rolePathMap } from '../../constants/rolePath';
@@ -24,7 +25,7 @@ import accountIcon from '@iconify-icons/mdi/account';
 
 export default function HealthcareDashboard() {
   const dispatch = useDispatch();
-  const { user_info, status: userStatus, appointments: doctorAppointment} = useSelector((state) => state.user);
+  const { user_info, status: userStatus, appointments: doctorAppointment } = useSelector((state) => state.user);
   const { patients, statistics, status: providerStatus, appointments: adminAppointment } = useSelector((state) => state.healthcareProvider);
   const [appointmentData, setAppointmentData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,10 +46,71 @@ export default function HealthcareDashboard() {
   useEffect(() => {
     if (user_info?.user_role === 'doctor') {
       setAppointmentData(doctorAppointment);
-    } else if(user_info?.user_role === 'admin' || user_info?.user_role === 'nurse') {
+    } else if (user_info?.user_role === 'admin' || user_info?.user_role === 'nurse') {
       setAppointmentData(adminAppointment?.data);
     }
-  }, [user_info, doctorAppointment, adminAppointment])
+  }, [user_info, doctorAppointment, adminAppointment]);
+
+  const getDailyAppointmentsData = () => {
+    const labels = statistics?.daily_appointments?.map(app => app.date) || [];
+    const data = statistics?.daily_appointments?.map(app => app.total_appointments) || [];
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Daily Appointments',
+          data,
+          fill: false,
+          borderColor: 'rgba(75,192,192,1)',
+          backgroundColor: 'rgba(75,192,192,0.4)',
+        },
+      ],
+    };
+  };
+
+  const getBlogpostsByUserData = () => {
+    const labels = statistics?.blogposts_by_user?.map(post => post.user_name) || [];
+    const data = statistics?.blogposts_by_user?.map(post => post.total_blogposts) || [];
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Blogposts by User',
+          data,
+          backgroundColor: 'rgba(75,192,192,0.4)',
+        },
+      ],
+    };
+  };
+
+  const getStaffByRoleData = () => {
+    const labels = statistics?.staff_by_role?.map(role => role.role) || [];
+    const data = statistics?.staff_by_role?.map(role => role.total) || [];
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Staff by Role',
+          data,
+          backgroundColor: [
+            'rgba(75,192,192,0.4)',
+            'rgba(255,99,132,0.4)',
+            'rgba(54,162,235,0.4)',
+            'rgba(153,102,255,0.4)',
+          ],
+        },
+      ],
+    };
+  };
+
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'left',
+      },
+    },
+  };
 
   return (
     <div className="flex flex-col p-5 md:p-9">
@@ -143,24 +205,24 @@ export default function HealthcareDashboard() {
         {user_info?.user_role === 'admin' && (
           <div className="flex flex-col gap-6 mt-8 sm:w-1/4">
             <h3 className="text-lg font-bold">Statistic</h3>
-            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center">
-              <h4 className="text-lg mb-2">Number of Staffs</h4>
-              <p className="text-3xl font-bold">{statistics?.num_staffs || 0}</p>
+            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center flex-1">
+              <h4 className="text-md sm:text-lg mb-2">Number of Staffs</h4>
+              <p className="text-md sm:text-3xl font-bold">{statistics?.num_staffs || 0}</p>
             </div>
-            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center">
-              <h4 className="text-lg mb-2">Number of Appointments</h4>
-              <p className="text-3xl font-bold">{statistics?.num_appointments || 0}</p>
+            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center flex-1">
+              <h4 className="text-md sm:text-lg mb-2">Number of Appointments</h4>
+              <p className="text-md sm:text-3xl font-bold">{statistics?.num_appointments || 0}</p>
             </div>
-            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center">
-              <h4 className="text-lg mb-2">Number of Blogposts</h4>
-              <p className="text-3xl font-bold">{statistics?.num_blogposts || 0}</p>
+            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 flex flex-col items-center text-center flex-1">
+              <h4 className="text-md sm:text-lg mb-2">Number of Blogposts</h4>
+              <p className="text-md sm:text-3xl font-bold">{statistics?.num_blogposts || 0}</p>
             </div>
           </div>
         )}
         {/* Appointments */}
-        <div className="my-8 w-full">
+        <div className="mt-8 w-full">
           <h3 className="text-lg font-bold">Consultation History</h3>
-          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[300px]">
+          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 mt-6 overflow-y-auto">
             <ul>
               {providerStatus === 'loading' ? (
                 Array.from({ length: 5 }).map((_, index) => (
@@ -216,7 +278,44 @@ export default function HealthcareDashboard() {
             </ul>
           </div>
         </div>
-      </div>   
+      </div>
+      {/* Charts */}
+      {user_info?.user_role === 'admin' && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="mt-8">
+            <h3 className="text-lg font-bold mb-4">Daily Appointments</h3>
+            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 w-full h-full flex justify-center items-center">
+              {providerStatus === 'loading' ? (
+                <Skeleton height={400} />
+              ) : (
+                <Line data={getDailyAppointmentsData()} />
+              )}
+            </div>
+          </div>
+          <div className="mt-8">
+            <h3 className="text-lg font-bold mb-4">Blogposts by User</h3>
+            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 w-full h-full flex justify-center items-center">
+              {providerStatus === 'loading' ? (
+                <Skeleton height={400} />
+              ) : (
+                <Bar data={getBlogpostsByUserData()} />
+              )}
+            </div>
+          </div>
+          <div className="mt-8">
+            <h3 className="text-lg font-bold mb-4">Staff by Role</h3>
+            <div className="bg-white rounded-lg shadow-sm shadow-teal-800 p-4 w-full h-full flex justify-center items-center">
+              {providerStatus === 'loading' ? (
+                <Skeleton height={400} />
+              ) : (
+                <div className="h-52 sm:h-80">
+                  <Pie data={getStaffByRoleData()}/>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <ProfileUpdateModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

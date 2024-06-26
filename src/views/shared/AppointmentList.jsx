@@ -89,7 +89,7 @@ const AppointmentList = () => {
           </span>
         </div>
         <div className="hidden sm:flex flex-col w-1/4 border-r-2 border-gray-300 px-2">
-          <span className="text-sm my-1 md:my-0">
+          <span className="text-sm my-1 md:my-0 capitalize">
             {appointment?.type}
           </span>
         </div>

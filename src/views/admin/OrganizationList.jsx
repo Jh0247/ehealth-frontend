@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAdminViewAllOrganization } from '../../redux/features/organizationSlice';
+import { stopCollaboration, recollaborate } from '../../redux/features/collaborationSlice';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Icon } from '@iconify/react';
@@ -51,7 +52,7 @@ const OrganizationList = () => {
 
   const filteredOrganizations = sortedOrganizations.filter(org => {
     return org.organization.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-           (filterType === '' || org.organization.type === filterType);
+            (filterType === '' || org.organization.type === filterType);
   });
 
   const toggleOrganizationDetails = (index) => {
@@ -60,6 +61,16 @@ const OrganizationList = () => {
     } else {
       setSelectedOrganization([...selectedOrganization, index]);
     }
+  };
+
+  const handleStopCollaboration = async (organizationId) => {
+    await dispatch(stopCollaboration(organizationId));
+    dispatch(getAdminViewAllOrganization());
+  };
+
+  const handleRecollaborate = async (organizationId) => {
+    await dispatch(recollaborate(organizationId));
+    dispatch(getAdminViewAllOrganization());
   };
 
   return (
@@ -135,9 +146,9 @@ const OrganizationList = () => {
                         {org.first_admin ? org.first_admin.name : 'N/A'}
                       </span>
                     </div>
-                    <div className="w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2">
+                    <div className={`w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2 ${org.first_admin.status === 'terminated' ? 'bg-red-100' : org.first_admin.status === 'active' ? 'bg-green-100' : 'bg-gray-100'}`}>
                       <span className="text-sm sm:text-base my-1 md:my-0 capitalize">
-                      {org.first_admin ? org.first_admin.status : 'N/A'}
+                        {org.first_admin ? org.first_admin.status : 'N/A'}
                       </span>
                     </div>
                     <div className="hidden sm:flex border-r-2 border-gray-300 px-2 items-center justify-center">
@@ -181,11 +192,21 @@ const OrganizationList = () => {
                           <p className="font-bold w-32">Address:</p>
                           <p>{org.organization.address}</p>
                         </div>
+                        {org.first_admin.status !== 'terminated' ?
+                          <button
+                            onClick={() => handleStopCollaboration(org.organization.id)}
+                            className="py-2 px-4 rounded mb-5 bg-red-500 hover:bg-red-600 text-white"
+                          >
+                            End partnership
+                          </button>
+                        : 
                         <button
-                          className={`py-2 px-4 rounded mb-5 bg-red-500 hover:bg-red-600 text-white`}
+                          onClick={() => handleRecollaborate(org.organization.id)}
+                          className="py-2 px-4 rounded mb-5 bg-green-500 hover:bg-green-600 text-white"
                         >
-                          End partnership
+                          Collaborate
                         </button>
+                        }
                       </div>
                     </div>
                   </li>

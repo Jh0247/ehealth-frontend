@@ -18,6 +18,7 @@ import blogPostReducer from './features/blogpostSlice';
 import healthcareProviderReducer from './features/healthcareProviderSlice';
 import medicationReducer from './features/medicationSlice';
 import purchaseReducer from './features/purchaseSlice';
+import statisticsReducer from './features/statisticsSlice';
 
 const reduxLogger = (store) => (next) => (action) => {
   console.log('Dispatching action:', action);
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   healthcareProvider: healthcareProviderReducer,
   medication: medicationReducer,
   purchase: purchaseReducer,
+  statistics: statisticsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
