@@ -4,10 +4,12 @@ import { Icon } from '@iconify/react';
 import logoutIcon from '@iconify-icons/mdi/logout';
 import menuIcon from '@iconify-icons/mdi/menu';
 import chevronLeft from '@iconify-icons/mdi/chevron-left';
+import editIcon from '@iconify-icons/mdi/pencil-outline';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/features/authSlice';
 import { clearUser } from '../redux/features/userSlice';
+import UpdatePasswordModal from '../views/shared/UpdatePasswordModal';
 
 const Sidebar = ({ navItems, onToggleSidebar }) => {
   const location = useLocation();
@@ -15,6 +17,7 @@ const Sidebar = ({ navItems, onToggleSidebar }) => {
 
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -75,8 +78,15 @@ const Sidebar = ({ navItems, onToggleSidebar }) => {
         </nav>
         <div className={`mt-auto mb-4 ${isOpen ? 'px-4' : 'px-1'}`}>
           <button 
-            onClick={handleLogout} 
+            onClick={() => setIsPasswordModalOpen(true)}
             className="flex items-center w-full px-4 py-2 text-[#285D5E] bg-[#E6F7F7] rounded-lg hover:bg-[#63D4D5] focus:outline-none transition-colors duration-200"
+          >
+            <Icon icon={editIcon} className="w-6 h-6" />
+            {isOpen && <span className="ml-2">Change Password</span>}
+          </button>
+          <button 
+            onClick={handleLogout} 
+            className="flex items-center w-full px-4 py-2 text-[#285D5E] bg-[#E6F7F7] rounded-lg hover:bg-[#63D4D5] focus:outline-none transition-colors duration-200 mt-2"
           >
             <Icon icon={logoutIcon} className="w-6 h-6" />
             {isOpen && <span className="ml-2">Logout</span>}
@@ -93,6 +103,7 @@ const Sidebar = ({ navItems, onToggleSidebar }) => {
         ></div>
       )}
       <div className={`transition-transform duration-300 ${isOpen && isMobile ? 'transform translate-x-56' : ''}`}></div>
+      <UpdatePasswordModal isOpen={isPasswordModalOpen} onClose={() => setIsPasswordModalOpen(false)} />
     </>
   );
 };

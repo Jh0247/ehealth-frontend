@@ -36,4 +36,5 @@ export const API_URL = {
   COLLABORATION_REQUEST_APPROVE: API_BASE_URL + 'collaboration-request/approve',
   COLLABORATION_REQUEST_DECLINE: API_BASE_URL + 'collaboration-request/decline',
   RECOLLABORATE: API_BASE_URL + 'recollaborate',
+  UPDATE_PASSWORD: API_BASE_URL + 'user/update-password',
 };

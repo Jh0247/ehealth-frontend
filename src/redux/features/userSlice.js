@@ -90,6 +90,22 @@ export const fetchUserPurchases = createAsyncThunk(
   }
 );
 
+export const updateUserPassword = createAsyncThunk(
+  'user/updateUserPassword',
+  async ({ current_password, new_password, new_password_confirmation }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(API_URL.UPDATE_PASSWORD, {
+        current_password,
+        new_password,
+        new_password_confirmation,
+      });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -100,6 +116,10 @@ const userSlice = createSlice({
     clearUser: (state) => {
       return initialState; 
     },
+    resetUserStatus: (state) => {
+      state.status = 'idle';
+      state.error = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -184,10 +204,23 @@ const userSlice = createSlice({
       .addCase(fetchUserPurchases.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(updateUserPassword.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(updateUserPassword.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(updateUserPassword.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, clearUser, resetUserStatus } = userSlice.actions;
 
 export default userSlice.reducer;

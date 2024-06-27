@@ -12,6 +12,7 @@ const includeToastsForActions = [
   'blogpost/updateBlogpost/rejected',
   'healthcareProvider/registerStaff/fulfilled',
   'healthcareProvider/registerStaff/rejected',
+  'user/updateUserPassword/fulfilled',
 ];
 
 export const axiosMiddleware = ({ dispatch }) => (next) => async (action) => {
