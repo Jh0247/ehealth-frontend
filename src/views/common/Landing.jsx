@@ -2,7 +2,7 @@ import React from 'react';
 import healthcareImage from '../../assets/healthcareImage.png';
 import hipaaLogo from '../../assets/hipaa.png';
 
-export default function Landing() {
+const Landing = () => {
   return (
     <div className="relative">
       <div id="top" className="bg-cover bg-center relative h-screen bg-wave">
@@ -77,3 +77,5 @@ export default function Landing() {
     </div>
   );
 }
+
+export default Landing;

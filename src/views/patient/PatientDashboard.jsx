@@ -19,7 +19,7 @@ import { fetchMedicationDetails } from '../../redux/features/medicationSlice';
 import ProfileUpdateModal from '../shared/ProfileUpdateModal';
 import MedicationDetailsModal from '../shared/MedicationDetailsModal';
 
-export default function PatientDashboard() {
+const PatientDashboard = () => {
   const dispatch = useDispatch();
   const { user_info, health_record, appointments, medications, status } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -195,3 +195,5 @@ export default function PatientDashboard() {
     </div>
   );
 }
+
+export default PatientDashboard;

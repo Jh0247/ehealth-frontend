@@ -12,7 +12,7 @@ import { createCollaborationRequest } from '../../redux/features/collaborationSl
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-export default function SignUpOrganization() {
+const SignUpOrganization = () => {
   const dispatch = useDispatch();
 
   const [organizationName, setOrganizationName] = useState('');
@@ -312,3 +312,5 @@ export default function SignUpOrganization() {
     </div>
   );
 }
+
+export default SignUpOrganization;

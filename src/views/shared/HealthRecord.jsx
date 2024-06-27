@@ -21,7 +21,7 @@ import { fetchMedicationDetails } from '../../redux/features/medicationSlice';
 import HealthRecordUpdateModal from '../healthcare/HealthRecordUpdateModal';
 import MedicationDetailsModal from './MedicationDetailsModal';
 
-export default function HealthRecord() {
+const HealthRecord = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { userId } = location.state || {};
@@ -223,3 +223,5 @@ export default function HealthRecord() {
     </div>
   );
 }
+
+export default HealthRecord;

@@ -23,7 +23,7 @@ import cancelIcon from '@iconify-icons/mdi/cancel';
 import businessIcon from '@iconify-icons/mdi/business';
 import accountIcon from '@iconify-icons/mdi/account';
 
-export default function HealthcareDashboard() {
+const HealthcareDashboard = () => {
   const dispatch = useDispatch();
   const { user_info, status: userStatus, appointments: doctorAppointment } = useSelector((state) => state.user);
   const { patients, statistics, status: providerStatus, appointments: adminAppointment } = useSelector((state) => state.healthcareProvider);
@@ -320,3 +320,5 @@ export default function HealthcareDashboard() {
     </div>
   );
 }
+
+export default HealthcareDashboard;

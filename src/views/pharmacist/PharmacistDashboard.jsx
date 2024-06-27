@@ -14,7 +14,7 @@ import businessIcon from '@iconify-icons/mdi/business';
 import accountIcon from '@iconify-icons/mdi/account';
 import { fetchPurchaseStatistics } from '../../redux/features/purchaseSlice';
 
-export default function PharmacistDashboard() {
+const PharmacistDashboard = () => {
   const dispatch = useDispatch();
   const { user_info, status: userStatus } = useSelector((state) => state.user);
   const { statistics, status: statsStatus } = useSelector((state) => state.purchase);
@@ -156,3 +156,5 @@ export default function PharmacistDashboard() {
     </div>
   );
 }
+
+export default PharmacistDashboard;

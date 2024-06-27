@@ -7,7 +7,7 @@ import noDataImage from '../../assets/noData.png';
 import { rolePathMap } from '../../constants/rolePath';
 import { Editor, EditorState, convertFromHTML, ContentState } from 'draft-js';
 
-export default function ViewBlogpost() {
+const ViewBlogpost = () => {
   const dispatch = useDispatch();
   const { user_info } = useSelector((state) => state.user);
   const { blogpost, status } = useSelector((state) => state.blogpost);
@@ -110,3 +110,5 @@ export default function ViewBlogpost() {
     </div>
   );
 }
+
+export default ViewBlogpost;

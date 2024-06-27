@@ -9,7 +9,7 @@ import noDataImage from '../../assets/noData.png';
 import { Icon } from '@iconify/react';
 import arrowBackIcon from '@iconify-icons/mdi/arrow-left';
 
-export default function BlogpostDetails() {
+const BlogpostDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -103,3 +103,5 @@ export default function BlogpostDetails() {
     </div>
   );
 }
+
+export default BlogpostDetails;
