@@ -177,10 +177,6 @@ const blogpostSlice = createSlice({
       })
       .addCase(updateBlogpost.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const index = state.blogpost.findIndex(bp => bp.id === action.payload.id);
-        if (index !== -1) {
-          state.blogpost[index] = action.payload;
-        }
         state.error = null;
       })
       .addCase(updateBlogpost.rejected, (state, action) => {

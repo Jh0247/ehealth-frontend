@@ -15,7 +15,6 @@ const Navbar = () => {
 
   const renderNavItems = () => (
     <>
-      <ScrollLink to="about" smooth={true} duration={500} className="text-gray-700 hover:text-[#63D4D5] cursor-pointer" onClick={handleNavClick}>About</ScrollLink>
       <ScrollLink to="collaboration" smooth={true} duration={500} className="text-gray-700 hover:text-[#63D4D5] cursor-pointer" onClick={handleNavClick}>Collaboration</ScrollLink>
       <ScrollLink to="contact" smooth={true} duration={500} className="text-gray-700 hover:text-[#63D4D5] cursor-pointer" onClick={handleNavClick}>Contact</ScrollLink>
       <RouterLink to="/login" className="ml-4 px-4 py-2 bg-[#347576] text-white rounded hover:bg-[#285D5E]">Login</RouterLink>
@@ -60,7 +59,6 @@ const Navbar = () => {
       </div>
       {isOpen && location.pathname === '/' && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200 px-4">
-          <ScrollLink to="about" smooth={true} duration={500} className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5] border-t border-gray-200" onClick={handleNavClick}>About</ScrollLink>
           <ScrollLink to="collaboration" smooth={true} duration={500} className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5] border-t border-gray-200" onClick={handleNavClick}>Collaboration</ScrollLink>
           <ScrollLink to="contact" smooth={true} duration={500} className="block px-4 py-2 text-gray-700 hover:text-[#63D4D5] border-t border-b border-gray-200" onClick={handleNavClick}>Contact</ScrollLink>
           <RouterLink to="/login" className="block w-full px-4 py-2 bg-[#347576] text-white text-center rounded hover:bg-[#285D5E] mt-2 mb-2">Login</RouterLink>

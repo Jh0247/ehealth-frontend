@@ -37,10 +37,20 @@ const PurchaseModal = ({ isOpen, onClose, user, medications, onCreatePurchase, p
   };
 
   const handleCreatePurchase = () => {
+    const malaysiaTime = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kuala_Lumpur',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date());
+  
+    const [day, month, year] = malaysiaTime.split('/');
+    const formattedDate = `${year}-${month}-${day}`;
+  
     const purchaseData = selectedMedications.map(medication => ({
       user_id: user.id,
       medication_id: medication.id,
-      date_purchase: new Date().toISOString().split('T')[0],
+      date_purchase: formattedDate,
       quantity: quantities[medication.id] || 1,
       total_payment: parseFloat(medication.price) * (quantities[medication.id] || 1),
       pharmacist_id: pharmacistId

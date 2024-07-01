@@ -82,7 +82,7 @@ const Sidebar = ({ navItems, onToggleSidebar }) => {
             className="flex items-center w-full px-4 py-2 text-[#285D5E] bg-[#E6F7F7] rounded-lg hover:bg-[#63D4D5] focus:outline-none transition-colors duration-200"
           >
             <Icon icon={editIcon} className="w-6 h-6" />
-            {isOpen && <span className="ml-2">Change Password</span>}
+            {isOpen && <span className="ml-2">Password</span>}
           </button>
           <button 
             onClick={handleLogout} 

@@ -9,7 +9,7 @@ const PrescriptionModal = ({ isOpen, onClose, prescriptions, onCreatePurchase, u
   useEffect(() => {
     if (isOpen) {
       const initialQuantities = prescriptions.reduce((acc, prescription) => {
-        acc[prescription.id] = 1; // default quantity to 1
+        acc[prescription.id] = 1;
         return acc;
       }, {});
       setQuantities(initialQuantities);
@@ -31,11 +31,21 @@ const PrescriptionModal = ({ isOpen, onClose, prescriptions, onCreatePurchase, u
   };
 
   const handleCreatePurchase = () => {
+    const malaysiaTime = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kuala_Lumpur',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date());
+
+    const [day, month, year] = malaysiaTime.split('/');
+    const formattedDate = `${year}-${month}-${day}`;
+
     const purchaseData = prescriptions.map(prescription => ({
       user_id: userId,
       pharmacist_id: pharmacistId,
       medication_id: prescription.medication.id,
-      date_purchase: new Date().toISOString().split('T')[0],
+      date_purchase: formattedDate,
       quantity: quantities[prescription.id] || 1,
       total_payment: parseFloat(prescription.medication.price) * (quantities[prescription.id] || 1),
     }));

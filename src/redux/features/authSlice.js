@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../Utils/axiosSetup';
 import { API_URL } from '../../statis/url';
+import setToken from '../../Utils/axiosSetup';
 
 const initialState = {
   token: '',
@@ -37,6 +38,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      setToken(null);
       return initialState; 
     },
   },
@@ -48,6 +50,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.token = action.payload.access_token;
+        setToken(action.payload.access_token);
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {

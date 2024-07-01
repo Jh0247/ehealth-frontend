@@ -127,7 +127,7 @@ const CreateMedicationModal = ({ isOpen, onClose, onCreate, initialData }) => {
           </div>
           <div className="flex justify-end gap-2">
             <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">Cancel</button>
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">{initialData ? 'Update' : 'Create'}</button>
+            <button type="submit" className="px-4 py-2 bg-[#347576] hover:bg-[#285D5E] text-white rounded">{initialData ? 'Update' : 'Create'}</button>
           </div>
         </form>
       </div>

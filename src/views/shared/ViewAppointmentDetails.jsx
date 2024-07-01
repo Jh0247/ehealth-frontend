@@ -122,10 +122,10 @@ const ViewAppointmentDetails = () => {
     );
   
     if (!duration || !note || !allPrescriptionsFilled) {
-      console.log('Duration:', duration);
-      console.log('Note:', note);
-      console.log('All Prescriptions Filled:', allPrescriptionsFilled);
-      console.log('Prescriptions Details:', prescriptions);
+      console.warn('Duration:', duration);
+      console.warn('Note:', note);
+      console.warn('All Prescriptions Filled:', allPrescriptionsFilled);
+      console.warn('Prescriptions Details:', prescriptions);
   
       dispatch(popToast({
         title: 'Error',
@@ -168,6 +168,7 @@ const ViewAppointmentDetails = () => {
   const isCompleted = appointment.status === 'completed';
 
   const formatAllergies = (allergies) => {
+    if (!allergies) return "None";
     if (allergies === '["None"]') return "None";
     const parsedAllergies = JSON.parse(allergies);
     const formattedAllergies = Object.entries(parsedAllergies)
@@ -258,10 +259,10 @@ const ViewAppointmentDetails = () => {
           <p className="mt-2"><strong>Name:</strong> {appointment?.doctor?.name}</p>
           <p className="mt-2"><strong>Email: </strong>
             <a
-              href={`mailto:${appointment.doctor.email}`}
+              href={`mailto:${appointment?.doctor?.email}`}
               className="mt-2 text-blue-500 underline cursor-pointer"
             >
-              {appointment.doctor.email}
+              {appointment?.doctor?.email}
             </a>
           </p>
           <p className="mt-2"><strong>Contact: </strong>
@@ -285,7 +286,7 @@ const ViewAppointmentDetails = () => {
             <h4 className="font-bold my-2">Virtual Meeting</h4>
             <JitsiMeeting
               roomName={`appointment_${appointment?.id}`}
-              displayName={appointment?.user?.name}
+              displayName={user_info?.name}
               email={appointment?.user?.email}
             />
           </div>

@@ -18,6 +18,18 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
     user_role: 'doctor',
   });
 
+  const clearFormData = () => {
+    setFormData({
+      name: '',
+      email: '',
+      icno: '',
+      contact: '',
+      password: '',
+      password_confirmation: '',
+      user_role: 'doctor',
+    });
+  };
+
   useEffect(() => {
     if (user_info?.organization_id) {
       setFormData((prevData) => ({ ...prevData, organization_id: user_info.organization_id }));
@@ -38,6 +50,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
     dispatch(registerStaff(dataToSubmit)).then((response) => {
       if (response.meta.requestStatus !== 'rejected') {
         onClose();
+        clearFormData();
       }
     });
   };
@@ -80,6 +93,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
               value={formData.icno}
               onChange={handleChange}
               className="mt-1 p-2 w-full border rounded"
+                pattern="\d{6}-\d{2}-\d{4}"
               required
             />
           </div>
@@ -91,6 +105,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
               value={formData.contact}
               onChange={handleChange}
               className="mt-1 p-2 w-full border rounded"
+              pattern="\d{3,4}-\d{7,8}"
               required
             />
           </div>
@@ -102,6 +117,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
               value={formData.password}
               onChange={handleChange}
               className="mt-1 p-2 w-full border rounded"
+              minLength={8}
               required
             />
           </div>
@@ -113,6 +129,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
               value={formData.password_confirmation}
               onChange={handleChange}
               className="mt-1 p-2 w-full border rounded"
+              minLength={8}
               required
             />
           </div>
@@ -141,7 +158,7 @@ const CreateStaffModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+              className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded"
               disabled={status === 'loading'}
             >
               {status === 'loading' ? 'Registering...' : 'Register'}

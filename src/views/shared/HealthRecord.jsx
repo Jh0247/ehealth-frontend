@@ -53,7 +53,6 @@ const HealthRecord = () => {
     });
   };
 
-  // Parse allergic data
   const parseAllergic = (allergic) => {
     try {
       return JSON.parse(allergic);

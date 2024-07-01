@@ -33,7 +33,6 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
     const objectUrl = URL.createObjectURL(formData.profile_img);
     setPreview(objectUrl);
 
-    // Free memory when component unmounts
     return () => URL.revokeObjectURL(objectUrl);
   }, [formData.profile_img]);
 

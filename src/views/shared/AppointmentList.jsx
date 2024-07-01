@@ -247,7 +247,7 @@ const AppointmentList = () => {
         isOpen={isModalOpen} 
         onClose={() => {
           setIsModalOpen(false);
-          fetchAppointments(); // Refetch appointments after closing modal
+          fetchAppointments();
         }} 
       />
     </div>

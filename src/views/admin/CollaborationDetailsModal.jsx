@@ -25,7 +25,7 @@ const CollaborationDetailsModal = ({ isOpen, onClose, request, onApprove, onDecl
           <div>
             <p><strong className="capitalize w-24 inline-block text-sm sm:text-base">Name:</strong> {request.name}</p>
             <p><strong className="capitalize w-24 inline-block text-sm sm:text-base">Code:</strong> <a className="text-blue-500 underline" href={"https://www.ssm.com.my/Pages/e-Search.aspx"} target="_blank" rel="noopener noreferrer">{request.code}</a></p>
-            <p><strong className="capitalize w-24 inline-block text-sm sm:text-base">Type:</strong> {request.type}</p>
+            <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">Type:</strong> {request.type}</p>
             <p><strong className="capitalize w-24 inline-block text-sm sm:text-base">Address:</strong> <a className="text-blue-500 underline" href={getGoogleMapsLink(request.address)} target="_blank" rel="noopener noreferrer">{request.address}</a></p>
           </div>
           <div>
@@ -41,16 +41,16 @@ const CollaborationDetailsModal = ({ isOpen, onClose, request, onApprove, onDecl
             <li key={user.id} className="mb-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <p><strong className="w-24 inline-block text-sm sm:text-base">Name:</strong> {user.name}</p>
-                  <p><strong className="w-24 inline-block text-sm sm:text-base">Email:</strong> <a className="text-blue-500 underline" href={`mailto:${user.email}`}>{user.email}</a></p>
+                  <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">Name:</strong> {user.name}</p>
+                  <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">Email:</strong> <a className="text-blue-500 underline" href={`mailto:${user.email}`}>{user.email}</a></p>
                 </div>
                 <div>
-                  <p><strong className="w-24 inline-block text-sm sm:text-base">Contact:</strong> <a className="text-blue-500 underline" href={`tel:${user.contact}`}>{user.contact}</a></p>
-                  <p><strong className="w-24 inline-block text-sm sm:text-base">IC No:</strong> {user.icno}</p>
+                  <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">Contact:</strong> <a className="text-blue-500 underline" href={`tel:${user.contact}`}>{user.contact}</a></p>
+                  <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">IC No:</strong> {user.icno}</p>
                 </div>
                 <div>
-                  <p><strong className="w-24 inline-block text-sm sm:text-base">Role:</strong> {user.user_role}</p>
-                  <p><strong className="w-24 inline-block text-sm sm:text-base">Status:</strong> {user.status}</p>
+                  <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">Role:</strong> {user.user_role}</p>
+                  <p className="capitalize"><strong className="capitalize w-24 inline-block text-sm sm:text-base">Status:</strong> {user.status}</p>
                 </div>
               </div>
             </li>

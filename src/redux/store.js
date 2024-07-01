@@ -9,7 +9,7 @@ import { loadingMiddleware } from './middleware/loadingMiddleware';
 import toastReducer from './features/toastSlice';
 import loadingReducer from './features/loadingSlice';
 
-import authReducer from './features/authSlice';
+import authReducer, { logout } from './features/authSlice';
 import userReducer from './features/userSlice';
 import collaborationReducer from './features/collaborationSlice';
 import organizationReducer from './features/organizationSlice';
@@ -31,9 +31,10 @@ const persistConfig = {
   key: 'root',
   storage,
   transforms: [loadingTransform],
+  blacklist: ['loading'],
 };
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   toast: toastReducer,
   loading: loadingReducer,
   auth: authReducer,
@@ -47,6 +48,14 @@ const rootReducer = combineReducers({
   purchase: purchaseReducer,
   statistics: statisticsReducer,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === logout.type) {
+    storage.removeItem('persist:root');
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

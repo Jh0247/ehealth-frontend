@@ -46,7 +46,7 @@ const ViewBlogpost = () => {
 
   const renderBlogpostContent = (content) => {
     if (!content) {
-      return null; // or a placeholder text if you prefer
+      return null;
     }
     
     const blocksFromHTML = convertFromHTML(content);

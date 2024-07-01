@@ -11,6 +11,7 @@ import { rolePathMap } from '../../constants/rolePath';
 
 import { getUserAppointments } from '../../redux/features/userSlice';
 import { getPatientsByDoctor, getOrganizationStats, getAppointmentsByOrganization } from '../../redux/features/healthcareProviderSlice';
+import { getStaffByOrganization } from '../../redux/features/healthcareProviderSlice';
 
 import ProfileUpdateModal from '../shared/ProfileUpdateModal';
 
@@ -38,6 +39,7 @@ const HealthcareDashboard = () => {
     } else if (user_info?.user_role === 'admin') {
       dispatch(getOrganizationStats(user_info.organization_id));
       dispatch(getAppointmentsByOrganization(user_info.organization_id));
+      dispatch(getStaffByOrganization(user_info.organization_id));
     } else if (user_info?.user_role === 'nurse') {
       dispatch(getAppointmentsByOrganization(user_info.organization_id));
     }
@@ -103,15 +105,6 @@ const HealthcareDashboard = () => {
     };
   };
 
-  const pieOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'left',
-      },
-    },
-  };
-
   return (
     <div className="flex flex-col p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Dashboard</h3>
@@ -143,7 +136,7 @@ const HealthcareDashboard = () => {
               <Icon icon={businessIcon} className="w-5 h-5 mr-2" />
               {userStatus === 'loading' ? <Skeleton width={120} /> : user_info?.organization?.name}
             </p>
-            <p className="flex items-center text-gray-600 mt-2">
+            <p className="flex items-center text-gray-600 mt-2 capitalize">
               <Icon icon={accountIcon} className="w-5 h-5 mr-2" />
               {userStatus === 'loading' ? <Skeleton width={120} /> : user_info?.user_role}
             </p>
@@ -161,7 +154,7 @@ const HealthcareDashboard = () => {
         {user_info?.user_role === 'doctor' && (
           <div className="mt-8 w-full">
             <h3 className="text-md sm:text-lg font-bold mb-3">My Patients</h3>
-            <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 max-h-52 overflow-y-auto min-h-[300px]">
+            <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 my-4 mt-6 max-h-[360px] overflow-y-auto min-h-[360px]">
               <ul>
                 {providerStatus === 'loading' ? (
                   Array.from({ length: 5 }).map((_, index) => (
@@ -222,7 +215,7 @@ const HealthcareDashboard = () => {
         {/* Appointments */}
         <div className="mt-8 w-full">
           <h3 className="text-lg font-bold">Consultation History</h3>
-          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 mt-6 overflow-y-auto">
+          <div className="bg-white p-4 rounded-lg shadow-sm shadow-teal-800 mt-6 overflow-y-auto min-h-[360px] max-h-[360px]">
             <ul>
               {providerStatus === 'loading' ? (
                 Array.from({ length: 5 }).map((_, index) => (

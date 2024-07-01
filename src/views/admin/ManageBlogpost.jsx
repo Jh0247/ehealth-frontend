@@ -30,7 +30,7 @@ const ManageBlogpost = () => {
   }, [dispatch, currentPage, filterStatus]);
 
   useEffect(() => {
-    if (blogpost?.data?.length > 0 && blogpost.current_page === currentPage) {
+    if (blogpost?.data?.length > 0 && blogpost?.current_page === currentPage) {
       sortData(blogpost.data, sortConfig.key, sortConfig.direction);
     }
   }, [currentPage, blogpost, sortConfig]);
@@ -54,7 +54,7 @@ const ManageBlogpost = () => {
   const handleSort = (key) => {
     const direction = sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
     setSortConfig({ key, direction });
-    sortData(blogpost.data, key, direction);
+    sortData(blogpost?.data, key, direction);
   };
 
   const renderSortIcon = (key) => {
@@ -71,7 +71,7 @@ const ManageBlogpost = () => {
 
   const renderBlogpostContent = (content) => {
     if (!content) {
-      return null; // or a placeholder text if you prefer
+      return null;
     }
 
     const blocksFromHTML = convertFromHTML(content);
@@ -93,22 +93,22 @@ const ManageBlogpost = () => {
       <div className="flex w-full my-2">
         <div className="flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 pr-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            {blogpost.title}
+            {blogpost?.title}
           </span>
         </div>
         <div className="hidden sm:flex flex-col w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            {renderBlogpostContent(blogpost.content)}
+            {renderBlogpostContent(blogpost?.content)}
           </span>
         </div>
         <div className={`flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2 ${blogpost.status === 'terminated' ? 'bg-red-100' : blogpost.status === 'published' ? 'bg-green-100' : 'bg-gray-100'}`}>
           <span className={`capitalize text-sm sm:text-base my-1 md:my-0 ${blogpost.status === 'terminated' ? 'text-red-500' : blogpost.status === 'published' ? 'text-green-800' : 'text-gray-500'}`}>
-            {blogpost.status}
+            {blogpost?.status}
           </span>
         </div>
         <div className="hidden sm:flex flex-col w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            {new Date(blogpost.created_at).toLocaleDateString()}
+            {new Date(blogpost?.created_at).toLocaleDateString()}
           </span>
         </div>
       </div>
@@ -116,7 +116,7 @@ const ManageBlogpost = () => {
   );
 
   const filteredBlogposts = sortedBlogposts.filter(blogpost => {
-    return blogpost.title.toLowerCase().includes(searchTerm.toLowerCase()) && (filterStatus === '' || blogpost.status === filterStatus);
+    return blogpost?.title.toLowerCase().includes(searchTerm.toLowerCase()) && (filterStatus === '' || blogpost?.status === filterStatus);
   });
 
   const handlePageChange = (page) => {
@@ -127,12 +127,6 @@ const ManageBlogpost = () => {
     <div className="flex flex-col p-5 md:p-9">
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between">
         <h3 className="text-xl md:text-2xl font-bold mb-6">Manage Blogposts</h3>
-        <button
-          onClick={() => {}}
-          className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded mb-6"
-        >
-          Create Blogpost
-        </button>
       </div>
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
@@ -196,7 +190,7 @@ const ManageBlogpost = () => {
         >
           Previous
         </button>
-        {[...Array(blogpost.last_page).keys()].map((_, index) => (
+        {[...Array(blogpost?.last_page).keys()].map((_, index) => (
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
@@ -207,7 +201,7 @@ const ManageBlogpost = () => {
         ))}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === blogpost.last_page}
+          disabled={currentPage === blogpost?.last_page}
           className="px-3 py-1 mx-1 bg-gray-300 text-gray-700 rounded hover:bg-[#285D5E] hover:text-white disabled:opacity-50"
         >
           Next

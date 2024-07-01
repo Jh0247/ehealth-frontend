@@ -92,11 +92,11 @@ const MyBlogpost = () => {
 
   return (
     <div className="flex flex-col p-5 md:p-9">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center">
         <h3 className="text-xl md:text-2xl font-bold mb-6 text-center sm:text-left">My Blogposts</h3>
         <button
           onClick={() => navigate('/healthcare/creation-blog')}
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           Create Blogpost
         </button>

@@ -124,6 +124,7 @@ const UpdatePasswordModal = ({ isOpen, onClose }) => {
               className="w-full p-2 border border-gray-300 rounded"
               value={newPassword}
               onChange={handlePasswordChange}
+              minLength={8}
               required
             />
             <div className="h-2 mt-2 w-full bg-gray-300 rounded">
@@ -139,16 +140,17 @@ const UpdatePasswordModal = ({ isOpen, onClose }) => {
               className="w-full p-2 border border-gray-300 rounded"
               value={newPasswordConfirmation}
               onChange={(e) => setNewPasswordConfirmation(e.target.value)}
+              minLength={8}
               required
             />
           </div>
           {error && <div className="text-red-500 mb-4">{typeof error === 'string' ? error : JSON.stringify(error)}</div>}
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="w-full py-2 bg-[#347576] hover:bg-[#285D5E] text-white rounded-lg"
             disabled={status === 'loading'}
           >
-            {status === 'loading' ? <Skeleton width={100} /> : 'Confirm'}
+            Confirm
           </button>
         </form>
       </div>

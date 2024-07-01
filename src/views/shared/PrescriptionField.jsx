@@ -50,7 +50,7 @@ const PrescriptionField = ({ index, medications, formData, handleChange, handleR
                 onChange={(e) => handleChange(index, 'dosageUnit', e.target.value)}
                 required
               >
-                <option disabled value=''>Unit</option>
+                <option disabled value=''>Select</option>
                 {dosageUnits.map(unit => (
                   <option key={unit} value={unit}>{unit}</option>
                 ))}
@@ -91,7 +91,7 @@ const PrescriptionField = ({ index, medications, formData, handleChange, handleR
               onChange={(e) => handleChange(index, 'durationUnit', e.target.value)}
               required
             >
-              <option disabled value=''>Duration</option>
+              <option disabled value=''>Select</option>
               {durationUnits.map(unit => (
                 <option key={unit} value={unit}>{unit}</option>
               ))}

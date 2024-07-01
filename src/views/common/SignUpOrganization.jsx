@@ -14,7 +14,6 @@ import 'leaflet/dist/leaflet.css';
 
 const SignUpOrganization = () => {
   const dispatch = useDispatch();
-
   const [organizationName, setOrganizationName] = useState('');
   const [organizationCode, setOrganizationCode] = useState('');
   const [adminName, setAdminName] = useState('');
@@ -48,7 +47,6 @@ const SignUpOrganization = () => {
         longitude
       })
     );
-
     if (result.type === 'collaboration/createCollaborationRequest/fulfilled') {
       resetField();
     }
@@ -170,7 +168,8 @@ const SignUpOrganization = () => {
                 value={organizationCode} 
                 onChange={(e) => setOrganizationCode(e.target.value)}
                 placeholder={isNewCode ? '202001012345' : '123456-M'}
-                maxLength={15}
+                pattern={isNewCode ? '\\d{12}' : '\\d{6}-[A-Z]'}
+                maxLength={isNewCode ? 12 : 8}
                 required
               />
             </div>
@@ -201,6 +200,8 @@ const SignUpOrganization = () => {
                 value={adminContact} 
                 onChange={(e) => setAdminContact(e.target.value)}
                 placeholder='012-3456789'
+                pattern="\d{3,4}-\d{7,8}"
+                maxLength={13}
                 required
               />
             </div>
@@ -231,6 +232,7 @@ const SignUpOrganization = () => {
                 value={adminIcno} 
                 onChange={(e) => setAdminIcno(e.target.value)}
                 placeholder='Admin IC Number here...'
+                pattern="\d{6}-\d{2}-\d{4}"
                 required
               />
             </div>
@@ -246,6 +248,7 @@ const SignUpOrganization = () => {
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder='********'
+                minLength={8}
                 required
               />
               <button 
@@ -268,6 +271,7 @@ const SignUpOrganization = () => {
                 value={confirmPassword} 
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder='********'
+                minLength={8}
                 required
               />
               <button 

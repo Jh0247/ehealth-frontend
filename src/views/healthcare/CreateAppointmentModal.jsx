@@ -165,7 +165,7 @@ const CreateAppointmentModal = ({ isOpen, onClose }) => {
         </div>
         <div className="flex flex-col sm:flex-row justify-end gap-2">
           <button onClick={handleClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded">Cancel</button>
-          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">Create Appointment</button>
+          <button onClick={handleSubmit} className="px-4 py-2 bg-[#347576] hover:bg-[#285D5E] text-white rounded">Create Appointment</button>
         </div>
       </div>
     </div>

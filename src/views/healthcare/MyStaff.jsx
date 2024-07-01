@@ -72,7 +72,7 @@ const MyStaff = () => {
         <img
           src={member.profile_img || defaultImage}
           alt={member.name}
-          className="w-24 h-24 rounded-full sm:mr-4 mb-4 sm:mb-0"
+          className="w-24 h-24 rounded-full sm:mr-4 mb-4 sm:mb-0 object-cover"
         />
         <div className="justify-center text-center sm:text-left">
           <h4 className="text-sm sm:text-base font-semibold mb-2">{member.name}</h4>
@@ -134,7 +134,7 @@ const MyStaff = () => {
         </select>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-teal-400"
         >
           Create Staff
         </button>

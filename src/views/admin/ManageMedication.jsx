@@ -5,6 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import CreateMedicationModal from './CreateMedicationModal';
 import { fetchMedications, createMedication, updateMedication } from '../../redux/features/medicationSlice';
 import { Icon } from '@iconify/react';
+import editIcon from '@iconify-icons/mdi/pencil-outline';
 import arrowDown from '@iconify-icons/mdi/arrow-down';
 import arrowUp from '@iconify-icons/mdi/arrow-up';
 import Slider from 'rc-slider';
@@ -75,29 +76,29 @@ const ManageMedication = () => {
       <div className="flex w-full my-2">
         <div className="flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 pr-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            <strong>Name: </strong> {medication.name}
+            {medication.name}
           </span>
         </div>
         <div className="flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            <strong>Form: </strong> {medication.form}
+            {medication.form}
           </span>
         </div>
         <div className="hidden sm:flex flex-col w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            <strong>Manufacturer: </strong> {medication.manufacturer}
+            {medication.manufacturer}
           </span>
         </div>
         <div className="hidden sm:flex flex-col w-1/4 border-r-2 border-gray-300 px-2">
           <span className="text-sm sm:text-base my-1 md:my-0">
-            <strong>Price: </strong> ${medication.price}
+            ${medication.price}
           </span>
         </div>
         <button
           onClick={() => handleEdit(medication)}
-          className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded ml-2"
+          className="bg-[#347576] hover:bg-[#285D5E] text-white py-1 px-2 rounded ml-2"
         >
-          Edit
+          <Icon icon={editIcon} className="w-6 h-6" />
         </button>
       </div>
     </li>
@@ -134,7 +135,7 @@ const ManageMedication = () => {
         <h3 className="text-xl md:text-2xl font-bold mb-6">Manage Medication</h3>
         <button
           onClick={() => setCreateModalOpen(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mb-6"
+          className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded mb-6"
         >
           Create Medication
         </button>

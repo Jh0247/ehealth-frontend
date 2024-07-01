@@ -16,23 +16,14 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // rmb to uncomment required fields and remove the required
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(
       loginUser({
-        // email: "johndoe2@example.com",
-        // email: "doctorname2@example.com",
-        // email: "doctorOZ2x2@example.com", //second oz doc
-        email: "test1@example.com",
-        // email: "admin@sample.com", 
-        // email: "pharmacist@example.com",
-        // email: "nurse@sample.com",
-        // email: "testdel@mail.com",
-        password: "password" 
+        email,
+        password
       })
     );
-    // success case
     if (result.type === 'auth/loginUser/fulfilled') {
       dispatch(setUser(result.payload.user));
       let role = result?.payload?.user?.user_role;
@@ -63,7 +54,7 @@ const Login = () => {
                 className="w-full outline-none" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                // required
+                required
               />
             </div>
           </div>
@@ -77,7 +68,8 @@ const Login = () => {
                 className="w-full outline-none pr-10" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                // required
+                minLength={8}
+                required
               />
               <button 
                 type="button" 

@@ -12,7 +12,19 @@ const includeToastsForActions = [
   'blogpost/updateBlogpost/rejected',
   'healthcareProvider/registerStaff/fulfilled',
   'healthcareProvider/registerStaff/rejected',
-  'user/updateUserPassword/fulfilled',
+  'user/updateUserPassword/fulfilled', 
+  'collaboration/approveCollaborationRequest/fulfilled',
+  'collaboration/approveCollaborationRequest/rejected',
+  'collaboration/declineCollaborationRequest/fulfilled',
+  'collaboration/declineCollaborationRequest/rejected',
+  'medication/createMedication/fulfilled',
+  'medication/createMedication/rejected',
+  'medication/updateMedication/fulfilled',
+  'medication/updateMedication/rejected',
+  'user/updateUserProfile/fulfilled',
+  'user/updateUserProfile/rejected',
+  'blogpost/createBlogpost/fulfilled',
+  'blogpost/createBlogpost/rejected',
 ];
 
 export const axiosMiddleware = ({ dispatch }) => (next) => async (action) => {

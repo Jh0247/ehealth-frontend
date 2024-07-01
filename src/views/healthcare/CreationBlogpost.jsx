@@ -75,22 +75,39 @@ const CreationBlogpost = () => {
     e.preventDefault();
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
-    formDataToSend.append('content', formData.content? formData.content : 'Content here');
+    formDataToSend.append('content', formData.content ? formData.content : 'Content here');
     formDataToSend.append('status', formData.status);
+  
     if (bannerChanged && formData.banner) {
-      formDataToSend.append('banner', formData.banner);
+      if (formData.banner instanceof File) {
+        formDataToSend.append('banner', formData.banner);
+      } else {
+        console.error('Banner is not a valid file');
+      }
     }
-
+  
+    console.warn('Form Data to Send:', {
+      title: formData.title,
+      content: formData.content ? formData.content : 'Content here',
+      status: formData.status,
+      banner: bannerChanged && formData.banner ? formData.banner : null,
+    });
+  
     if (blogId) {
       dispatch(updateBlogpost({ id: blogId, formData: formDataToSend })).then(() => {
         navigate('/healthcare/my-blog');
+      }).catch(error => {
+        console.error('Update blog post error:', error);
       });
     } else {
       dispatch(createBlogpost(formDataToSend)).then(() => {
         navigate('/healthcare/my-blog');
+      }).catch(error => {
+        console.error('Create blog post error:', error);
       });
     }
   };
+  
 
   return (
     <div className="flex flex-col p-5 md:p-9 bg-gray-50">
@@ -98,7 +115,6 @@ const CreationBlogpost = () => {
         {blogId ? 'Edit Blogpost' : 'Create Blogpost'}
       </h3>
       {errorState && <div className="text-red-500 mb-4">{errorState}</div>}
-      {error && <div className="text-red-500 mb-4">{JSON.stringify(error)}</div>}
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-4 md:p-6">
         <div className="mb-4">
           <label className="block text-gray-700">Title</label>
@@ -154,14 +170,14 @@ const CreationBlogpost = () => {
         <div className="flex justify-end">
           <button
             type="button"
-            onClick={() => navigate('/my-blogposts')}
+            onClick={() => navigate('/healthcare/my-blog')}
             className="mr-4 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+            className="bg-[#347576] hover:bg-[#285D5E] text-white py-2 px-4 rounded"
             disabled={status === 'loading'}
           >
             {status === 'loading' ? 'Saving...' : 'Save'}

@@ -94,7 +94,7 @@ const OrganizationList = () => {
           >
             <option value="">All Types</option>
             {Array.from(new Set(organizations.map(org => org.organization.type))).map(type => (
-              <option key={type} value={type}>{type}</option>
+              <option key={type} value={type} className="capitalize">{type}</option>
             ))}
           </select>
         </div>
@@ -146,9 +146,9 @@ const OrganizationList = () => {
                         {org.first_admin ? org.first_admin.name : 'N/A'}
                       </span>
                     </div>
-                    <div className={`w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2 ${org.first_admin.status === 'terminated' ? 'bg-red-100' : org.first_admin.status === 'active' ? 'bg-green-100' : 'bg-gray-100'}`}>
+                    <div className={`w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2 ${org?.first_admin?.status === 'terminated' ? 'bg-red-200 text-red-800' : org?.first_admin?.status === 'active' ? 'bg-green-200 text-green-800' : 'bg-gray-100'}`}>
                       <span className="text-sm sm:text-base my-1 md:my-0 capitalize">
-                        {org.first_admin ? org.first_admin.status : 'N/A'}
+                        {org?.first_admin ? org?.first_admin?.status : 'N/A'}
                       </span>
                     </div>
                     <div className="hidden sm:flex border-r-2 border-gray-300 px-2 items-center justify-center">

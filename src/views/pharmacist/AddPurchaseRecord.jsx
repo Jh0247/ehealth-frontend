@@ -59,8 +59,6 @@ export default function AddPurchaseRecord() {
           setIsPrescriptionModalOpen(false);
           setIsPurchaseModalOpen(false);
           setIcno('');
-          //navigate to purchase record
-          
         })
         .catch((error) => {
           dispatch(

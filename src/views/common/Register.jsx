@@ -27,15 +27,14 @@ const Register = () => {
     e.preventDefault();
     const result = await dispatch(
       registerUser({
-        name : "John Doe",
-        email: "johndoe2@example.com",
-        icno: "111111111112",
-        contact: "1234567890",
-        password: "password",
-        password_confirmation:"password"
+        name,
+        email,
+        icno,
+        contact,
+        password,
+        password_confirmation: passwordConfirmation
       })
     );
-    // success case
     if (result.type === 'auth/registerUser/fulfilled') {
       navigate('/login');
     }
@@ -65,7 +64,7 @@ const Register = () => {
                 value={name} 
                 onChange={(e) => setName(e.target.value)}
                 placeholder='John Doe'
-                // required
+                required
               />
             </div>
           </div>
@@ -80,7 +79,7 @@ const Register = () => {
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder='johndoe@sample.com'
-                // required
+                required
               />
             </div>
           </div>
@@ -95,7 +94,8 @@ const Register = () => {
                 value={icno} 
                 onChange={(e) => setIcno(e.target.value)}
                 placeholder='XXXXXX-XX-XXXX'
-                // required
+                pattern="\d{6}-\d{2}-\d{4}"
+                required
               />
             </div>
           </div>
@@ -110,7 +110,8 @@ const Register = () => {
                 value={contact} 
                 onChange={(e) => setContact(e.target.value)} 
                 placeholder='012-3456789'
-                // required
+                pattern="\d{3,4}-\d{7,8}"
+                required
               />
             </div>
           </div>
@@ -125,7 +126,8 @@ const Register = () => {
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
                 placeholder='********'
-                // required
+                minLength={8}
+                required
               />
               <button 
                 type="button" 
@@ -147,7 +149,8 @@ const Register = () => {
                 value={passwordConfirmation} 
                 onChange={(e) => setPasswordConfirmation(e.target.value)} 
                 placeholder='********'
-                // required
+                minLength={8}
+                required
               />
               <button 
                 type="button" 
