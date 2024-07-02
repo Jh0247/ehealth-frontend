@@ -25,7 +25,7 @@ const Landing = () => {
       message: message,
     };
 
-    emailjs.send('service_ni5q7ts', 'template_axl0se1', templateParams, '99BpzdeMgVuF5dSZj')
+    emailjs.send('service_ni5q7ts', 'template_axl0se1', templateParams, 'p7TBSz5wpICP_GOX-')
       .then((response) => {
         dispatch(
           popToast({

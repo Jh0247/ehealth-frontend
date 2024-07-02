@@ -30,14 +30,17 @@ const OrganizationList = () => {
   const sortData = (data, key, direction) => {
     const sortedArray = [...data].sort((a, b) => {
       if (key === 'name') {
+        const nameA = a.organization?.name || '';
+        const nameB = b.organization?.name || '';
         return direction === 'ascending'
-          ? a.organization[key].localeCompare(b.organization[key])
-          : b.organization[key].localeCompare(a.organization[key]);
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
       }
       return 0;
     });
     setSortedOrganizations(sortedArray);
   };
+  
 
   const handleSort = (key) => {
     const direction = sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
@@ -51,8 +54,8 @@ const OrganizationList = () => {
   };
 
   const filteredOrganizations = sortedOrganizations.filter(org => {
-    return org.organization.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (filterType === '' || org.organization.type === filterType);
+    return org?.organization?.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (filterType === '' || org?.organization?.type === filterType);
   });
 
   const toggleOrganizationDetails = (index) => {
@@ -93,7 +96,7 @@ const OrganizationList = () => {
             className="p-2 border border-gray-300 rounded w-full sm:w-1/4"
           >
             <option value="">All Types</option>
-            {Array.from(new Set(organizations.map(org => org.organization.type))).map(type => (
+            {Array.from(new Set(organizations.map(org => org?.organization?.type))).map(type => (
               <option key={type} value={type} className="capitalize">{type}</option>
             ))}
           </select>
@@ -125,7 +128,7 @@ const OrganizationList = () => {
             ))
           ) : filteredOrganizations.length > 0 ? (
             filteredOrganizations.map((org, index) => (
-              <React.Fragment key={org.organization.id}>
+              <React.Fragment key={org?.organization?.id}>
                 <li
                   onClick={() => toggleOrganizationDetails(index)}
                   className="flex justify-between items-center border-b py-2 cursor-pointer"
@@ -133,17 +136,17 @@ const OrganizationList = () => {
                   <div className="flex w-full my-2">
                     <div className="flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 pr-2">
                       <span className="text-sm sm:text-base my-1 md:my-0">
-                        {org.organization.name}
+                        {org?.organization?.name}
                       </span>
                     </div>
                     <div className="hidden sm:flex w-1/4 border-r-2 border-gray-300 px-2">
                       <span className="text-sm sm:text-base my-1 md:my-0 capitalize">
-                        {org.organization.type} Organization
+                        {org?.organization?.type} Organization
                       </span>
                     </div>
                     <div className="hidden sm:flex w-1/4 border-r-2 border-gray-300 px-2">
                       <span className="text-sm sm:text-base my-1 md:my-0">
-                        {org.first_admin ? org.first_admin.name : 'N/A'}
+                        {org?.first_admin ? org?.first_admin?.name : 'N/A'}
                       </span>
                     </div>
                     <div className={`w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2 ${org?.first_admin?.status === 'terminated' ? 'bg-red-200 text-red-800' : org?.first_admin?.status === 'active' ? 'bg-green-200 text-green-800' : 'bg-gray-100'}`}>
@@ -162,46 +165,46 @@ const OrganizationList = () => {
                       <div className="lg:w-1/3 flex flex-col">
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold sm:w-32">Admin: </p>
-                          <p>{org.first_admin ? org.first_admin.name : 'N/A'}</p>
+                          <p>{org?.first_admin ? org?.first_admin?.name : 'N/A'}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold sm:w-32">Email:</p>
-                          <p>{org.first_admin ? org.first_admin.email : 'N/A'}</p>
+                          <p>{org?.first_admin ? org?.first_admin?.email : 'N/A'}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold sm:w-32">Contact:</p>
-                          <p>{org.first_admin ? org.first_admin.contact : 'N/A'}</p>
+                          <p>{org?.first_admin ? org?.first_admin?.contact : 'N/A'}</p>
                         </div>
                       </div>
                       <div className="lg:w-1/3 flex flex-col">
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Staff Count:</p>
-                          <p>{org.stats.num_staffs}</p>
+                          <p>{org?.stats?.num_staffs}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Appointments:</p>
-                          <p>{org.stats.num_appointments}</p>
+                          <p>{org?.stats?.num_appointments}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Blog Posts:</p>
-                          <p>{org.stats.num_blogposts}</p>
+                          <p>{org?.stats?.num_blogposts}</p>
                         </div>
                       </div>
                       <div className="lg:w-1/3 flex flex-col">
                         <div className="flex flex-col mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Address:</p>
-                          <p>{org.organization.address}</p>
+                          <p>{org?.organization.address}</p>
                         </div>
                         {org.first_admin.status !== 'terminated' ?
                           <button
-                            onClick={() => handleStopCollaboration(org.organization.id)}
+                            onClick={() => handleStopCollaboration(org?.organization?.id)}
                             className="py-2 px-4 rounded mb-5 bg-red-500 hover:bg-red-600 text-white"
                           >
                             End partnership
                           </button>
                         : 
                         <button
-                          onClick={() => handleRecollaborate(org.organization.id)}
+                          onClick={() => handleRecollaborate(org?.organization?.id)}
                           className="py-2 px-4 rounded mb-5 bg-green-500 hover:bg-green-600 text-white"
                         >
                           Collaborate
