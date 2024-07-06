@@ -22,5 +22,5 @@ const setToken = (token) => {
     return Promise.reject(error);
   });
 };
-
+export default axiosInstance;
 export { axiosInstance, setToken };
