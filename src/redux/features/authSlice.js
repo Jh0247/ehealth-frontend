@@ -6,6 +6,7 @@ import setToken from '../../Utils/axiosSetup';
 const initialState = {
   token: '',
   status: 'idle',
+  isAuthenticated: false,
   error: null,
 };
 
@@ -39,7 +40,7 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       setToken(null);
-      return initialState; 
+      return initialState;
     },
   },
   extraReducers: (builder) => {
@@ -48,14 +49,17 @@ const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        const { token } = action.payload;
+        setToken(token);
+        state.token = token;
+        state.isAuthenticated = true;
         state.status = 'succeeded';
-        state.token = action.payload.access_token;
-        setToken(action.payload.access_token);
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
         state.token = null;
+        state.isAuthenticated = false;
         state.error = action.payload;
       })
       .addCase(registerUser.pending, (state) => {

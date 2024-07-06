@@ -1,4 +1,4 @@
-let API_BASE_URL = 'http://localhost:8000/api/';
+export let API_BASE_URL = 'http://52.64.17.175:5173';
 
 export const API_URL = {
   LOGIN: API_BASE_URL + 'login',
