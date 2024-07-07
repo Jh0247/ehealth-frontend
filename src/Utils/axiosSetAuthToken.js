@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosSetup";
+import axiosInstance from './axiosSetup';
 
 const setToken = (token) => {
   if (token) {

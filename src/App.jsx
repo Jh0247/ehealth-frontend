@@ -17,6 +17,15 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    console.log('Token from localStorage:', token); // Debugging log
+    if (token) {
+      setToken(token);
+      console.log('Token set to axios headers'); // Debugging log
+    }
+  }, []);
+
   return (
     <>
       {loading && <Loading />}
