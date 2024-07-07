@@ -10,7 +10,7 @@ import arrowUp from '@iconify-icons/mdi/arrow-up';
 
 const OrganizationList = () => {
   const dispatch = useDispatch();
-  const { organizations, status } = useSelector((state) => state.organization);
+  const { organizations = [], status } = useSelector((state) => state.organization);
   const [selectedOrganization, setSelectedOrganization] = useState([]);
   const [sortedOrganizations, setSortedOrganizations] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
@@ -22,7 +22,7 @@ const OrganizationList = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (organizations?.length > 0) {
+    if (organizations.length > 0) {
       sortData(organizations, sortConfig.key, sortConfig.direction);
     }
   }, [organizations, sortConfig]);
@@ -40,7 +40,6 @@ const OrganizationList = () => {
     });
     setSortedOrganizations(sortedArray);
   };
-  
 
   const handleSort = (key) => {
     const direction = sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
@@ -54,7 +53,7 @@ const OrganizationList = () => {
   };
 
   const filteredOrganizations = sortedOrganizations.filter(org => {
-    return org?.organization?.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    return org?.organization?.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
             (filterType === '' || org?.organization?.type === filterType);
   });
 
@@ -136,22 +135,22 @@ const OrganizationList = () => {
                   <div className="flex w-full my-2">
                     <div className="flex flex-col w-2/4 sm:w-1/4 border-r-2 border-gray-300 pr-2">
                       <span className="text-sm sm:text-base my-1 md:my-0">
-                        {org?.organization?.name}
+                        {org?.organization?.name || 'N/A'}
                       </span>
                     </div>
                     <div className="hidden sm:flex w-1/4 border-r-2 border-gray-300 px-2">
                       <span className="text-sm sm:text-base my-1 md:my-0 capitalize">
-                        {org?.organization?.type} Organization
+                        {org?.organization?.type || 'N/A'} Organization
                       </span>
                     </div>
                     <div className="hidden sm:flex w-1/4 border-r-2 border-gray-300 px-2">
                       <span className="text-sm sm:text-base my-1 md:my-0">
-                        {org?.first_admin ? org?.first_admin?.name : 'N/A'}
+                        {org?.first_admin?.name || 'N/A'}
                       </span>
                     </div>
                     <div className={`w-2/4 sm:w-1/4 border-r-2 border-gray-300 px-2 ${org?.first_admin?.status === 'terminated' ? 'bg-red-200 text-red-800' : org?.first_admin?.status === 'active' ? 'bg-green-200 text-green-800' : 'bg-gray-100'}`}>
                       <span className="text-sm sm:text-base my-1 md:my-0 capitalize">
-                        {org?.first_admin ? org?.first_admin?.status : 'N/A'}
+                        {org?.first_admin?.status || 'N/A'}
                       </span>
                     </div>
                     <div className="hidden sm:flex border-r-2 border-gray-300 px-2 items-center justify-center">
@@ -165,37 +164,37 @@ const OrganizationList = () => {
                       <div className="lg:w-1/3 flex flex-col">
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold sm:w-32">Admin: </p>
-                          <p>{org?.first_admin ? org?.first_admin?.name : 'N/A'}</p>
+                          <p>{org?.first_admin?.name || 'N/A'}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold sm:w-32">Email:</p>
-                          <p>{org?.first_admin ? org?.first_admin?.email : 'N/A'}</p>
+                          <p>{org?.first_admin?.email || 'N/A'}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold sm:w-32">Contact:</p>
-                          <p>{org?.first_admin ? org?.first_admin?.contact : 'N/A'}</p>
+                          <p>{org?.first_admin?.contact || 'N/A'}</p>
                         </div>
                       </div>
                       <div className="lg:w-1/3 flex flex-col">
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Staff Count:</p>
-                          <p>{org?.stats?.num_staffs}</p>
+                          <p>{org?.stats?.num_staffs || 'N/A'}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Appointments:</p>
-                          <p>{org?.stats?.num_appointments}</p>
+                          <p>{org?.stats?.num_appointments || 'N/A'}</p>
                         </div>
                         <div className="flex mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Blog Posts:</p>
-                          <p>{org?.stats?.num_blogposts}</p>
+                          <p>{org?.stats?.num_blogposts || 'N/A'}</p>
                         </div>
                       </div>
                       <div className="lg:w-1/3 flex flex-col">
                         <div className="flex flex-col mb-1 justify-between lg:justify-normal">
                           <p className="font-bold w-32">Address:</p>
-                          <p>{org?.organization.address}</p>
+                          <p>{org?.organization?.address || 'N/A'}</p>
                         </div>
-                        {org.first_admin.status !== 'terminated' ?
+                        {org?.first_admin?.status !== 'terminated' ?
                           <button
                             onClick={() => handleStopCollaboration(org?.organization?.id)}
                             className="py-2 px-4 rounded mb-5 bg-red-500 hover:bg-red-600 text-white"

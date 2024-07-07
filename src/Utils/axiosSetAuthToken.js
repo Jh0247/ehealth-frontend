@@ -1,9 +1,16 @@
 import axiosInstance from "./axiosSetup";
 
 const setToken = (token) => {
+  if (token) {
+    localStorage.setItem('authToken', token);
+  } else {
+    localStorage.removeItem('authToken');
+  }
+
   axiosInstance.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      config.headers.Authorization = `Bearer ${storedToken}`;
     }
     return config;
   }, (error) => {
