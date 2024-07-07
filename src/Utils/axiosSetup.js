@@ -1,26 +1,26 @@
-import axios from "axios";
-import { API_BASE_URL } from "../statis/url";
-
-const URL = API_BASE_URL;
+import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: URL,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
 });
 
-const setToken = (token) => {
-  axiosInstance.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+axiosInstance.interceptors.request.use(
+  (config) => {
+    console.log('Request URL:', config.url);
     return config;
-  }, (error) => {
+  },
+  (error) => {
     return Promise.reject(error);
-  });
-};
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export default axiosInstance;
-export { axiosInstance, setToken };
