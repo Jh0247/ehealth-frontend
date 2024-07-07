@@ -1,4 +1,4 @@
-export let API_BASE_URL = 'http://52.64.17.175:5173/api/';
+export let API_BASE_URL = 'http://52.64.17.175:8000/api/';
 
 export const API_URL = {
   LOGIN: API_BASE_URL + 'login',
