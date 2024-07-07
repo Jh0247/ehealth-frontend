@@ -18,10 +18,10 @@ const NotFound = () => {
       } else if (user?.user_info?.user_role === 'pharmacist') {
         navigate('/pharmacist/dashboard');
       } else {
-        navigate('/landing');
+        navigate('/');
       }
     } else {
-      navigate('/landing');
+      navigate('/');
     }
   }, [auth, user, navigate]);
 

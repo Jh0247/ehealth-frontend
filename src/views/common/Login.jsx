@@ -20,8 +20,8 @@ const Login = () => {
     e.preventDefault();
     const result = await dispatch(
       loginUser({
-        email: "ehealth@admin.com",
-        password: "password"
+        email,
+        password
       })
     );
     if (result.type === 'auth/loginUser/fulfilled') {
@@ -54,7 +54,7 @@ const Login = () => {
                 className="w-full outline-none" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                // required
+                required
               />
             </div>
           </div>
@@ -69,7 +69,7 @@ const Login = () => {
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
                 minLength={8}
-                // required
+                required
               />
               <button 
                 type="button" 

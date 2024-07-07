@@ -6,7 +6,6 @@ import setToken from '../../Utils/axiosSetAuthToken';
 const initialState = {
   token: '',
   status: 'idle',
-  isAuthenticated: false,
   error: null,
 };
 
@@ -15,7 +14,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(API_URL.LOGIN, credentials);
-      return response;
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -40,7 +39,7 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       setToken(null);
-      return initialState;
+      return initialState; 
     },
   },
   extraReducers: (builder) => {
@@ -50,14 +49,13 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.token = action.payload.access_token;
         setToken(action.payload.access_token);
+        state.token = action.payload.access_token;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
         state.token = null;
-        state.isAuthenticated = false;
         state.error = action.payload;
       })
       .addCase(registerUser.pending, (state) => {
