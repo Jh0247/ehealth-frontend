@@ -12,7 +12,7 @@ export default function ManagePurchaseRecord() {
   const { user_info } = useSelector((state) => state.user);
   const { purchases, status } = useSelector((state) => state.purchase);
   const [sortedPurchases, setSortedPurchases] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
 
   useEffect(() => {
     if (user_info?.organization_id) {
@@ -21,17 +21,16 @@ export default function ManagePurchaseRecord() {
   }, [dispatch, user_info?.organization_id]);
 
   useEffect(() => {
-    setSortedPurchases(purchases);
+    handleSort('id', 'ascending');
   }, [purchases]);
 
   const handleDeletePurchase = (id) => {
     dispatch(deletePurchaseRecord(id));
   };
 
-  const handleSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+  const handleSort = (key, direction) => {
+    if (!direction) {
+      direction = sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
     }
     setSortConfig({ key, direction });
 
@@ -59,7 +58,7 @@ export default function ManagePurchaseRecord() {
   };
 
   const renderSortIcon = (key) => {
-    if (sortConfig.key !== key) return null;
+    if (sortConfig.key !== key || key === 'id') return null;
     return sortConfig.direction === 'ascending' ? <Icon className="ml-2" icon={arrowUp} /> : <Icon className="ml-2" icon={arrowDown} />;
   };
 
@@ -71,7 +70,7 @@ export default function ManagePurchaseRecord() {
           <div className="sticky top-0 bg-gray-100 p-4 rounded-t-lg shadow-md">
             <div className="flex justify-between mb-2">
               <div className="flex flex-row w-1/6 cursor-pointer items-center" onClick={() => handleSort('id')}>
-                <strong>Purchase ID</strong> {renderSortIcon('id')}
+                <strong>Purchase ID</strong> {sortConfig.key === 'id' && sortConfig.direction !== null && renderSortIcon('id')}
               </div>
               <div className="flex-row w-1/6 hidden sm:flex cursor-pointer items-center" onClick={() => handleSort('total_payment')}>
                 <strong>Total Payment</strong> {renderSortIcon('total_payment')}
