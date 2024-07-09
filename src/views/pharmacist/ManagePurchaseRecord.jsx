@@ -9,7 +9,6 @@ export default function ManagePurchaseRecord() {
   const { user_info } = useSelector((state) => state.user);
   const { purchases, status } = useSelector((state) => state.purchase);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState({ user: '', medication: '' });
 
   useEffect(() => {
     if (user_info?.organization_id) {
@@ -25,25 +24,11 @@ export default function ManagePurchaseRecord() {
     setSearchTerm(e.target.value);
   };
 
-  const handleFilterChange = (e) => {
-    setFilter({
-      ...filter,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const filteredPurchases = purchases.filter((purchase) =>
+    purchase.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const filteredPurchases = purchases.filter((purchase) => {
-    return (
-      (purchase.id?.toString().includes(searchTerm) ||
-        purchase.total_payment?.toString().includes(searchTerm) ||
-        purchase.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        purchase.medication?.name?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (!filter.user || purchase.user?.name?.toLowerCase().includes(filter.user.toLowerCase())) &&
-      (!filter.medication || purchase.medication?.name?.toLowerCase().includes(filter.medication.toLowerCase()))
-    );
-  });
-
-  const renderPurchases = () => (
+  const renderPurchases = (purchasesList) => (
     <div className="bg-white rounded shadow-md shadow-teal-800 p-4 md:p-6">
       <div className="mt-4">
         <h4 className="font-bold mb-2">Purchase Records</h4>
@@ -68,11 +53,11 @@ export default function ManagePurchaseRecord() {
             ) : filteredPurchases.length > 0 ? (
               filteredPurchases.map((purchase, index) => (
                 <li key={index} className="flex justify-between items-center border-b py-2">
-                  <div className="w-1/6">{purchase.id ?? 'N/A'}</div>
-                  <div className="w-1/6 hidden sm:block">{purchase.total_payment ?? 'N/A'}</div>
-                  <div className="w-1/6 hidden sm:block">{new Date(purchase.date_purchase).toLocaleDateString() ?? 'N/A'}</div>
-                  <div className="w-1/6">{purchase.user?.name ?? 'N/A'}</div>
-                  <div className="w-1/6 hidden sm:block">{purchase.medication?.name ?? 'N/A'}</div>
+                  <div className="w-1/6">{purchase.id}</div>
+                  <div className="w-1/6 hidden sm:block">{purchase.total_payment}</div>
+                  <div className="w-1/6 hidden sm:block">{new Date(purchase.date_purchase).toLocaleDateString()}</div>
+                  <div className="w-1/6">{purchase.user?.name || 'N/A'}</div>
+                  <div className="w-1/6 hidden sm:block">{purchase.medication?.name || 'N/A'}</div>
                   <div className="w-1/6">
                     <button
                       className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600"
@@ -97,32 +82,14 @@ export default function ManagePurchaseRecord() {
   return (
     <div className="flex flex-col p-5 md:p-9">
       <h3 className="text-xl md:text-2xl font-bold mb-6">Manage Purchase Record</h3>
-      <div className="flex justify-between mb-4">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="w-full md:w-1/3 p-2 border rounded mb-4 md:mb-0"
-        />
-        <input
-          type="text"
-          name="user"
-          placeholder="Filter by User"
-          value={filter.user}
-          onChange={handleFilterChange}
-          className="w-full md:w-1/3 p-2 border rounded mb-4 md:mb-0"
-        />
-        <input
-          type="text"
-          name="medication"
-          placeholder="Filter by Medication"
-          value={filter.medication}
-          onChange={handleFilterChange}
-          className="w-full md:w-1/3 p-2 border rounded mb-4 md:mb-0"
-        />
-      </div>
-      {renderPurchases()}
+      <input
+        type="text"
+        placeholder="Search by user name"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="w-full md:w-1/3 p-2 border rounded mb-4 md:mb-0"
+      />
+      {renderPurchases(filteredPurchases)}
     </div>
   );
 }

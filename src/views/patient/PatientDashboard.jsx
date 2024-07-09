@@ -163,16 +163,18 @@ const PatientDashboard = () => {
                 ))
               ) : (
                 Array.isArray(medications) && medications.length > 0 ? (
-                  medications.map((medication, index) => (
-                    <li onClick={() => handleViewDetails(medication?.medication_id)} key={index} className="flex justify-between items-center border-b py-2">
-                      <div className="flex flex-col">
-                        <span className="text-sm sm:text-base"><strong>{medication?.medication_name}</strong></span>
-                        <span className="text-sm sm:text-base my-2">Start on: <strong>{medication?.start_date}</strong></span>
-                        <span className="text-sm sm:text-base">End on: <strong>{medication?.end_date}</strong></span>
-                      </div>
-                      <button className="bg-gray-200 text-gray-700 py-1 px-3 rounded">{medication?.dosage}</button>
-                    </li>
-                  ))
+                  medications
+                    .filter((medication) => new Date(medication?.end_date) >= new Date())
+                    .map((medication, index) => (
+                      <li onClick={() => handleViewDetails(medication?.medication_id)} key={index} className="flex justify-between items-center border-b py-2">
+                        <div className="flex flex-col">
+                          <span className="text-sm sm:text-base"><strong>{medication?.medication_name ?? 'N/A'}</strong></span>
+                          <span className="text-sm sm:text-base my-2">Start on: <strong>{medication?.start_date ?? 'N/A'}</strong></span>
+                          <span className="text-sm sm:text-base">End on: <strong>{medication?.end_date ?? 'N/A'}</strong></span>
+                        </div>
+                        <button className="bg-gray-200 text-gray-700 py-1 px-3 rounded">{medication?.dosage ?? 'N/A'}</button>
+                      </li>
+                    ))
                 ) : (
                   <div className="flex flex-col items-center">
                     <img src={noMedicationImage} alt="No Medications Found" className="w-32 h-32" />
