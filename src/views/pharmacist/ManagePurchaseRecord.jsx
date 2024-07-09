@@ -12,7 +12,7 @@ export default function ManagePurchaseRecord() {
   const { user_info } = useSelector((state) => state.user);
   const { purchases, status } = useSelector((state) => state.purchase);
   const [sortedPurchases, setSortedPurchases] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: 'date_purchase', direction: 'descending' });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
   useEffect(() => {
     if (user_info?.organization_id) {
@@ -21,38 +21,38 @@ export default function ManagePurchaseRecord() {
   }, [dispatch, user_info?.organization_id]);
 
   useEffect(() => {
-    if (purchases.length > 0) {
-      handleSort('date_purchase', 'descending');
-    }
+    setSortedPurchases(purchases);
   }, [purchases]);
 
   const handleDeletePurchase = (id) => {
     dispatch(deletePurchaseRecord(id));
   };
 
-  const handleSort = (key, direction) => {
-    if (!direction) {
-      direction = sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
     }
     setSortConfig({ key, direction });
 
     const sortedArray = [...purchases].sort((a, b) => {
+      const aValue = key === 'user_name' ? a.user?.name ?? '' : a[key] ?? '';
+      const bValue = key === 'user_name' ? b.user?.name ?? '' : b[key] ?? '';
+
       if (key === 'date_purchase') {
-        const dateA = new Date(a[key]);
-        const dateB = new Date(b[key]);
-        return direction === 'ascending' ? dateA - dateB : dateB - dateA;
+        return direction === 'ascending' ? new Date(aValue) - new Date(bValue) : new Date(bValue) - new Date(aValue);
       } else if (key === 'medication_name') {
         return direction === 'ascending'
-          ? a.medication.name.localeCompare(b.medication.name)
-          : b.medication.name.localeCompare(a.medication.name);
+          ? (a.medication?.name ?? '').localeCompare(b.medication?.name ?? '')
+          : (b.medication?.name ?? '').localeCompare(a.medication?.name ?? '');
       } else if (key === 'user_name') {
         return direction === 'ascending'
-          ? a.user.name.localeCompare(b.user.name)
-          : b.user.name.localeCompare(a.user.name);
+          ? (a.user?.name ?? '').localeCompare(b.user?.name ?? '')
+          : (b.user?.name ?? '').localeCompare(a.user?.name ?? '');
       } else {
         return direction === 'ascending'
-          ? a[key] - b[key]
-          : b[key] - a[key];
+          ? aValue - bValue
+          : bValue - aValue;
       }
     });
     setSortedPurchases(sortedArray);
@@ -95,14 +95,14 @@ export default function ManagePurchaseRecord() {
                   <Skeleton width={200} height={20} />
                 </li>
               ))
-            ) : sortedPurchases.length > 0 ? (
-              sortedPurchases.map((purchase, index) => (
+            ) : purchasesList.length > 0 ? (
+              purchasesList.map((purchase, index) => (
                 <li key={index} className="flex justify-between items-center border-b py-2">
-                  <div className="w-1/6">{purchase.id}</div>
-                  <div className="w-1/6 hidden sm:block">{purchase.total_payment}</div>
-                  <div className="w-1/6 hidden sm:block">{new Date(purchase.date_purchase).toLocaleDateString()}</div>
-                  <div className="w-1/6">{purchase.user?.name || 'N/A'}</div>
-                  <div className="w-1/6 hidden sm:block">{purchase.medication?.name || 'N/A'}</div>
+                  <div className="w-1/6">{purchase.id ?? 'N/A'}</div>
+                  <div className="w-1/6 hidden sm:block">{purchase.total_payment ?? 'N/A'}</div>
+                  <div className="w-1/6 hidden sm:block">{purchase.date_purchase ? new Date(purchase.date_purchase).toLocaleDateString() : 'N/A'}</div>
+                  <div className="w-1/6">{purchase.user?.name ?? 'N/A'}</div>
+                  <div className="w-1/6 hidden sm:block">{purchase.medication?.name ?? 'N/A'}</div>
                   <div className="w-1/6">
                     <button
                       className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600"
