@@ -37,7 +37,7 @@ const UpdatePasswordModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newPassword.length >= 8 && newPassword === newPasswordConfirmation) {
-      dispatch(updateUserPassword({ current_password: currentPassword, new_password: newPassword, new_password_confirmation: newPasswordConfirmation }));
+      dispatch(updateUserPassword({ current_password: currentPassword, new_password: newPassword, new_password_confirmation: newPasswordConfirmation })).then(() => {clearData()});
     } else if (newPassword.length <= 7) {
       dispatch(
         popToast({
