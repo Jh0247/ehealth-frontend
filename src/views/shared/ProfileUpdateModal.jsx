@@ -96,6 +96,7 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
               value={formData.name}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-1 md:px-2"
+              required
             />
           </div>
           <div className="mb-4">
@@ -106,6 +107,7 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
               value={formData.email}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-1 md:px-2"
+              required
             />
           </div>
           <div className="mb-4">
@@ -116,6 +118,7 @@ const ProfileUpdateModal = ({ isOpen, onClose }) => {
               value={formData.contact}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-1 md:px-2"
+              required
             />
           </div>
           <div className="mb-4">
