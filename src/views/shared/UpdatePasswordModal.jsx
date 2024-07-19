@@ -42,7 +42,7 @@ const UpdatePasswordModal = ({ isOpen, onClose }) => {
       dispatch(
         popToast({
           title: 'Error',
-          message: 'New password should more than 8 character.',
+          message: 'New password should more than 8 characters.',
           type: ToastType.ERROR,
         })
       );
@@ -57,8 +57,16 @@ const UpdatePasswordModal = ({ isOpen, onClose }) => {
     }
   };
 
+  const clearData = () => {
+    setCurrentPassword('');
+    setNewPassword('');
+    setNewPasswordConfirmation('');
+    setPasswordStrength(0);
+  };
+
   useEffect(() => {
     if (status === 'succeeded') {
+      clearData();
       onClose();
       dispatch(resetUserStatus());
     }
